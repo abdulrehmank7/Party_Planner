@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "974929550909",
+    "firebase_url": "https://party-planner-8d2ba.firebaseio.com",
+    "project_id": "party-planner-8d2ba",
+    "storage_bucket": "party-planner-8d2ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974929550909:android:4aad21f66a670a93ef1454",
+        "android_client_info": {
+          "package_name": "com.arkapp.partyplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974929550909-5ehqjacltj20pkach0r1d23rdv5e096c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEcLnobEJn6zIR2LTMHwptIS0BNWs1ggQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "974929550909-5ehqjacltj20pkach0r1d23rdv5e096c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
