@@ -19,9 +19,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
 
     private val prefRepository by lazy { PrefRepository(requireContext()) }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    private fun initSignUpBtn() {
         if (!prefRepository.setLoggedIn()) {
             signUpBtn.setOnClickListener {
                 requireActivity().openLoginScreen()
@@ -30,8 +28,14 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
             signUpBtn.hide()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initSignUpBtn()
+    }
+
     override fun onStart() {
         super.onStart()
+
         loadSplash()
     }
 
