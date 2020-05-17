@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         findNavController(R.id.fragment).addOnDestinationChangedListener { controller, destination, arguments ->
-            if (destination.id == R.id.splashFragment)
+            if (destination.id == R.id.splashFragment || destination.id == R.id.signupFragment)
                 supportActionBar!!.hide()
             else
                 supportActionBar!!.show()

@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
-import com.arkapp.partyplanner.data.authentication.openLoginScreen
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.utils.hide
 import kotlinx.android.synthetic.main.fragment_splash.*
@@ -22,7 +21,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     private fun initSignUpBtn() {
         if (!prefRepository.setLoggedIn()) {
             signUpBtn.setOnClickListener {
-                requireActivity().openLoginScreen()
+                findNavController().navigate(R.id.action_splashFragment_to_signupFragment)
             }
         } else
             signUpBtn.hide()
