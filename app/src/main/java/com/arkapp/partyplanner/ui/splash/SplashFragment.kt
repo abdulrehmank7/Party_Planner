@@ -42,7 +42,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         CoroutineScope(Dispatchers.Main).launch {
             delay(1500)
             if (prefRepository.setLoggedIn())
-                findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_optionsFragment)
         }
     }
 }

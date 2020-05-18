@@ -14,6 +14,7 @@ import com.arkapp.partyplanner.data.models.UserLogin
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentSignupBinding
+import com.arkapp.partyplanner.utils.getFoodList
 import com.arkapp.partyplanner.utils.hide
 import com.arkapp.partyplanner.utils.show
 import com.arkapp.partyplanner.utils.toast
@@ -132,6 +133,8 @@ class SignUpFragment : Fragment() {
     private fun checkCredentials() {
 
         lifecycleScope.launch(Dispatchers.Main) {
+            insertFoodData()
+
             val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
 
             val userData = userLoginDao.getLoggedInUser(
@@ -157,6 +160,8 @@ class SignUpFragment : Fragment() {
     private fun storeCredentials() {
 
         lifecycleScope.launch(Dispatchers.Main) {
+            insertFoodData()
+
             val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
 
             userLoginDao.insert(
@@ -170,6 +175,14 @@ class SignUpFragment : Fragment() {
             onLoginSuccess()
         }
 
+    }
+
+    private suspend fun insertFoodData() {
+        val foodDao = AppDatabase.getDatabase(requireContext()).foodDao()
+
+        for (food in getFoodList()) {
+            foodDao.insert(food)
+        }
     }
 
     private fun removeErrorOnChange() {

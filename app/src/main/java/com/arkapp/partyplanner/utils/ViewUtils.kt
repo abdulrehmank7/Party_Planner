@@ -1,6 +1,5 @@
 package com.arkapp.partyplanner.utils
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -10,9 +9,11 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlin.math.roundToInt
 
@@ -133,4 +134,18 @@ fun BottomSheetDialog.expandBottomDialogOnOpen() {
 fun Context.dpFromPx(px: Float) = px / resources.displayMetrics.density
 
 fun Context.pxFromDp(dp: Float) = dp * resources.displayMetrics.density
+
+fun Context.getDrawable(resId: Int) = ContextCompat.getDrawable(this, resId)
+
+fun RecyclerView.initVerticalAdapter(
+    adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
+    hasFixedSize: Boolean
+) {
+    val llm = LinearLayoutManager(this.context)
+    this.setHasFixedSize(hasFixedSize)
+    this.setItemViewCacheSize(10)
+    this.layoutManager = llm
+    adapter.setHasStableIds(true)
+    this.adapter = adapter
+}
 

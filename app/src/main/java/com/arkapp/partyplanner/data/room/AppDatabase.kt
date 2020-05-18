@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.arkapp.partyplanner.data.models.Food
 import com.arkapp.partyplanner.data.models.UserLogin
 
 /**
@@ -11,11 +12,13 @@ import com.arkapp.partyplanner.data.models.UserLogin
  * Contact email - abdulrehman0796@gmail.com
  */
 
-@Database(entities = [UserLogin::class], version = 1)
+@Database(entities = [UserLogin::class, Food::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
 
     abstract fun userLoginDao(): UserLoginDao
+
+    abstract fun foodDao(): FoodDao
 
     companion object {
         private val dbName = "PARTY_PLANNER_DB"
