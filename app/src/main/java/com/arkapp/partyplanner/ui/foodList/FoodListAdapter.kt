@@ -1,14 +1,15 @@
 package com.arkapp.partyplanner.ui.foodList
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Food
 import com.arkapp.partyplanner.utils.loadImage
+import com.arkapp.partyplanner.utils.toast
 
 /**
  * Created by Abdul Rehman on 28-02-2020.
@@ -17,9 +18,11 @@ import com.arkapp.partyplanner.utils.loadImage
 
 class FoodListAdapter(
     private val foodList: List<Food>,
-    private val navController: NavController
+    private val context: Context
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    val selectedFoodList = ArrayList<Food>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return FoodListViewHolder(
@@ -32,7 +35,7 @@ class FoodListAdapter(
         )
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as FoodListViewHolder).viewBinding
 
@@ -41,10 +44,23 @@ class FoodListAdapter(
         binding.foodPrice.text = "$${foodData.price}"
         binding.foodImg.loadImage(foodData.resId)
 
-        /*binding.parent.setOnClickListener {
-            prefRepository.openedBook(foodData)
-            navController.navigate(R.id.action_favouritesFragment_to_bookDetailsFragment)
-        }*/
+        if (selectedFoodList.contains(foodData))
+            binding.addFoodBtn.text = context.getString(R.string.remove_food)
+        else
+            binding.addFoodBtn.text = context.getString(R.string.add_food)
+
+        binding.addFoodBtn.setOnClickListener {
+            if (binding.addFoodBtn.text.toString() == context.getString(R.string.add_food)) {
+                selectedFoodList.add(foodData)
+                context.toast("Food added!")
+                binding.addFoodBtn.text = context.getString(R.string.remove_food)
+
+            } else {
+                selectedFoodList.remove(foodData)
+                context.toast("Food removed!")
+                binding.addFoodBtn.text = context.getString(R.string.add_food)
+            }
+        }
     }
 
 

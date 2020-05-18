@@ -2,6 +2,7 @@ package com.arkapp.partyplanner.utils
 
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Food
+import com.arkapp.partyplanner.data.models.SelectionData
 
 /**
  * Created by Abdul Rehman on 17-05-2020.
@@ -11,6 +12,16 @@ import com.arkapp.partyplanner.data.models.Food
 const val FOOD_TYPE_ALCOHOL = "ALCOHOL"
 const val FOOD_TYPE_CAKE = "CAKE"
 const val FOOD_TYPE_MAIN_COURSE = "MAIN_COURSE"
+
+const val LOW_BUDGED_LIMIT = 50.0
+const val MEDIUM_BUDGED_LIMIT = 100.0
+const val HIGH_BUDGED_LIMIT = 200.0
+const val VERY_HIGH_BUDGED_LIMIT = 100000.0
+
+const val PARTY_TYPE_BABY_SHOWER = "BABY_SHOWER"
+const val PARTY_TYPE_OTHER = "OTHER"
+
+val selectionData = SelectionData(null, null, null, null, null)
 
 fun getFoodList(): ArrayList<Food> {
     val foodList = ArrayList<Food>()

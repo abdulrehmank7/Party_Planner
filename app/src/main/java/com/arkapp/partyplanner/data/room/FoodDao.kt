@@ -20,4 +20,9 @@ interface FoodDao {
     @Query("SELECT * FROM FOOD_TYPE")
     suspend fun getAllFood(): List<Food>
 
+    @Query("SELECT * FROM FOOD_TYPE WHERE price <= :budgetLimit AND foodType NOT IN ('ALCOHOL')")
+    suspend fun getFoodListWithoutAlcohol(budgetLimit: Double): List<Food>
+
+    @Query("SELECT * FROM FOOD_TYPE WHERE price <= :budgetLimit")
+    suspend fun getFoodListWithAlcohol(budgetLimit: Double): List<Food>
 }

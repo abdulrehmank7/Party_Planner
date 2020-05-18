@@ -75,15 +75,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
-            <ImageView
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
+                android:gravity="center"
+                android:text="$1 - $50"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/lowBudget"
                 app:layout_constraintEnd_toEndOf="@+id/lowBudget"
                 app:layout_constraintStart_toStartOf="@+id/lowBudget"
@@ -99,33 +96,17 @@
                 app:layout_constraintStart_toEndOf="@+id/lowBudget"
                 app:layout_constraintTop_toTopOf="@+id/lowBudget" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/imageView3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
-                app:layout_constraintBottom_toBottomOf="@+id/mediumBudget"
-                app:layout_constraintEnd_toStartOf="@+id/imageView4"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toEndOf="@+id/lowBudget"
-                app:layout_constraintStart_toStartOf="@+id/mediumBudget"
-                app:layout_constraintTop_toTopOf="@+id/mediumBudget" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
+                android:gravity="center"
+                android:text="$50 - $100"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/mediumBudget"
                 app:layout_constraintEnd_toEndOf="@+id/mediumBudget"
-                app:layout_constraintEnd_toStartOf="@+id/highBudget"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintStart_toEndOf="@+id/lowBudget"
+                app:layout_constraintStart_toStartOf="@+id/mediumBudget"
                 app:layout_constraintTop_toTopOf="@+id/mediumBudget" />
 
             <View
@@ -138,43 +119,17 @@
                 app:layout_constraintStart_toEndOf="@+id/mediumBudget"
                 app:layout_constraintTop_toTopOf="@+id/mediumBudget" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/imageView7"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
+                android:gravity="center"
+                android:text="$100 - $200"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/highBudget"
-                app:layout_constraintEnd_toStartOf="@+id/imageView6"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintEnd_toEndOf="@id/highBudget"
                 app:layout_constraintStart_toEndOf="@+id/mediumBudget"
                 app:layout_constraintStart_toStartOf="@+id/highBudget"
-                app:layout_constraintTop_toTopOf="@+id/highBudget" />
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
-                app:layout_constraintBottom_toBottomOf="@+id/highBudget"
-                app:layout_constraintEnd_toStartOf="@+id/imageView5"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView7"
-                app:layout_constraintTop_toTopOf="@+id/highBudget" />
-
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
-                app:layout_constraintBottom_toBottomOf="@+id/highBudget"
-                app:layout_constraintEnd_toEndOf="@+id/highBudget"
-                app:layout_constraintEnd_toStartOf="@+id/veryHighBudget"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView6"
                 app:layout_constraintTop_toTopOf="@+id/highBudget" />
 
             <View
@@ -188,54 +143,17 @@
                 app:layout_constraintStart_toEndOf="@+id/highBudget"
                 app:layout_constraintTop_toTopOf="@+id/highBudget" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/imageView9"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
+                android:gravity="center"
+                android:text="@string/more_than_200"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/veryHighBudget"
-                app:layout_constraintEnd_toStartOf="@+id/imageView11"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintEnd_toEndOf="@id/veryHighBudget"
                 app:layout_constraintStart_toEndOf="@+id/highBudget"
                 app:layout_constraintStart_toStartOf="@+id/veryHighBudget"
-                app:layout_constraintTop_toTopOf="@+id/veryHighBudget" />
-
-            <ImageView
-                android:id="@+id/imageView11"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
-                app:layout_constraintBottom_toBottomOf="@+id/veryHighBudget"
-                app:layout_constraintEnd_toStartOf="@+id/imageView10"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView9"
-                app:layout_constraintTop_toTopOf="@+id/veryHighBudget" />
-
-            <ImageView
-                android:id="@+id/imageView10"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
-                app:layout_constraintBottom_toBottomOf="@+id/veryHighBudget"
-                app:layout_constraintEnd_toStartOf="@+id/imageView8"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView11"
-                app:layout_constraintTop_toTopOf="@+id/veryHighBudget" />
-
-            <ImageView
-                android:id="@+id/imageView8"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_dollar"
-                app:layout_constraintBottom_toBottomOf="@+id/veryHighBudget"
-                app:layout_constraintEnd_toEndOf="@+id/veryHighBudget"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView10"
                 app:layout_constraintTop_toTopOf="@+id/veryHighBudget" />
 
             <TextView

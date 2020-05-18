@@ -20,6 +20,18 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addFoodBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/add_food"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_add"
+                app:iconGravity="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/foodName"
                 android:layout_width="0dp"
