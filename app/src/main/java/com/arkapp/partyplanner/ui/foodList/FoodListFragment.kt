@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.utils.*
@@ -44,6 +45,8 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
             )
             foodListRv.initVerticalAdapter(adapter, true)
         }
+
+        proceedBtn.setOnClickListener { findNavController().navigate(R.id.action_foodListFragment_to_venueListFragment) }
     }
 
 }

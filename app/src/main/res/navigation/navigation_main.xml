@@ -58,5 +58,13 @@
         android:id="@+id/foodListFragment"
         android:name="com.arkapp.partyplanner.ui.foodList.FoodListFragment"
         android:label="fragment_food_list"
-        tools:layout="@layout/fragment_food_list" />
+        tools:layout="@layout/fragment_food_list">
+        <action
+            android:id="@+id/action_foodListFragment_to_venueListFragment"
+            app:destination="@id/venueListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/venueListFragment"
+        android:name="com.arkapp.partyplanner.ui.venueList.VenueListFragment"
+        android:label="VenueListFragment" />
 </navigation>

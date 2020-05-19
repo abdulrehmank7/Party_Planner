@@ -3,6 +3,7 @@ package com.arkapp.partyplanner.utils
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Food
 import com.arkapp.partyplanner.data.models.SelectionData
+import com.arkapp.partyplanner.data.models.Venue
 
 /**
  * Created by Abdul Rehman on 17-05-2020.
@@ -26,11 +27,11 @@ val selectionData = SelectionData(null, null, null, null, null)
 fun getFoodList(): ArrayList<Food> {
     val foodList = ArrayList<Food>()
 
-    foodList.add(Food(null, "Jara Petit", 10.0, R.drawable.img_cake1, FOOD_TYPE_CAKE))
-    foodList.add(Food(null, "Marble Slab Creamery", 20.0, R.drawable.img_cake2, FOOD_TYPE_CAKE))
-    foodList.add(Food(null, "The White Ombré", 5.0, R.drawable.img_cake3, FOOD_TYPE_CAKE))
     foodList.add(Food(null, "Cup Cake", 10.0, R.drawable.img_cake4, FOOD_TYPE_CAKE))
+    foodList.add(Food(null, "Marble Slab Creamery", 20.0, R.drawable.img_cake2, FOOD_TYPE_CAKE))
     foodList.add(Food(null, "Chocolates", 5.0, R.drawable.img_cake5, FOOD_TYPE_CAKE))
+    foodList.add(Food(null, "Jara Petit", 10.0, R.drawable.img_cake1, FOOD_TYPE_CAKE))
+    foodList.add(Food(null, "The White Ombré", 5.0, R.drawable.img_cake3, FOOD_TYPE_CAKE))
     foodList.add(Food(null,
                       "Butler’s Triple Chocalate",
                       20.0,
@@ -108,4 +109,155 @@ fun getFoodList(): ArrayList<Food> {
                       FOOD_TYPE_ALCOHOL))
 
     return foodList
+}
+
+fun getVenueList(): ArrayList<Venue> {
+    val venueList = ArrayList<Venue>()
+    venueList.add(Venue(null, "Sungei Road Laksa", "27 Jalan Berseh", R.drawable.img_venue1))
+    venueList.add(Venue(null,
+                        "Outram Park Yahua Rou Gu Cha",
+                        "7 Keppel Rd, PSA Tanjong Pagar Complex, 089053",
+                        R.drawable.img_venue2))
+    venueList.add(Venue(null,
+                        "Nam Sing Fried Hokkien Mee",
+                        "Old Airport Food Centre, 51 Old Airport Rd",
+                        R.drawable.img_venue3))
+    venueList.add(Venue(null,
+                        "Tian Tian Chicken Rice",
+                        "Maxwell Food Centre, 1 Kadayanallur St",
+                        R.drawable.img_venue4))
+    venueList.add(Venue(null,
+                        "Hill Street Char Kway Teow",
+                        ": #01-41,16 Bedok South Rd",
+                        R.drawable.img_venue5))
+    venueList.add(Venue(null,
+                        "Song Zhou Luo Bo Gao",
+                        "#01-18, Bedok Interchange Food Centre, 207 New Upper Changi Road",
+                        R.drawable.img_venue6))
+    venueList.add(Venue(null,
+                        "Jing Hua Sliced Fish Bee Hoon",
+                        "Stall #77 at Maxwell Food Centre, 1 Kadayanallur St",
+                        R.drawable.img_venue7))
+    venueList.add(Venue(null,
+                        "Hill Street Tai Hwa Pork Noodles",
+                        "Block 466 Crawford Lane #01-12 Singapore 190465",
+                        R.drawable.img_venue8))
+    venueList.add(Venue(null,
+                        "Ah Chuan Fried Oyster Omelette",
+                        "Toa Payoh Lor 7 Food Centre Stall #01-25, Singapore",
+                        R.drawable.img_venue9))
+    venueList.add(Venue(null,
+                        "Yong Xiang Xing Tou Foo",
+                        "32 New Market Rd, 01-1084 People’s Park Food Centre",
+                        R.drawable.img_venue10))
+    venueList.add(Venue(null,
+                        "Kim Heng Roasted Meat",
+                        "214 Serangoon Avenue 4, #01-88, Singapore 550214",
+                        R.drawable.img_venue11))
+    venueList.add(Venue(null,
+                        "Kok Sen Restaurant",
+                        "30 Keong Saik Rd, Singapore",
+                        R.drawable.img_venue12))
+    venueList.add(Venue(null,
+                        "Two Chefs Eating House",
+                        "116 Commonwealth Crescent #01-129, Singapore",
+                        R.drawable.img_venue13))
+    venueList.add(Venue(null,
+                        "Selera Rasa Nasi Lemak",
+                        "2 Adam Rd, #01-02, Adam Road Food Centre, Singapore",
+                        R.drawable.img_venue14))
+    venueList.add(Venue(null,
+                        "Entire Venue at Zouk",
+                        "River Valley Road The Cannery, 3C #01-05, Singapore, 179022",
+                        R.drawable.img_venue15))
+    venueList.add(Venue(null,
+                        "Rooftop Terrace at ClubCo The Quadrant",
+                        "Cecil Street, 19, Singapore, 049704",
+                        R.drawable.img_venue16))
+    venueList.add(Venue(null,
+                        "Entire Venue at OSG Bar",
+                        "Temasek Boulevard, 3, Singapore, 038983",
+                        R.drawable.img_venue17))
+    venueList.add(Venue(null,
+                        "Island-style bar at Mogambo Bar & Restaurant",
+                        "Canton Street, 3, Singapore, 049745",
+                        R.drawable.img_venue18))
+    venueList.add(Venue(null,
+                        "The Cocktail Atelier at Grand Park Orchard",
+                        "Orchard Road, 270, Singapore, 238857",
+                        R.drawable.img_venue19))
+    venueList.add(Venue(null,
+                        "Entire Venue at Bikini Bar",
+                        "Siloso Beach Walk, 50, Singapore, 099000",
+                        R.drawable.img_venue20))
+    venueList.add(Venue(null,
+                        "Entire Space at Angie’s Oyster Bar",
+                        "Raffles Place, 50, Singapore, 048623",
+                        R.drawable.img_venue21))
+    venueList.add(Venue(null,
+                        "Exclusive Hire at Nickeldime Novena",
+                        "Thomson Road, #01-01 Regency, , 275 , Singapore, 307645",
+                        R.drawable.img_venue22))
+    venueList.add(Venue(null,
+                        "The Cocktail Bar at Monarchy Cocktail Bar & Ultra-Lounge",
+                        "Tras Street, 56/58, Singapore, 078995",
+                        R.drawable.img_venue23))
+    venueList.add(Venue(null,
+                        "Dining Lounge at Alley Bar",
+                        "Emerald Hill Road, 2, Singapore, 229287",
+                        R.drawable.img_venue24))
+    venueList.add(Venue(null,
+                        "Into The Woods at Into The Woods",
+                        "Lavender Street, 213, Singapore, 338770",
+                        R.drawable.img_venue25))
+    venueList.add(Venue(null,
+                        "Private Event Space at Design Hub Rooftop Event Space",
+                        "Tuas Bay Drive, 30, Singapore, 637548",
+                        R.drawable.img_venue26))
+    venueList.add(Venue(null,
+                        "Hyperspace Studio at HYPERSPACE",
+                        "Lavender Street, 91a, Singapore, 338719",
+                        R.drawable.img_venue27))
+    venueList.add(Venue(null,
+                        "Rooftop Lounge & Terrace at the Hive New Bridge Road",
+                        "New Bridge Road, 59, Singapore, 059405",
+                        R.drawable.img_venue28))
+    venueList.add(Venue(null,
+                        "Entire Venue at HERE",
+                        "Serangoon Road, 576A, Singapore, 218190",
+                        R.drawable.img_venue29))
+    venueList.add(Venue(null,
+                        "Outdoor Terrace at PARKROYAL on Pickering",
+                        "Upper Pickering Street, 3, Singapore, 058289",
+                        R.drawable.img_venue30))
+    venueList.add(Venue(null,
+                        "Terrace Lounge at Zafferano Italian Restaurant & Lounge",
+                        "Collyer Quay, Ocean Financial Centre, Level 43, 10, Singapore, 049315",
+                        R.drawable.img_venue31))
+    venueList.add(Venue(null,
+                        "Entire Space at LDF KALLANG RIVERSIDE UPSTAIRS 楼上",
+                        "Kampong Bugis, 66, Singapore, 338987",
+                        R.drawable.img_venue32))
+    venueList.add(Venue(null,
+                        "Infinity at Village Hotel Changi",
+                        "Netheravon Road, 1, Singapore, 508502",
+                        R.drawable.img_venue33))
+    venueList.add(Venue(null,
+                        "Roof Deck Alfresco dining at Jayleen 1918",
+                        "Carpenter Street, 42, Singapore, 059921",
+                        R.drawable.img_venue34))
+    venueList.add(Venue(null,
+                        "Hive Café & Event Space at The Hive Lavender",
+                        "Kallang Junction, Level 6, 1, Singapore, 339263 ",
+                        R.drawable.img_venue35))
+    venueList.add(Venue(null,
+                        "Long Beach at Coastes",
+                        "Siloso Beach Walk, 50, Singapore, 099000 ",
+                        R.drawable.img_venue36))
+    venueList.add(Venue(null,
+                        "Whole Venue at HYPERSPACE",
+                        "Lavender Street, 91a, Singapore, 338719",
+                        R.drawable.img_venue37))
+
+    return venueList
 }
