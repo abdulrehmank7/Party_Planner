@@ -8,17 +8,20 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
+import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.databinding.FragmentHomeBinding
-import com.arkapp.partyplanner.utils.*
+import com.arkapp.partyplanner.utils.PARTY_TYPE_BABY_SHOWER
+import com.arkapp.partyplanner.utils.PARTY_TYPE_OTHER
+import com.arkapp.partyplanner.utils.hide
+import com.arkapp.partyplanner.utils.show
 import java.util.*
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
+
+    private val prefRepository by lazy { PrefRepository(requireContext()) }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -31,46 +34,90 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initPartyTypeBtn()
-        initBudgetBtn()
-        initDestinationBtn()
-
-        binding.calendarView.minDate = Calendar.getInstance().timeInMillis
-
-        val selectedPartyDate = Calendar.getInstance()
-        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            selectedPartyDate.set(Calendar.YEAR, year)
-            selectedPartyDate.set(Calendar.MONTH, month)
-            selectedPartyDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-        }
+        initPartyTypeBtnListener()
+        initBudgetBtnListener()
+        initDestinationBtnListener()
+        initCalendar()
 
         binding.guestEt.doAfterTextChanged { text ->
-            if (!text.isNullOrEmpty())
-                selectionData.partyGuest = text.toString().toInt()
+            if (!text.isNullOrEmpty()) {
+                val details = prefRepository.getCurrentPartyDetails()
+                details.partyGuest = text.toString().toInt()
+                prefRepository.setCurrentPartyDetails(details)
+            }
         }
 
         binding.proceedBtn.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_foodListFragment)
         }
 
+        initOldPartyData()
+
     }
 
-    private fun initPartyTypeBtn() {
-        binding.babyShowerBtn.setOnClickListener {
-            binding.partyCheck.hide()
-            binding.babyShowerCheck.show()
-
-            selectionData.partyType = PARTY_TYPE_BABY_SHOWER
+    private fun initOldPartyData() {
+        val detail = prefRepository.getCurrentPartyDetails()
+        detail.partyDate.also {
+            if (it != null) {
+                val selectedDate = Calendar.getInstance()
+                selectedDate.time = it
+                binding.calendarView.date = selectedDate.timeInMillis
+            }
+        }
+        detail.partyBudget.also {
+            if (it != null) {
+                when (it) {
+                    getString(R.string.low) -> binding.lowBudget.performClick()
+                    getString(R.string.medium) -> binding.mediumBudget.performClick()
+                    getString(R.string.high) -> binding.highBudget.performClick()
+                    getString(R.string.very_high) -> binding.veryHighBudget.performClick()
+                    else -> binding.lowBudget.performClick()
+                }
+            }
         }
 
-        binding.normalPartyBtn.setOnClickListener {
-            binding.partyCheck.show()
-            binding.babyShowerCheck.hide()
-            selectionData.partyType = PARTY_TYPE_OTHER
+        detail.partyDestination.also {
+            if (it != null) {
+                if (it == getString(R.string.home)) {
+                    binding.homeParty.performClick()
+                } else
+                    binding.venueParty.performClick()
+            }
+        }
+
+        detail.partyGuest.also {
+            if (it != null) {
+                binding.guestEt.setText(it.toString())
+            }
+        }
+
+        detail.partyType.also {
+            if (it != null) {
+                if (it == PARTY_TYPE_BABY_SHOWER)
+                    binding.babyShowerBtn.performClick()
+                else
+                    binding.normalPartyBtn.performClick()
+            }
         }
     }
 
-    private fun initBudgetBtn() {
+    private fun initCalendar() {
+        binding.calendarView.minDate = Calendar.getInstance().timeInMillis
+
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+
+            val selectedPartyDate = Calendar.getInstance()
+            selectedPartyDate.set(Calendar.YEAR, year)
+            selectedPartyDate.set(Calendar.MONTH, month)
+            selectedPartyDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyDate = selectedPartyDate.time
+            prefRepository.setCurrentPartyDetails(details)
+        }
+    }
+
+    private fun initBudgetBtnListener() {
         binding.lowBudget.setOnClickListener {
             binding.budget.text = getString(R.string.low)
 
@@ -79,7 +126,9 @@ class HomeFragment : Fragment() {
             binding.highBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
             binding.veryHighBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_end)
 
-            selectionData.partyBudget = getString(R.string.low)
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyBudget = getString(R.string.low)
+            prefRepository.setCurrentPartyDetails(details)
         }
 
         binding.mediumBudget.setOnClickListener {
@@ -90,7 +139,9 @@ class HomeFragment : Fragment() {
             binding.highBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
             binding.veryHighBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_end)
 
-            selectionData.partyBudget = getString(R.string.medium)
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyBudget = getString(R.string.medium)
+            prefRepository.setCurrentPartyDetails(details)
         }
 
         binding.highBudget.setOnClickListener {
@@ -101,7 +152,9 @@ class HomeFragment : Fragment() {
             binding.highBudget.background = requireContext().getDrawable(R.drawable.bg_selected)
             binding.veryHighBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_end)
 
-            selectionData.partyBudget = getString(R.string.high)
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyBudget = getString(R.string.high)
+            prefRepository.setCurrentPartyDetails(details)
         }
 
         binding.veryHighBudget.setOnClickListener {
@@ -112,23 +165,49 @@ class HomeFragment : Fragment() {
             binding.highBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
             binding.veryHighBudget.background = requireContext().getDrawable(R.drawable.bg_selected_end)
 
-            selectionData.partyBudget = getString(R.string.very_high)
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyBudget = getString(R.string.very_high)
+            prefRepository.setCurrentPartyDetails(details)
         }
     }
 
-    private fun initDestinationBtn() {
+    private fun initDestinationBtnListener() {
         binding.homeParty.setOnClickListener {
             binding.homeParty.background = requireContext().getDrawable(R.drawable.bg_selected_start)
             binding.venueParty.background = requireContext().getDrawable(R.drawable.bg_unselected_end)
 
-            selectionData.partyDestination = getString(R.string.home)
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyDestination = getString(R.string.home)
+            prefRepository.setCurrentPartyDetails(details)
         }
 
         binding.venueParty.setOnClickListener {
             binding.homeParty.background = requireContext().getDrawable(R.drawable.bg_unselected_start)
             binding.venueParty.background = requireContext().getDrawable(R.drawable.bg_selected_end)
 
-            selectionData.partyDestination = getString(R.string.other_venue)
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyDestination = getString(R.string.other_venue)
+            prefRepository.setCurrentPartyDetails(details)
+        }
+    }
+
+    private fun initPartyTypeBtnListener() {
+        binding.babyShowerBtn.setOnClickListener {
+            binding.partyCheck.hide()
+            binding.babyShowerCheck.show()
+
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyType = PARTY_TYPE_BABY_SHOWER
+            prefRepository.setCurrentPartyDetails(details)
+        }
+
+        binding.normalPartyBtn.setOnClickListener {
+            binding.partyCheck.show()
+            binding.babyShowerCheck.hide()
+
+            val details = prefRepository.getCurrentPartyDetails()
+            details.partyType = PARTY_TYPE_OTHER
+            prefRepository.setCurrentPartyDetails(details)
         }
     }
 }

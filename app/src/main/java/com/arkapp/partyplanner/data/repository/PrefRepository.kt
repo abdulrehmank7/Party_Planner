@@ -2,8 +2,10 @@ package com.arkapp.partyplanner.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.arkapp.partyplanner.data.models.PartyDetails
 import com.arkapp.partyplanner.data.preferences.PREFERENCE_NAME
 import com.arkapp.partyplanner.data.preferences.PREF_LOGGED_IN
+import com.arkapp.partyplanner.data.preferences.PREF_PARTY_DETAILS
 import com.google.gson.Gson
 
 
@@ -65,5 +67,18 @@ class PrefRepository(val context: Context) {
     }
 
     fun setLoggedIn() = PREF_LOGGED_IN.getBoolean()
+
+    fun setCurrentPartyDetails(partyDetails: PartyDetails) {
+        PREF_PARTY_DETAILS.put(gson.toJson(partyDetails))
+    }
+
+    fun getCurrentPartyDetails(): PartyDetails {
+        PREF_PARTY_DETAILS.getString().also {
+            return if (it.isEmpty())
+                PartyDetails(null, null, null, null, null, null, null)
+            else
+                gson.fromJson(it, PartyDetails::class.java)
+        }
+    }
 
 }

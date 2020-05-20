@@ -12,9 +12,7 @@
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_signupFragment"
-            app:destination="@id/signupFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit" />
+            app:destination="@id/signupFragment" />
         <action
             android:id="@+id/action_splashFragment_to_optionsFragment"
             app:destination="@id/optionsFragment"
@@ -25,7 +23,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.arkapp.partyplanner.ui.home.HomeFragment"
-        android:label="fragment_home"
+        android:label="Party details"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_foodListFragment"
@@ -34,13 +32,11 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.arkapp.partyplanner.ui.signup.SignUpFragment"
-        android:label="fragment_signup"
+        android:label="Signup"
         tools:layout="@layout/fragment_signup">
         <action
             android:id="@+id/action_signupFragment_to_splashFragment"
             app:destination="@id/splashFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
             app:launchSingleTop="true"
             app:popUpTo="@id/signupFragment"
             app:popUpToInclusive="true" />
@@ -48,7 +44,7 @@
     <fragment
         android:id="@+id/optionsFragment"
         android:name="com.arkapp.partyplanner.ui.options.OptionsFragment"
-        android:label="fragment_options"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_options">
         <action
             android:id="@+id/action_optionsFragment_to_homeFragment"
@@ -57,14 +53,25 @@
     <fragment
         android:id="@+id/foodListFragment"
         android:name="com.arkapp.partyplanner.ui.foodList.FoodListFragment"
-        android:label="fragment_food_list"
+        android:label="Select Food item"
         tools:layout="@layout/fragment_food_list">
         <action
             android:id="@+id/action_foodListFragment_to_venueListFragment"
             app:destination="@id/venueListFragment" />
+        <action
+            android:id="@+id/action_foodListFragment_to_finalChecklistFragment"
+            app:destination="@id/finalChecklistFragment" />
     </fragment>
     <fragment
         android:id="@+id/venueListFragment"
         android:name="com.arkapp.partyplanner.ui.venueList.VenueListFragment"
-        android:label="VenueListFragment" />
+        android:label="Select Venue">
+        <action
+            android:id="@+id/action_venueListFragment_to_finalChecklistFragment"
+            app:destination="@id/finalChecklistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/finalChecklistFragment"
+        android:name="com.arkapp.partyplanner.ui.finalChecklist.FinalChecklistFragment"
+        android:label="Summary" />
 </navigation>

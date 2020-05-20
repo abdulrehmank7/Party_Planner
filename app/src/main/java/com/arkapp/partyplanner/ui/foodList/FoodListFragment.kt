@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
+import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.utils.*
 import kotlinx.android.synthetic.main.fragment_food_list.*
@@ -17,10 +18,13 @@ import kotlinx.coroutines.launch
  */
 class FoodListFragment : Fragment(R.layout.fragment_food_list) {
 
+    private lateinit var adapter: FoodListAdapter
+    private val prefRepository by lazy { PrefRepository(requireContext()) }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val budgetLimit = when (selectionData.partyBudget) {
+        val budgetLimit = when (prefRepository.getCurrentPartyDetails().partyBudget) {
             getString(R.string.low) -> LOW_BUDGED_LIMIT
             getString(R.string.medium) -> MEDIUM_BUDGED_LIMIT
             getString(R.string.high) -> HIGH_BUDGED_LIMIT
@@ -28,7 +32,7 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
             else -> HIGH_BUDGED_LIMIT
         }
 
-        val toShowAlcohol = selectionData.partyType != PARTY_TYPE_BABY_SHOWER
+        val toShowAlcohol = prefRepository.getCurrentPartyDetails().partyType != PARTY_TYPE_BABY_SHOWER
 
         lifecycleScope.launch(Dispatchers.Main) {
 
@@ -39,14 +43,33 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
                 else
                     foodDao.getFoodListWithoutAlcohol(budgetLimit)
 
-            val adapter = FoodListAdapter(
+            adapter = FoodListAdapter(
                 foodList,
                 requireContext()
             )
             foodListRv.initVerticalAdapter(adapter, true)
         }
 
-        proceedBtn.setOnClickListener { findNavController().navigate(R.id.action_foodListFragment_to_venueListFragment) }
+        if (prefRepository.getCurrentPartyDetails().partyDestination == getString(R.string.home)) {
+            proceedBtn.text = getString(R.string.check_all_details)
+        }
+
+        proceedBtn.setOnClickListener {
+
+            if (adapter.selectedFoodList.size <= 0) {
+                requireContext().toast("Please add some food items!")
+                return@setOnClickListener
+            }
+
+            val detail = prefRepository.getCurrentPartyDetails()
+            detail.selectedFood = adapter.selectedFoodList
+            prefRepository.setCurrentPartyDetails(detail)
+
+            if (prefRepository.getCurrentPartyDetails().partyDestination == getString(R.string.home))
+                findNavController().navigate(R.id.action_foodListFragment_to_finalChecklistFragment)
+            else
+                findNavController().navigate(R.id.action_foodListFragment_to_venueListFragment)
+        }
     }
 
 }

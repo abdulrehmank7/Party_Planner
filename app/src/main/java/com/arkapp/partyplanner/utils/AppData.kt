@@ -2,7 +2,6 @@ package com.arkapp.partyplanner.utils
 
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Food
-import com.arkapp.partyplanner.data.models.SelectionData
 import com.arkapp.partyplanner.data.models.Venue
 
 /**
@@ -21,8 +20,6 @@ const val VERY_HIGH_BUDGED_LIMIT = 100000.0
 
 const val PARTY_TYPE_BABY_SHOWER = "BABY_SHOWER"
 const val PARTY_TYPE_OTHER = "OTHER"
-
-val selectionData = SelectionData(null, null, null, null, null)
 
 fun getFoodList(): ArrayList<Food> {
     val foodList = ArrayList<Food>()

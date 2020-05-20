@@ -7,10 +7,12 @@ import java.util.*
  * Contact email - abdulrehman0796@gmail.com
  */
 
-data class SelectionData(
+data class PartyDetails(
     var partyDate: Date?,
     var partyBudget: String?,
     var partyDestination: String?,
     var partyGuest: Int?,
-    var partyType: String?
+    var partyType: String?,
+    var selectedFood: ArrayList<Food>?,
+    var selectedDestination: Venue?
 )

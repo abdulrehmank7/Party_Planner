@@ -15,10 +15,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.roundToInt
 
 fun Context.toast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+}
+
+fun Context.toastShort(msg: String) {
+    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
 
 fun View.show() {
@@ -148,4 +154,11 @@ fun RecyclerView.initVerticalAdapter(
     adapter.setHasStableIds(true)
     this.adapter = adapter
 }
+
+fun Date.getFormattedDate(): String {
+    val sdf = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+    val date = this
+    return sdf.format(date)
+}
+
 

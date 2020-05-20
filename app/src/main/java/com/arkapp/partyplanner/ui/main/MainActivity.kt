@@ -3,8 +3,11 @@ package com.arkapp.partyplanner.ui.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.authentication.RC_SIGN_IN
 import com.arkapp.partyplanner.data.repository.PrefRepository
@@ -21,6 +24,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val navController = findNavController(R.id.fragment)
+        val appBarConfiguration = AppBarConfiguration
+            .Builder(R.id.optionsFragment)
+            .build()
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
         findNavController(R.id.fragment).addOnDestinationChangedListener { controller, destination, arguments ->
             if (destination.id == R.id.splashFragment || destination.id == R.id.signupFragment)
@@ -46,5 +55,14 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+            }
+        }
+        return true
     }
 }

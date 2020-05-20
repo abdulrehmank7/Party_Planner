@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Food
 import com.arkapp.partyplanner.utils.loadImage
-import com.arkapp.partyplanner.utils.toast
+import com.arkapp.partyplanner.utils.toastShort
 
 /**
  * Created by Abdul Rehman on 28-02-2020.
@@ -52,12 +52,12 @@ class FoodListAdapter(
         binding.addFoodBtn.setOnClickListener {
             if (binding.addFoodBtn.text.toString() == context.getString(R.string.add_food)) {
                 selectedFoodList.add(foodData)
-                context.toast("Food added!")
+                context.toastShort("Food added!")
                 binding.addFoodBtn.text = context.getString(R.string.remove_food)
 
             } else {
                 selectedFoodList.remove(foodData)
-                context.toast("Food removed!")
+                context.toastShort("Food removed!")
                 binding.addFoodBtn.text = context.getString(R.string.add_food)
             }
         }

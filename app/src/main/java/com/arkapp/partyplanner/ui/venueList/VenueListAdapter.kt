@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Venue
+import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.utils.loadImage
 
 /**
@@ -15,7 +17,9 @@ import com.arkapp.partyplanner.utils.loadImage
  */
 
 class VenueListAdapter(
-    private val venueList: List<Venue>
+    private val venueList: List<Venue>,
+    private val navController: NavController,
+    private val prefRepository: PrefRepository
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -39,6 +43,15 @@ class VenueListAdapter(
         binding.venueName.text = venueData.name
         binding.venueAdd.text = venueData.address
         binding.venueImg.loadImage(venueData.resId)
+
+
+        binding.parent.setOnClickListener {
+            val details = prefRepository.getCurrentPartyDetails()
+            details.selectedDestination = venueData
+            prefRepository.setCurrentPartyDetails(details)
+
+            navController.navigate(R.id.action_venueListFragment_to_finalChecklistFragment)
+        }
 
     }
 
