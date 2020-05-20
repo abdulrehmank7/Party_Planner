@@ -109,8 +109,7 @@ class SignUpFragment : Fragment() {
             return
         }
 
-        storeCredentials()
-
+        checkIfUserNameExist()
     }
 
     private fun onLoginClicked() {
@@ -140,6 +139,8 @@ class SignUpFragment : Fragment() {
                 binding.passwordEt.text.toString()
             )
 
+            ENTERED_USER_NAME = binding.userNameEt.text.toString()
+
             if (userData.isEmpty()) {
                 requireContext().toast("Login failed!")
                 binding.userName.error = "Check username and password!"
@@ -147,6 +148,24 @@ class SignUpFragment : Fragment() {
                 onLoginSuccess()
         }
 
+    }
+
+    private fun checkIfUserNameExist() {
+
+        lifecycleScope.launch(Dispatchers.Main) {
+
+            val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
+
+            val userData = userLoginDao.checkLoggedInUser(
+                binding.userNameEt.text.toString()
+            )
+
+            if (userData.isNotEmpty()) {
+                requireContext().toast("Signup failed!")
+                binding.userName.error = "Username already exits!"
+            } else
+                storeCredentials()
+        }
     }
 
     private fun onLoginSuccess() {
@@ -170,6 +189,8 @@ class SignUpFragment : Fragment() {
                     binding.signUpPasswordEt.text.toString()
                 )
             )
+
+            ENTERED_USER_NAME = binding.signUpUserNameEt.text.toString()
 
             onLoginSuccess()
         }

@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.arkapp.partyplanner.data.models.Food
+import com.arkapp.partyplanner.data.models.UnfinishedDetails
 import com.arkapp.partyplanner.data.models.UserLogin
 import com.arkapp.partyplanner.data.models.Venue
 
@@ -13,7 +14,8 @@ import com.arkapp.partyplanner.data.models.Venue
  * Contact email - abdulrehman0796@gmail.com
  */
 
-@Database(entities = [UserLogin::class, Food::class, Venue::class], version = 1)
+@Database(entities = [UserLogin::class, Food::class, Venue::class, UnfinishedDetails::class],
+          version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userLoginDao(): UserLoginDao
@@ -21,6 +23,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun foodDao(): FoodDao
 
     abstract fun venueDao(): VenueDao
+
+    abstract fun unfinishedDao(): UnfinishedDetailsDao
 
     companion object {
         private val dbName = "PARTY_PLANNER_DB"

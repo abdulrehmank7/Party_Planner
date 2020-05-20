@@ -1,8 +1,17 @@
 package com.arkapp.partyplanner.utils
 
+import android.content.Context
+import androidx.lifecycle.LifecycleCoroutineScope
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Food
+import com.arkapp.partyplanner.data.models.PartyDetails
+import com.arkapp.partyplanner.data.models.UnfinishedDetails
 import com.arkapp.partyplanner.data.models.Venue
+import com.arkapp.partyplanner.data.repository.PrefRepository
+import com.arkapp.partyplanner.data.room.AppDatabase
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Created by Abdul Rehman on 17-05-2020.
@@ -18,8 +27,17 @@ const val MEDIUM_BUDGED_LIMIT = 100.0
 const val HIGH_BUDGED_LIMIT = 200.0
 const val VERY_HIGH_BUDGED_LIMIT = 100000.0
 
+
+const val OPTION_CREATE = 0
+const val OPTION_CHECKLIST = 1
+const val OPTION_UNFINISHED = 2
+const val OPTION_PAST = 3
+
 const val PARTY_TYPE_BABY_SHOWER = "BABY_SHOWER"
 const val PARTY_TYPE_OTHER = "OTHER"
+
+var ENTERED_USER_NAME: String = ""
+var CURRENT_SELECTED_OPTION: Int = OPTION_CREATE
 
 fun getFoodList(): ArrayList<Food> {
     val foodList = ArrayList<Food>()
@@ -257,4 +275,29 @@ fun getVenueList(): ArrayList<Venue> {
                         R.drawable.img_venue37))
 
     return venueList
+}
+
+fun convertUnfinished(partyDetails: PartyDetails, uid: Int): UnfinishedDetails {
+    val gson = Gson()
+    return UnfinishedDetails(
+        null,
+        uid,
+        gson.toJson(partyDetails.partyDate),
+        partyDetails.partyBudget,
+        partyDetails.partyDestination,
+        partyDetails.partyGuest,
+        partyDetails.partyType,
+        gson.toJson(partyDetails.selectedFood),
+        gson.toJson(partyDetails.selectedDestination)
+    )
+}
+
+fun addUnfinishedData(lifecycleScope: LifecycleCoroutineScope,
+                      context: Context,
+                      prefRepository: PrefRepository) {
+    lifecycleScope.launch(Dispatchers.Main) {
+        val unfinishedDao = AppDatabase.getDatabase(context).unfinishedDao()
+        unfinishedDao.insert(convertUnfinished(prefRepository.getCurrentPartyDetails(),
+                                               prefRepository.getCurrentUser()?.uid!!))
+    }
 }

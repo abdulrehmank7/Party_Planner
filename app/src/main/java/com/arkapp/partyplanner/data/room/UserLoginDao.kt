@@ -20,4 +20,7 @@ interface UserLoginDao {
     @Query("SELECT * FROM USER_LOGIN WHERE userName = :userName AND password =:password")
     suspend fun getLoggedInUser(userName: String, password: String): List<UserLogin>
 
+    @Query("SELECT * FROM USER_LOGIN WHERE userName = :userName")
+    suspend fun checkLoggedInUser(userName: String): List<UserLogin>
+
 }
