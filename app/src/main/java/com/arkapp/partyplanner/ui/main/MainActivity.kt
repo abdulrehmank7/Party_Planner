@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.fragment)
         val appBarConfiguration = AppBarConfiguration
-            .Builder(R.id.optionsFragment)
+            .Builder(R.id.optionsFragment, R.id.finalChecklistFragment)
             .build()
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 

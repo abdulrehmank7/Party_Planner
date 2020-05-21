@@ -8,10 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
-import com.arkapp.partyplanner.utils.CURRENT_SELECTED_OPTION
-import com.arkapp.partyplanner.utils.ENTERED_USER_NAME
-import com.arkapp.partyplanner.utils.OPTION_CREATE
-import com.arkapp.partyplanner.utils.OPTION_UNFINISHED
+import com.arkapp.partyplanner.utils.*
 import kotlinx.android.synthetic.main.fragment_options.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,18 +31,41 @@ class OptionsFragment : Fragment(R.layout.fragment_options) {
         }
 
         unfinishedChecklistBtn.setOnClickListener {
-            CURRENT_SELECTED_OPTION = OPTION_UNFINISHED
-            findNavController().navigate(R.id.action_optionsFragment_to_homeFragment)
+            lifecycleScope.launch(Dispatchers.Main) {
+                val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
+                val unfinishedData = unfinishedDao.getUserUnfinished(prefRepository.getCurrentUser()?.uid!!)
+
+                if (unfinishedData.isNotEmpty()) {
+                    CURRENT_SELECTED_OPTION = OPTION_UNFINISHED
+                    findNavController().navigate(R.id.action_optionsFragment_to_homeFragment)
+                } else
+                    requireContext().toast("No unfinished data found!. Please create a new checklist.")
+            }
+        }
+
+        checklistBtn.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
+                val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
+
+                if (summaryData.isNotEmpty()) {
+                    CURRENT_SELECTED_OPTION = OPTION_CHECKLIST
+                    findNavController().navigate(R.id.action_optionsFragment_to_finalChecklistFragment)
+                } else
+                    requireContext().toast("No checklist found!. Please create a new checklist.")
+            }
         }
 
     }
 
     private fun addUserName() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
-            val userData = userLoginDao.checkLoggedInUser(ENTERED_USER_NAME)
+        if (ENTERED_USER_NAME.isNotEmpty()) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
+                val userData = userLoginDao.checkLoggedInUser(ENTERED_USER_NAME)
 
-            prefRepository.setCurrentUser(userData[0])
+                prefRepository.setCurrentUser(userData[0])
+            }
         }
     }
 }

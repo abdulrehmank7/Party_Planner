@@ -45,8 +45,7 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
 
             adapter = FoodListAdapter(
                 foodList,
-                requireContext()
-            )
+                requireContext())
             foodListRv.initVerticalAdapter(adapter, true)
         }
 

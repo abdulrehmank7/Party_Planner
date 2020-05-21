@@ -3,15 +3,15 @@ package com.arkapp.partyplanner.utils
 import android.content.Context
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.arkapp.partyplanner.R
-import com.arkapp.partyplanner.data.models.Food
-import com.arkapp.partyplanner.data.models.PartyDetails
-import com.arkapp.partyplanner.data.models.UnfinishedDetails
-import com.arkapp.partyplanner.data.models.Venue
+import com.arkapp.partyplanner.data.models.*
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Abdul Rehman on 17-05-2020.
@@ -289,6 +289,38 @@ fun convertUnfinished(partyDetails: PartyDetails, uid: Int): UnfinishedDetails {
         partyDetails.partyType,
         gson.toJson(partyDetails.selectedFood),
         gson.toJson(partyDetails.selectedDestination)
+    )
+}
+
+fun convertSummary(partyDetails: PartyDetails, uid: Int): SummaryDetails {
+    val gson = Gson()
+    return SummaryDetails(
+        null,
+        uid,
+        gson.toJson(partyDetails.partyDate),
+        partyDetails.partyBudget,
+        partyDetails.partyDestination,
+        partyDetails.partyGuest,
+        partyDetails.partyType,
+        gson.toJson(partyDetails.selectedFood),
+        gson.toJson(partyDetails.selectedDestination)
+    )
+}
+
+fun convertPartyFromSummary(summary: SummaryDetails): PartyDetails {
+    val gson = Gson()
+
+    val type = object : TypeToken<ArrayList<Food>>() {}.type
+    val selectedFood = gson.fromJson<ArrayList<Food>>(summary.selectedFood, type)
+
+    return PartyDetails(
+        gson.fromJson(summary.partyDate, Date::class.java),
+        summary.partyBudget,
+        summary.partyDestination,
+        summary.partyGuest,
+        summary.partyType,
+        selectedFood,
+        gson.fromJson(summary.selectedDestination, Venue::class.java)
     )
 }
 

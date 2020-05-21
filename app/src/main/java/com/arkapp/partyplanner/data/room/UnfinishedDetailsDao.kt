@@ -19,4 +19,7 @@ interface UnfinishedDetailsDao {
 
     @Query("SELECT * FROM UNFINISHED WHERE uid = :userUid")
     suspend fun getUserUnfinished(userUid: Int): List<UnfinishedDetails>
+
+    @Query("DELETE FROM UNFINISHED WHERE uid = :userUid")
+    suspend fun delete(userUid: Int)
 }

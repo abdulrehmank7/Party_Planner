@@ -5,11 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
+import com.arkapp.partyplanner.data.models.PartyDetails
 import com.arkapp.partyplanner.data.repository.PrefRepository
+import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentFinalChecklistBinding
 import com.arkapp.partyplanner.utils.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -18,6 +25,7 @@ class FinalChecklistFragment : Fragment() {
 
     private val prefRepository by lazy { PrefRepository(requireContext()) }
 
+    private lateinit var details: PartyDetails
     private lateinit var binding: FragmentFinalChecklistBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +34,46 @@ class FinalChecklistFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val details = prefRepository.getCurrentPartyDetails()
+        if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
+                val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
 
+                details = convertPartyFromSummary(summaryData[0])
+                setPartyData()
+            }
+        } else {
+            deleteUnfinishedData()
+            details = prefRepository.getCurrentPartyDetails()
+            setPartyData()
+            addSummaryData(prefRepository)
+        }
+
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner) {
+                prefRepository
+                    .setCurrentPartyDetails(
+                        PartyDetails(
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null)
+                    )
+                this.remove()
+                findNavController().navigate(R.id.action_finalChecklistFragment_to_optionsFragment)
+                true
+            }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setPartyData() {
         binding.partyDate.text = details.partyDate?.getFormattedDate()
         binding.destinationType.text = details.partyDestination
         binding.totalGuest.text = "${details.partyGuest} Guests"
@@ -61,6 +103,22 @@ class FinalChecklistFragment : Fragment() {
         }
 
         binding.partyBudget.text = "$${estimatedBudget * details.partyGuest!!}"
+    }
+
+    private fun addSummaryData(
+        prefRepository: PrefRepository) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
+            summaryDao.insert(convertSummary(prefRepository.getCurrentPartyDetails(),
+                                             prefRepository.getCurrentUser()?.uid!!))
+        }
+    }
+
+    private fun deleteUnfinishedData() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
+            unfinishedDao.delete(prefRepository.getCurrentUser()?.uid!!)
+        }
     }
 
 }

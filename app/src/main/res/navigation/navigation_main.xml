@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_optionsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_optionsFragment_to_finalChecklistFragment"
+            app:destination="@id/finalChecklistFragment" />
     </fragment>
     <fragment
         android:id="@+id/foodListFragment"
@@ -73,5 +76,12 @@
     <fragment
         android:id="@+id/finalChecklistFragment"
         android:name="com.arkapp.partyplanner.ui.finalChecklist.FinalChecklistFragment"
-        android:label="Summary" />
+        android:label="Summary">
+        <action
+            android:id="@+id/action_finalChecklistFragment_to_optionsFragment"
+            app:destination="@id/optionsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/optionsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

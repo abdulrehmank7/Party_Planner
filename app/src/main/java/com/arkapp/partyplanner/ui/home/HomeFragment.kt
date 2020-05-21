@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
+import com.arkapp.partyplanner.data.models.PartyDetails
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentHomeBinding
@@ -58,7 +60,75 @@ class HomeFragment : Fragment() {
 
         if (CURRENT_SELECTED_OPTION == OPTION_UNFINISHED)
             initOldPartyData()
+        else
+            initLastEnteredData()
 
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner) {
+                prefRepository
+                    .setCurrentPartyDetails(
+                        PartyDetails(
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null)
+                    )
+                this.remove()
+                requireActivity().onBackPressed()
+                true
+            }
+    }
+
+    private fun initLastEnteredData() {
+        val detail = prefRepository.getCurrentPartyDetails()
+
+        detail.partyDate.also {
+            if (it != null) {
+                val selectedDate = Calendar.getInstance()
+                selectedDate.time = it
+                binding.calendarView.date = selectedDate.timeInMillis
+            }
+        }
+
+        detail.partyBudget.also {
+            if (it != null) {
+                when (it) {
+                    getString(R.string.low) -> binding.lowBudget.performClick()
+                    getString(R.string.medium) -> binding.mediumBudget.performClick()
+                    getString(R.string.high) -> binding.highBudget.performClick()
+                    getString(R.string.very_high) -> binding.veryHighBudget.performClick()
+                    else -> binding.lowBudget.performClick()
+                }
+            }
+        }
+
+        detail.partyDestination.also {
+            if (it != null) {
+                if (it == getString(R.string.home)) {
+                    binding.homeParty.performClick()
+                } else
+                    binding.venueParty.performClick()
+            }
+        }
+
+        detail.partyGuest.also {
+            if (it != null) {
+                binding.guestEt.setText(it.toString())
+            }
+        }
+
+        detail.partyType.also {
+            if (it != null) {
+                if (it == PARTY_TYPE_BABY_SHOWER)
+                    binding.babyShowerBtn.performClick()
+                else
+                    binding.normalPartyBtn.performClick()
+            }
+        }
     }
 
     private fun initOldPartyData() {
@@ -75,6 +145,7 @@ class HomeFragment : Fragment() {
                     binding.calendarView.date = selectedDate.timeInMillis
                 }
             }
+
             unfinishedDetail.partyBudget.also {
                 if (it != null) {
                     when (it) {
