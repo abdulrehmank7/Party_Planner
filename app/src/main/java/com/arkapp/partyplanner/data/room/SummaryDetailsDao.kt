@@ -19,4 +19,7 @@ interface SummaryDetailsDao {
 
     @Query("SELECT * FROM SUMMARY WHERE uid = :userUid")
     suspend fun getUserSummary(userUid: Int): List<SummaryDetails>
+
+    @Query("DELETE FROM SUMMARY WHERE uid = :userUid")
+    suspend fun delete(userUid: Int)
 }

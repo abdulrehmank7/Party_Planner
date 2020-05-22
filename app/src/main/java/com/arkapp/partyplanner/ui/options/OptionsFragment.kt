@@ -1,5 +1,6 @@
 package com.arkapp.partyplanner.ui.options
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -31,6 +32,7 @@ class OptionsFragment : Fragment(R.layout.fragment_options) {
         }
 
         unfinishedChecklistBtn.setOnClickListener {
+            requireContext().toastShort("Fetching data...")
             lifecycleScope.launch(Dispatchers.Main) {
                 val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
                 val unfinishedData = unfinishedDao.getUserUnfinished(prefRepository.getCurrentUser()?.uid!!)
@@ -44,6 +46,7 @@ class OptionsFragment : Fragment(R.layout.fragment_options) {
         }
 
         checklistBtn.setOnClickListener {
+            requireContext().toastShort("Fetching data...")
             lifecycleScope.launch(Dispatchers.Main) {
                 val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
                 val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
@@ -57,9 +60,23 @@ class OptionsFragment : Fragment(R.layout.fragment_options) {
         }
 
         logoutBtn.setOnClickListener {
-            prefRepository.clearData()
-            findNavController().navigate(R.id.action_optionsFragment_to_splashFragment)
-            requireContext().toastShort("Logged Out!")
+            requireContext().showAlertDialog(
+                "Logout",
+                "Do you want to logout?",
+                "Logout",
+                "Cancel",
+                DialogInterface.OnClickListener { dialog, _ ->
+                    prefRepository.clearData()
+                    findNavController().navigate(R.id.action_optionsFragment_to_splashFragment)
+                    requireContext().toastShort("Logged Out!")
+                    dialog.dismiss()
+                }
+            )
+        }
+
+        pastChecklistBtn.setOnClickListener {
+            CURRENT_SELECTED_OPTION = OPTION_PAST
+            findNavController().navigate(R.id.action_optionsFragment_to_historySummaryFragment)
         }
     }
 

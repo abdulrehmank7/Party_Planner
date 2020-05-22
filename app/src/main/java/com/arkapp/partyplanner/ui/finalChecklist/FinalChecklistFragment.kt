@@ -18,9 +18,6 @@ import com.arkapp.partyplanner.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass.
- */
 class FinalChecklistFragment : Fragment() {
 
     private val prefRepository by lazy { PrefRepository(requireContext()) }
@@ -37,19 +34,28 @@ class FinalChecklistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
-                val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
+        when (CURRENT_SELECTED_OPTION) {
+            OPTION_CHECKLIST -> {
+                lifecycleScope.launch(Dispatchers.Main) {
+                    val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
+                    val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
 
-                details = convertPartyFromSummary(summaryData[0])
+                    details = convertPartyFromSummary(summaryData[0])
+                    setPartyData()
+                }
+            }
+            OPTION_PAST -> {
+                deleteUnfinishedData()
+                details = prefRepository.getCurrentPartyDetails()
                 setPartyData()
             }
-        } else {
-            deleteUnfinishedData()
-            details = prefRepository.getCurrentPartyDetails()
-            setPartyData()
-            addSummaryData(prefRepository)
+            else -> {
+                deleteUnfinishedData()
+                details = prefRepository.getCurrentPartyDetails()
+                setPartyData()
+                addSummaryData()
+                addHistorySummaryData()
+            }
         }
 
         requireActivity()
@@ -68,7 +74,10 @@ class FinalChecklistFragment : Fragment() {
                             null)
                     )
                 this.remove()
-                findNavController().navigate(R.id.action_finalChecklistFragment_to_optionsFragment)
+                if (CURRENT_SELECTED_OPTION == OPTION_PAST)
+                    findNavController().navigate(R.id.action_finalChecklistFragment_to_historySummaryFragment)
+                else
+                    findNavController().navigate(R.id.action_finalChecklistFragment_to_optionsFragment)
                 true
             }
     }
@@ -111,10 +120,10 @@ class FinalChecklistFragment : Fragment() {
         binding.partyBudget.text = "$${estimatedBudget * details.partyGuest!!}"
     }
 
-    private fun addSummaryData(
-        prefRepository: PrefRepository) {
+    private fun addSummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
+            summaryDao.delete(prefRepository.getCurrentUser()?.uid!!)
             summaryDao.insert(convertSummary(prefRepository.getCurrentPartyDetails(),
                                              prefRepository.getCurrentUser()?.uid!!))
         }
@@ -124,6 +133,14 @@ class FinalChecklistFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.Main) {
             val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
             unfinishedDao.delete(prefRepository.getCurrentUser()?.uid!!)
+        }
+    }
+
+    private fun addHistorySummaryData() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val summaryDao = AppDatabase.getDatabase(requireContext()).historySummaryDao()
+            summaryDao.insert(convertHistorySummary(prefRepository.getCurrentPartyDetails(),
+                                                    prefRepository.getCurrentUser()?.uid!!))
         }
     }
 

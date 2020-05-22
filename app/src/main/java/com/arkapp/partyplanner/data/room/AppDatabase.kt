@@ -17,7 +17,8 @@ import com.arkapp.partyplanner.data.models.*
     Venue::class,
     Caterers::class,
     UnfinishedDetails::class,
-    SummaryDetails::class], version = 1)
+    SummaryDetails::class,
+    HistorySummary::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userLoginDao(): UserLoginDao
@@ -31,6 +32,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun unfinishedDao(): UnfinishedDetailsDao
 
     abstract fun summaryDao(): SummaryDetailsDao
+
+    abstract fun historySummaryDao(): HistorySummaryDao
 
     companion object {
         private val dbName = "PARTY_PLANNER_DB"

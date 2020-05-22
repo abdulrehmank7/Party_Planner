@@ -40,6 +40,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initPartyData()
         initPartyTypeBtnListener()
         initBudgetBtnListener()
         initDestinationBtnListener()
@@ -54,6 +55,10 @@ class HomeFragment : Fragment() {
         }
 
         binding.proceedBtn.setOnClickListener {
+            if (binding.guestEt.text.toString().isEmpty()) {
+                binding.guest.error = "Please enter guest count!"
+                return@setOnClickListener
+            }
             addUnfinishedData(lifecycleScope, requireContext(), prefRepository)
             findNavController().navigate(R.id.action_homeFragment_to_foodListFragment)
         }
@@ -298,5 +303,19 @@ class HomeFragment : Fragment() {
             details.partyType = PARTY_TYPE_OTHER
             prefRepository.setCurrentPartyDetails(details)
         }
+    }
+
+    private fun initPartyData() {
+        val details = PartyDetails(
+            Calendar.getInstance().time,
+            getString(R.string.low),
+            getString(R.string.home),
+            null,
+            PARTY_TYPE_OTHER,
+            null,
+            null,
+            null
+        )
+        prefRepository.setCurrentPartyDetails(details)
     }
 }

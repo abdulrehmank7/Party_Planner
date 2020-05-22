@@ -317,7 +317,41 @@ fun convertSummary(partyDetails: PartyDetails, uid: Int): SummaryDetails {
     )
 }
 
+fun convertHistorySummary(partyDetails: PartyDetails, uid: Int): HistorySummary {
+    val gson = Gson()
+    return HistorySummary(
+        null,
+        uid,
+        gson.toJson(partyDetails.partyDate),
+        partyDetails.partyBudget,
+        partyDetails.partyDestination,
+        partyDetails.partyGuest,
+        partyDetails.partyType,
+        gson.toJson(partyDetails.selectedFood),
+        gson.toJson(partyDetails.selectedDestination),
+        gson.toJson(partyDetails.selectedCaterers)
+    )
+}
+
 fun convertPartyFromSummary(summary: SummaryDetails): PartyDetails {
+    val gson = Gson()
+
+    val type = object : TypeToken<ArrayList<Food>>() {}.type
+    val selectedFood = gson.fromJson<ArrayList<Food>>(summary.selectedFood, type)
+
+    return PartyDetails(
+        gson.fromJson(summary.partyDate, Date::class.java),
+        summary.partyBudget,
+        summary.partyDestination,
+        summary.partyGuest,
+        summary.partyType,
+        selectedFood,
+        gson.fromJson(summary.selectedDestination, Venue::class.java),
+        gson.fromJson(summary.selectedCaterers, Caterers::class.java)
+    )
+}
+
+fun convertPartyFromHistorySummary(summary: HistorySummary): PartyDetails {
     val gson = Gson()
 
     val type = object : TypeToken<ArrayList<Food>>() {}.type

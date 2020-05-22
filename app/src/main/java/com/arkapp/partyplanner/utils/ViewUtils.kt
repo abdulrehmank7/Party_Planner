@@ -1,6 +1,7 @@
 package com.arkapp.partyplanner.utils
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.util.DisplayMetrics
@@ -12,8 +13,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
@@ -127,14 +127,24 @@ fun Window.setFullScreen() {
     setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
 }
 
-fun BottomSheetDialog.expandBottomDialogOnOpen() {
+fun Context.showAlertDialog(
+    title: String,
+    message: String,
+    positiveTxt: String?,
+    negativeTxt: String,
+    positiveListener: DialogInterface.OnClickListener?
+) {
 
-    //used to set the height to fullscreen
-    setOnShowListener { dialogInterface ->
-        val d = dialogInterface as BottomSheetDialog
-        val bottomSheetInternal: View = d.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
-        BottomSheetBehavior.from(bottomSheetInternal).state = BottomSheetBehavior.STATE_EXPANDED
-    }
+    MaterialAlertDialogBuilder(this)
+        .setTitle(title)
+        .setMessage(message)
+        .setNegativeButton(negativeTxt) { dialog, _ -> dialog.dismiss() }
+        .apply {
+            if (!positiveTxt.isNullOrEmpty()) {
+                setPositiveButton(positiveTxt, positiveListener)
+            }
+            show()
+        }
 }
 
 fun Context.dpFromPx(px: Float) = px / resources.displayMetrics.density
