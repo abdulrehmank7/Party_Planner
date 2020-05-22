@@ -14,5 +14,6 @@ data class PartyDetails(
     var partyGuest: Int?,
     var partyType: String?,
     var selectedFood: ArrayList<Food>?,
-    var selectedDestination: Venue?
+    var selectedDestination: Venue?,
+    var selectedCaterers: Caterers?
 )

@@ -128,59 +128,7 @@ fun getFoodList(): ArrayList<Food> {
 
 fun getVenueList(): ArrayList<Venue> {
     val venueList = ArrayList<Venue>()
-    venueList.add(Venue(null, "Sungei Road Laksa", "27 Jalan Berseh", R.drawable.img_venue1))
-    venueList.add(Venue(null,
-                        "Outram Park Yahua Rou Gu Cha",
-                        "7 Keppel Rd, PSA Tanjong Pagar Complex, 089053",
-                        R.drawable.img_venue2))
-    venueList.add(Venue(null,
-                        "Nam Sing Fried Hokkien Mee",
-                        "Old Airport Food Centre, 51 Old Airport Rd",
-                        R.drawable.img_venue3))
-    venueList.add(Venue(null,
-                        "Tian Tian Chicken Rice",
-                        "Maxwell Food Centre, 1 Kadayanallur St",
-                        R.drawable.img_venue4))
-    venueList.add(Venue(null,
-                        "Hill Street Char Kway Teow",
-                        ": #01-41,16 Bedok South Rd",
-                        R.drawable.img_venue5))
-    venueList.add(Venue(null,
-                        "Song Zhou Luo Bo Gao",
-                        "#01-18, Bedok Interchange Food Centre, 207 New Upper Changi Road",
-                        R.drawable.img_venue6))
-    venueList.add(Venue(null,
-                        "Jing Hua Sliced Fish Bee Hoon",
-                        "Stall #77 at Maxwell Food Centre, 1 Kadayanallur St",
-                        R.drawable.img_venue7))
-    venueList.add(Venue(null,
-                        "Hill Street Tai Hwa Pork Noodles",
-                        "Block 466 Crawford Lane #01-12 Singapore 190465",
-                        R.drawable.img_venue8))
-    venueList.add(Venue(null,
-                        "Ah Chuan Fried Oyster Omelette",
-                        "Toa Payoh Lor 7 Food Centre Stall #01-25, Singapore",
-                        R.drawable.img_venue9))
-    venueList.add(Venue(null,
-                        "Yong Xiang Xing Tou Foo",
-                        "32 New Market Rd, 01-1084 People’s Park Food Centre",
-                        R.drawable.img_venue10))
-    venueList.add(Venue(null,
-                        "Kim Heng Roasted Meat",
-                        "214 Serangoon Avenue 4, #01-88, Singapore 550214",
-                        R.drawable.img_venue11))
-    venueList.add(Venue(null,
-                        "Kok Sen Restaurant",
-                        "30 Keong Saik Rd, Singapore",
-                        R.drawable.img_venue12))
-    venueList.add(Venue(null,
-                        "Two Chefs Eating House",
-                        "116 Commonwealth Crescent #01-129, Singapore",
-                        R.drawable.img_venue13))
-    venueList.add(Venue(null,
-                        "Selera Rasa Nasi Lemak",
-                        "2 Adam Rd, #01-02, Adam Road Food Centre, Singapore",
-                        R.drawable.img_venue14))
+
     venueList.add(Venue(null,
                         "Entire Venue at Zouk",
                         "River Valley Road The Cannery, 3C #01-05, Singapore, 179022",
@@ -277,6 +225,66 @@ fun getVenueList(): ArrayList<Venue> {
     return venueList
 }
 
+fun getCatererList(): ArrayList<Caterers> {
+    val catererList = ArrayList<Caterers>()
+
+    catererList.add(Caterers(null, "Sungei Road Laksa", "27 Jalan Berseh", R.drawable.img_venue1))
+    catererList.add(Caterers(null,
+                             "Outram Park Yahua Rou Gu Cha",
+                             "7 Keppel Rd, PSA Tanjong Pagar Complex, 089053",
+                             R.drawable.img_venue2))
+    catererList.add(Caterers(null,
+                             "Nam Sing Fried Hokkien Mee",
+                             "Old Airport Food Centre, 51 Old Airport Rd",
+                             R.drawable.img_venue3))
+    catererList.add(Caterers(null,
+                             "Tian Tian Chicken Rice",
+                             "Maxwell Food Centre, 1 Kadayanallur St",
+                             R.drawable.img_venue4))
+    catererList.add(Caterers(null,
+                             "Hill Street Char Kway Teow",
+                             ": #01-41,16 Bedok South Rd",
+                             R.drawable.img_venue5))
+    catererList.add(Caterers(null,
+                             "Song Zhou Luo Bo Gao",
+                             "#01-18, Bedok Interchange Food Centre, 207 New Upper Changi Road",
+                             R.drawable.img_venue6))
+    catererList.add(Caterers(null,
+                             "Jing Hua Sliced Fish Bee Hoon",
+                             "Stall #77 at Maxwell Food Centre, 1 Kadayanallur St",
+                             R.drawable.img_venue7))
+    catererList.add(Caterers(null,
+                             "Hill Street Tai Hwa Pork Noodles",
+                             "Block 466 Crawford Lane #01-12 Singapore 190465",
+                             R.drawable.img_venue8))
+    catererList.add(Caterers(null,
+                             "Ah Chuan Fried Oyster Omelette",
+                             "Toa Payoh Lor 7 Food Centre Stall #01-25, Singapore",
+                             R.drawable.img_venue9))
+    catererList.add(Caterers(null,
+                             "Yong Xiang Xing Tou Foo",
+                             "32 New Market Rd, 01-1084 People’s Park Food Centre",
+                             R.drawable.img_venue10))
+    catererList.add(Caterers(null,
+                             "Kim Heng Roasted Meat",
+                             "214 Serangoon Avenue 4, #01-88, Singapore 550214",
+                             R.drawable.img_venue11))
+    catererList.add(Caterers(null,
+                             "Kok Sen Restaurant",
+                             "30 Keong Saik Rd, Singapore",
+                             R.drawable.img_venue12))
+    catererList.add(Caterers(null,
+                             "Two Chefs Eating House",
+                             "116 Commonwealth Crescent #01-129, Singapore",
+                             R.drawable.img_venue13))
+    catererList.add(Caterers(null,
+                             "Selera Rasa Nasi Lemak",
+                             "2 Adam Rd, #01-02, Adam Road Food Centre, Singapore",
+                             R.drawable.img_venue14))
+
+    return catererList
+}
+
 fun convertUnfinished(partyDetails: PartyDetails, uid: Int): UnfinishedDetails {
     val gson = Gson()
     return UnfinishedDetails(
@@ -288,7 +296,8 @@ fun convertUnfinished(partyDetails: PartyDetails, uid: Int): UnfinishedDetails {
         partyDetails.partyGuest,
         partyDetails.partyType,
         gson.toJson(partyDetails.selectedFood),
-        gson.toJson(partyDetails.selectedDestination)
+        gson.toJson(partyDetails.selectedDestination),
+        gson.toJson(partyDetails.selectedCaterers)
     )
 }
 
@@ -303,7 +312,8 @@ fun convertSummary(partyDetails: PartyDetails, uid: Int): SummaryDetails {
         partyDetails.partyGuest,
         partyDetails.partyType,
         gson.toJson(partyDetails.selectedFood),
-        gson.toJson(partyDetails.selectedDestination)
+        gson.toJson(partyDetails.selectedDestination),
+        gson.toJson(partyDetails.selectedCaterers)
     )
 }
 
@@ -320,7 +330,8 @@ fun convertPartyFromSummary(summary: SummaryDetails): PartyDetails {
         summary.partyGuest,
         summary.partyType,
         selectedFood,
-        gson.fromJson(summary.selectedDestination, Venue::class.java)
+        gson.fromJson(summary.selectedDestination, Venue::class.java),
+        gson.fromJson(summary.selectedCaterers, Caterers::class.java)
     )
 }
 

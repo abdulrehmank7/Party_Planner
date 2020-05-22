@@ -64,13 +64,8 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
             detail.selectedFood = adapter.selectedFoodList
             prefRepository.setCurrentPartyDetails(detail)
 
-            if (prefRepository.getCurrentPartyDetails().partyDestination == getString(R.string.home))
-                findNavController().navigate(R.id.action_foodListFragment_to_finalChecklistFragment)
-            else {
-
-                addUnfinishedData(lifecycleScope, requireContext(), prefRepository)
-                findNavController().navigate(R.id.action_foodListFragment_to_venueListFragment)
-            }
+            addUnfinishedData(lifecycleScope, requireContext(), prefRepository)
+            findNavController().navigate(R.id.action_foodListFragment_to_caterersListFragment)
         }
     }
 

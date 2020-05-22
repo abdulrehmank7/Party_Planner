@@ -15,6 +15,7 @@ import com.arkapp.partyplanner.data.models.*
     UserLogin::class,
     Food::class,
     Venue::class,
+    Caterers::class,
     UnfinishedDetails::class,
     SummaryDetails::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
@@ -24,6 +25,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun foodDao(): FoodDao
 
     abstract fun venueDao(): VenueDao
+
+    abstract fun catererDao(): CatererDao
 
     abstract fun unfinishedDao(): UnfinishedDetailsDao
 

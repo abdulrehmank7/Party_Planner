@@ -28,5 +28,7 @@ data class UnfinishedDetails(
     @ColumnInfo(name = "selectedFood")
     var selectedFood: String?,
     @ColumnInfo(name = "selectedDestination")
-    var selectedDestination: String?
+    var selectedDestination: String?,
+    @ColumnInfo(name = "selectedCaterers")
+    var selectedCaterers: String?
 )

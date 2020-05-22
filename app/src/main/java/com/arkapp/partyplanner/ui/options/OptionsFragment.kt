@@ -56,6 +56,11 @@ class OptionsFragment : Fragment(R.layout.fragment_options) {
             }
         }
 
+        logoutBtn.setOnClickListener {
+            prefRepository.clearData()
+            findNavController().navigate(R.id.action_optionsFragment_to_splashFragment)
+            requireContext().toastShort("Logged Out!")
+        }
     }
 
     private fun addUserName() {

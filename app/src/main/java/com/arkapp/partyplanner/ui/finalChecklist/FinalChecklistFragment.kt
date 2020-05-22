@@ -64,6 +64,7 @@ class FinalChecklistFragment : Fragment() {
                             null,
                             null,
                             null,
+                            null,
                             null)
                     )
                 this.remove()
@@ -77,14 +78,19 @@ class FinalChecklistFragment : Fragment() {
         binding.partyDate.text = details.partyDate?.getFormattedDate()
         binding.destinationType.text = details.partyDestination
         binding.totalGuest.text = "${details.partyGuest} Guests"
-        binding.partyType.text = if (details.partyType == PARTY_TYPE_BABY_SHOWER)
-            getString(R.string.baby_shower)
-        else
-            getString(R.string.party_celebration)
+        binding.partyType.text =
+            if (details.partyType == PARTY_TYPE_BABY_SHOWER)
+                getString(R.string.baby_shower)
+            else
+                getString(R.string.party_celebration)
 
-        binding.selectedFoodRv.initVerticalAdapter(
-            SelectedFoodListAdapter(details.selectedFood!!),
-            true)
+        binding.selectedFoodRv.initVerticalAdapter(SelectedFoodListAdapter(details.selectedFood!!),
+                                                   true)
+
+        binding.include2.venueName.text = details.selectedCaterers?.name
+        binding.include2.venueAdd.text = details.selectedCaterers?.address
+        binding.include2.venueImg.loadImage(details.selectedCaterers!!.resId)
+        binding.include2.parent.isEnabled = false
 
         if (details.partyDestination != getString(R.string.home)) {
             binding.include.venueName.text = details.selectedDestination?.name

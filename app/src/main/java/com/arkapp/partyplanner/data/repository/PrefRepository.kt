@@ -77,7 +77,7 @@ class PrefRepository(val context: Context) {
     fun getCurrentPartyDetails(): PartyDetails {
         PREF_PARTY_DETAILS.getString().also {
             return if (it.isEmpty())
-                PartyDetails(null, null, null, null, null, null, null)
+                PartyDetails(null, null, null, null, null, null, null, null)
             else
                 gson.fromJson(it, PartyDetails::class.java)
         }

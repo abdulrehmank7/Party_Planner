@@ -75,6 +75,7 @@ class HomeFragment : Fragment() {
                             null,
                             null,
                             null,
+                            null,
                             null)
                     )
                 this.remove()
@@ -140,9 +141,13 @@ class HomeFragment : Fragment() {
 
             unfinishedDetail.partyDate.also {
                 if (it != null) {
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.time = gson.fromJson(it, Date::class.java)
-                    binding.calendarView.date = selectedDate.timeInMillis
+
+                    val time = gson.fromJson(it, Date::class.java)
+                    if (time != null) {
+                        val selectedDate = Calendar.getInstance()
+                        selectedDate.time = time
+                        binding.calendarView.date = selectedDate.timeInMillis
+                    }
                 }
             }
 

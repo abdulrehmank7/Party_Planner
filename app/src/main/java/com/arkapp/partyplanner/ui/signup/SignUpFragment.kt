@@ -130,6 +130,7 @@ class SignUpFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.Main) {
             insertFoodData()
+            insertCaterersData()
             insertVenueData()
 
             val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
@@ -178,6 +179,7 @@ class SignUpFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.Main) {
             insertFoodData()
+            insertCaterersData()
             insertVenueData()
 
             val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
@@ -210,6 +212,14 @@ class SignUpFragment : Fragment() {
 
         for (venue in getVenueList()) {
             venueDao.insert(venue)
+        }
+    }
+
+    private suspend fun insertCaterersData() {
+        val catererDao = AppDatabase.getDatabase(requireContext()).catererDao()
+
+        for (venue in getCatererList()) {
+            catererDao.insert(venue)
         }
     }
 
