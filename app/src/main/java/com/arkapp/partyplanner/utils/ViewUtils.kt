@@ -171,4 +171,21 @@ fun Date.getFormattedDate(): String {
     return sdf.format(date)
 }
 
+var LAST_CLICK_TIME: Long = 0
+
+
+fun isDoubleClicked(minimumClickTimeInMilli: Long): Boolean {
+    return if (getCurrentTimestamp() - LAST_CLICK_TIME < minimumClickTimeInMilli) {
+        true
+    } else {
+        LAST_CLICK_TIME = getCurrentTimestamp()
+        false
+    }
+}
+
+fun getCurrentTimestamp() = System.currentTimeMillis()
+
+
+
+
 

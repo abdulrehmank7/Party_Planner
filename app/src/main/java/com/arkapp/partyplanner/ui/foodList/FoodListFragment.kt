@@ -49,10 +49,6 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
             foodListRv.initVerticalAdapter(adapter, true)
         }
 
-        if (prefRepository.getCurrentPartyDetails().partyDestination == getString(R.string.home)) {
-            proceedBtn.text = getString(R.string.check_all_details)
-        }
-
         proceedBtn.setOnClickListener {
 
             if (adapter.selectedFoodList.size <= 0) {

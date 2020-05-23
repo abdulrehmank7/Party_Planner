@@ -16,6 +16,7 @@ import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentSignupBinding
 import com.arkapp.partyplanner.utils.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -37,6 +38,7 @@ class SignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.signUpBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
             if (binding.signUpBtn.text == getString(R.string.sign_up)) {
                 binding.signUpBtn.text = getString(R.string.login)
                 binding.signUpDesc.text = getString(R.string.already_have_account)
@@ -68,10 +70,16 @@ class SignUpFragment : Fragment() {
         }
 
         binding.loginBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+            binding.loginProgress.show()
+            requireActivity().window.disableTouch()
             onLoginClicked()
         }
 
         binding.insideSignUpBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+            binding.signupProgress.show()
+            requireActivity().window.disableTouch()
             onSignUpClicked()
         }
 
@@ -81,31 +89,49 @@ class SignUpFragment : Fragment() {
     private fun onSignUpClicked() {
         if (binding.signUpUserNameEt.text!!.isEmpty()) {
             binding.signUpUserName.error = "Username required!"
+
+            binding.signupProgress.hide()
+            requireActivity().window.enableTouch()
             return
         }
 
         if (binding.signUpUserNameEt.text!!.length < 3) {
             binding.signUpUserName.error = "Invalid Username!"
+
+            binding.signupProgress.hide()
+            requireActivity().window.enableTouch()
             return
         }
 
         if (binding.signUpPasswordEt.text!!.isEmpty()) {
             binding.signUpPassword.error = "Password required!"
+
+            binding.signupProgress.hide()
+            requireActivity().window.enableTouch()
             return
         }
 
         if (binding.signUpPasswordEt.text!!.length < 3) {
             binding.signUpPassword.error = "Invalid Password! Length should be more than 4"
+
+            binding.signupProgress.hide()
+            requireActivity().window.enableTouch()
             return
         }
 
         if (binding.signUpConfirmPasswordEt.text!!.isEmpty()) {
             binding.signUpConfirmPassword.error = "Password required!"
+
+            binding.signupProgress.hide()
+            requireActivity().window.enableTouch()
             return
         }
 
         if (binding.signUpConfirmPasswordEt.text.toString() != binding.signUpPasswordEt.text.toString()) {
             binding.signUpConfirmPassword.error = "Password incorrect!"
+
+            binding.signupProgress.hide()
+            requireActivity().window.enableTouch()
             return
         }
 
@@ -115,11 +141,17 @@ class SignUpFragment : Fragment() {
     private fun onLoginClicked() {
         if (binding.userNameEt.text!!.isEmpty()) {
             binding.userName.error = "Username required!"
+
+            binding.loginProgress.hide()
+            requireActivity().window.enableTouch()
             return
         }
 
         if (binding.passwordEt.text!!.isEmpty()) {
             binding.password.error = "Password required!"
+
+            binding.loginProgress.hide()
+            requireActivity().window.enableTouch()
             return
         }
 
@@ -145,8 +177,14 @@ class SignUpFragment : Fragment() {
             if (userData.isEmpty()) {
                 requireContext().toast("Login failed!")
                 binding.userName.error = "Check username and password!"
-            } else
+                binding.loginProgress.hide()
+                requireActivity().window.enableTouch()
+            } else {
+                delay(1000)
+                binding.loginProgress.hide()
+                requireActivity().window.enableTouch()
                 onLoginSuccess()
+            }
         }
 
     }
@@ -158,12 +196,15 @@ class SignUpFragment : Fragment() {
             val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
 
             val userData = userLoginDao.checkLoggedInUser(
-                binding.userNameEt.text.toString()
+                binding.signUpUserNameEt.text.toString()
             )
 
             if (userData.isNotEmpty()) {
                 requireContext().toast("Signup failed!")
-                binding.userName.error = "Username already exits!"
+                binding.signUpUserName.error = "Username already exits!"
+
+                binding.signupProgress.hide()
+                requireActivity().window.enableTouch()
             } else
                 storeCredentials()
         }
@@ -193,6 +234,10 @@ class SignUpFragment : Fragment() {
             )
 
             ENTERED_USER_NAME = binding.signUpUserNameEt.text.toString()
+
+            delay(1000)
+            binding.signupProgress.hide()
+            requireActivity().window.enableTouch()
 
             onLoginSuccess()
         }

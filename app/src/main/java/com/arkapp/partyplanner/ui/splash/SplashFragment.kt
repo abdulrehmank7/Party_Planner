@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.utils.hide
+import com.arkapp.partyplanner.utils.isDoubleClicked
 import kotlinx.android.synthetic.main.fragment_splash.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     private fun initSignUpBtn() {
         if (!prefRepository.setLoggedIn()) {
             signUpBtn.setOnClickListener {
+                if (isDoubleClicked(1000)) return@setOnClickListener
                 findNavController().navigate(R.id.action_splashFragment_to_signupFragment)
             }
         } else

@@ -103,6 +103,17 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/password" />
 
+                <ProgressBar
+                    android:id="@+id/loginProgress"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="8dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/loginBtn"
+                    app:layout_constraintEnd_toEndOf="@+id/loginBtn"
+                    app:layout_constraintTop_toTopOf="@+id/loginBtn" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -196,6 +207,17 @@
                     android:text="@string/sign_up"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/signUpConfirmPassword" />
+
+                <ProgressBar
+                    android:id="@+id/signupProgress"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="8dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/insideSignUpBtn"
+                    app:layout_constraintEnd_toEndOf="@+id/insideSignUpBtn"
+                    app:layout_constraintTop_toTopOf="@+id/insideSignUpBtn" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
