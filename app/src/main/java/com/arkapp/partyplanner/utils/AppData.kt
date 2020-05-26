@@ -18,13 +18,9 @@ import kotlin.collections.ArrayList
  * Contact email - abdulrehman0796@gmail.com
  */
 
-const val FOOD_TYPE_ALCOHOL = "ALCOHOL"
-const val FOOD_TYPE_CAKE = "CAKE"
-const val FOOD_TYPE_MAIN_COURSE = "MAIN_COURSE"
-
-const val LOW_BUDGED_LIMIT = 50.0
-const val MEDIUM_BUDGED_LIMIT = 100.0
-const val HIGH_BUDGED_LIMIT = 200.0
+const val LOW_BUDGED_LIMIT = 200.0
+const val MEDIUM_BUDGED_LIMIT = 400.0
+const val HIGH_BUDGED_LIMIT = 600.0
 const val VERY_HIGH_BUDGED_LIMIT = 100000.0
 
 
@@ -33,260 +29,806 @@ const val OPTION_CHECKLIST = 1
 const val OPTION_UNFINISHED = 2
 const val OPTION_PAST = 3
 
-const val PARTY_TYPE_BABY_SHOWER = "BABY_SHOWER"
-const val PARTY_TYPE_OTHER = "OTHER"
+const val PARTY_TYPE_BABY_SHOWER = "Baby Shower"
+const val PARTY_TYPE_SWEET_18 = "Sweet 18"
+const val PARTY_TYPE_SWEET_21 = "Sweet 21"
+const val PARTY_TYPE_REUNION = "Reunion"
+const val PARTY_TYPE_TEA_PARTY = "Tea Party"
+const val PARTY_TYPE_BREAK_FAST = "Breakfast"
+const val PARTY_TYPE_BBQ_PARTY = "BBQ Party"
+const val PARTY_TYPE_BACHELOR_PARTY = "Bachelor Party"
+const val PARTY_TYPE_KIDS_PARTY = "Kids Party"
+const val PARTY_TYPE_FORMAL_PARTY = "Formal Party"
+const val PARTY_TYPE_CHRISTMAS_PARTY = "Christmas Party"
+const val PARTY_TYPE_ALCOHOL = "Alcohol"
+
+const val LOCATION_NORTH = "North"
+const val LOCATION_SOUTH = "South"
+const val LOCATION_EAST = "East"
+const val LOCATION_WEST = "West"
+const val LOCATION_CITY = "City"
+const val LOCATION_NORTH_EAST = "North East"
+const val LOCATION_CENTRAL = "Central"
 
 var ENTERED_USER_NAME: String = ""
 var CURRENT_SELECTED_OPTION: Int = OPTION_CREATE
 
-fun getFoodList(): ArrayList<Food> {
-    val foodList = ArrayList<Food>()
+val gson = Gson()
 
-    foodList.add(Food(null, "Cup Cake", 10.0, R.drawable.img_cake4, FOOD_TYPE_CAKE))
-    foodList.add(Food(null, "Marble Slab Creamery", 20.0, R.drawable.img_cake2, FOOD_TYPE_CAKE))
-    foodList.add(Food(null, "Chocolates", 5.0, R.drawable.img_cake5, FOOD_TYPE_CAKE))
-    foodList.add(Food(null, "Jara Petit", 10.0, R.drawable.img_cake1, FOOD_TYPE_CAKE))
-    foodList.add(Food(null, "The White Ombré", 5.0, R.drawable.img_cake3, FOOD_TYPE_CAKE))
-    foodList.add(Food(null,
-                      "Butler’s Triple Chocalate",
-                      20.0,
-                      R.drawable.img_cake6,
-                      FOOD_TYPE_CAKE))
+fun getPartyTypes(): ArrayList<PartyType> {
+    val list = ArrayList<PartyType>()
 
-    foodList.add(Food(null, "Laksa", 3.0, R.drawable.img_main1, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Bak Kut The", 7.0, R.drawable.img_main2, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Hokkien Mee", 4.0, R.drawable.img_main3, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Chicken Rice", 12.0, R.drawable.img_main4, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Char Kway Teow", 4.0, R.drawable.img_main5, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null,
-                      "Carrot Cake (Chai Tow Kway)",
-                      3.0,
-                      R.drawable.img_main6,
-                      FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Wanton Mee", 3.0, R.drawable.img_main7, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Fish Bee Hoon", 5.0, R.drawable.img_main8, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Bak Chor Mee", 10.0, R.drawable.img_main9, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null,
-                      "Oyster omelette (Orh Luak)",
-                      8.0,
-                      R.drawable.img_main10,
-                      FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Yong Tau Foo", 4.0, R.drawable.img_main11, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null,
-                      "Roast Meat / Roast Duck",
-                      5.0,
-                      R.drawable.img_main12,
-                      FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Peranakan Food", 15.0, R.drawable.img_main13, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Zi Char Meal", 34.0, R.drawable.img_main14, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Tong Ah Kopitiam", 5.0, R.drawable.img_main15, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Rojak", 3.0, R.drawable.img_main16, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Satay", 6.5, R.drawable.img_main17, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Nasi Padang", 7.0, R.drawable.img_main18, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Nasi Lemak", 5.5, R.drawable.img_main19, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Murtabak", 8.0, R.drawable.img_main20, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null,
-                      "Chili Crab / Black Pepper Crab",
-                      100.0,
-                      R.drawable.img_main21,
-                      FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Sambal Stingray", 15.0, R.drawable.img_main22, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null,
-                      "Leng Heng BBQ & Claypot Deluxe",
-                      20.0,
-                      R.drawable.img_main23,
-                      FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Fish Head Curry", 61.0, R.drawable.img_main24, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Ice Kacang", 1.5, R.drawable.img_main25, FOOD_TYPE_MAIN_COURSE))
-    foodList.add(Food(null, "Durian", 32.0, R.drawable.img_main26, FOOD_TYPE_MAIN_COURSE))
+    list.add(PartyType(PARTY_TYPE_SWEET_18, R.drawable.ic_birthday))
+    list.add(PartyType(PARTY_TYPE_BABY_SHOWER, R.drawable.ic_baby))
+    list.add(PartyType(PARTY_TYPE_SWEET_21, R.drawable.ic_birthday))
+    list.add(PartyType(PARTY_TYPE_REUNION, R.drawable.ic_team))
+    list.add(PartyType(PARTY_TYPE_TEA_PARTY, R.drawable.ic_tea))
+    list.add(PartyType(PARTY_TYPE_BREAK_FAST, R.drawable.ic_bread))
+    list.add(PartyType(PARTY_TYPE_BBQ_PARTY, R.drawable.ic_meat))
+    list.add(PartyType(PARTY_TYPE_ALCOHOL, R.drawable.ic_food))
+    list.add(PartyType(PARTY_TYPE_BACHELOR_PARTY, R.drawable.ic_fun))
+    list.add(PartyType(PARTY_TYPE_KIDS_PARTY, R.drawable.ic_toy))
+    list.add(PartyType(PARTY_TYPE_FORMAL_PARTY, R.drawable.ic_dress_code))
+    list.add(PartyType(PARTY_TYPE_CHRISTMAS_PARTY, R.drawable.ic_christmas_tree))
 
-    foodList.add(Food(null, "Malibu Coconut", 48.0, R.drawable.img_alc1, FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null, "ABSOLUT APEACH", 60.0, R.drawable.img_alc2, FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null, "TIGER BEER CAN", 48.0, R.drawable.img_alc3, FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null, "DON JULIO 1942", 219.0, R.drawable.img_alc4, FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null, "BACARDI APPLE", 60.0, R.drawable.img_alc5, FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null, "MARTELL VSOP", 105.0, R.drawable.img_alc6, FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null, "FERNET BRANCA", 61.0, R.drawable.img_alc7, FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null,
-                      "CAPT. MORGAN SPICED RUM",
-                      58.0,
-                      R.drawable.img_alc8,
-                      FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null,
-                      "LITTLE CREATURES PALE ALE",
-                      118.0,
-                      R.drawable.img_alc9,
-                      FOOD_TYPE_ALCOHOL))
-    foodList.add(Food(null,
-                      "BOTTEGA GOLD PROSECCO DOC BRUT",
-                      60.0,
-                      R.drawable.img_alc10,
-                      FOOD_TYPE_ALCOHOL))
+    return list
+}
 
-    return foodList
+fun getLocation(): ArrayList<Location> {
+    val list = ArrayList<Location>()
+
+    list.add(Location(LOCATION_NORTH, R.drawable.ic_compass))
+    list.add(Location(LOCATION_SOUTH, R.drawable.ic_compass))
+    list.add(Location(LOCATION_CENTRAL, R.drawable.ic_compass))
+    list.add(Location(LOCATION_EAST, R.drawable.ic_compass))
+    list.add(Location(LOCATION_WEST, R.drawable.ic_compass))
+    list.add(Location(LOCATION_NORTH_EAST, R.drawable.ic_compass))
+    list.add(Location(LOCATION_CITY, R.drawable.ic_urban))
+
+    return list
+}
+
+fun getPartyTypeFromString(stringList: ArrayList<String>): ArrayList<PartyType> {
+    val newPartyTypeList = ArrayList<PartyType>()
+    for (partyTypeName in stringList) {
+        newPartyTypeList.add(getPartyTypes().find { it.title == partyTypeName }!!)
+    }
+
+    return newPartyTypeList
 }
 
 fun getVenueList(): ArrayList<Venue> {
     val venueList = ArrayList<Venue>()
 
-    venueList.add(Venue(null,
-                        "Entire Venue at Zouk",
-                        "River Valley Road The Cannery, 3C #01-05, Singapore, 179022",
-                        R.drawable.img_venue15))
-    venueList.add(Venue(null,
-                        "Rooftop Terrace at ClubCo The Quadrant",
-                        "Cecil Street, 19, Singapore, 049704",
-                        R.drawable.img_venue16))
-    venueList.add(Venue(null,
-                        "Entire Venue at OSG Bar",
-                        "Temasek Boulevard, 3, Singapore, 038983",
-                        R.drawable.img_venue17))
-    venueList.add(Venue(null,
-                        "Island-style bar at Mogambo Bar & Restaurant",
-                        "Canton Street, 3, Singapore, 049745",
-                        R.drawable.img_venue18))
-    venueList.add(Venue(null,
-                        "The Cocktail Atelier at Grand Park Orchard",
-                        "Orchard Road, 270, Singapore, 238857",
-                        R.drawable.img_venue19))
-    venueList.add(Venue(null,
-                        "Entire Venue at Bikini Bar",
-                        "Siloso Beach Walk, 50, Singapore, 099000",
-                        R.drawable.img_venue20))
-    venueList.add(Venue(null,
-                        "Entire Space at Angie’s Oyster Bar",
-                        "Raffles Place, 50, Singapore, 048623",
-                        R.drawable.img_venue21))
-    venueList.add(Venue(null,
-                        "Exclusive Hire at Nickeldime Novena",
-                        "Thomson Road, #01-01 Regency, , 275 , Singapore, 307645",
-                        R.drawable.img_venue22))
-    venueList.add(Venue(null,
-                        "The Cocktail Bar at Monarchy Cocktail Bar & Ultra-Lounge",
-                        "Tras Street, 56/58, Singapore, 078995",
-                        R.drawable.img_venue23))
-    venueList.add(Venue(null,
-                        "Dining Lounge at Alley Bar",
-                        "Emerald Hill Road, 2, Singapore, 229287",
-                        R.drawable.img_venue24))
-    venueList.add(Venue(null,
-                        "Into The Woods at Into The Woods",
-                        "Lavender Street, 213, Singapore, 338770",
-                        R.drawable.img_venue25))
-    venueList.add(Venue(null,
-                        "Private Event Space at Design Hub Rooftop Event Space",
-                        "Tuas Bay Drive, 30, Singapore, 637548",
-                        R.drawable.img_venue26))
-    venueList.add(Venue(null,
-                        "Hyperspace Studio at HYPERSPACE",
-                        "Lavender Street, 91a, Singapore, 338719",
-                        R.drawable.img_venue27))
-    venueList.add(Venue(null,
-                        "Rooftop Lounge & Terrace at the Hive New Bridge Road",
-                        "New Bridge Road, 59, Singapore, 059405",
-                        R.drawable.img_venue28))
-    venueList.add(Venue(null,
-                        "Entire Venue at HERE",
-                        "Serangoon Road, 576A, Singapore, 218190",
-                        R.drawable.img_venue29))
-    venueList.add(Venue(null,
-                        "Outdoor Terrace at PARKROYAL on Pickering",
-                        "Upper Pickering Street, 3, Singapore, 058289",
-                        R.drawable.img_venue30))
-    venueList.add(Venue(null,
-                        "Terrace Lounge at Zafferano Italian Restaurant & Lounge",
-                        "Collyer Quay, Ocean Financial Centre, Level 43, 10, Singapore, 049315",
-                        R.drawable.img_venue31))
-    venueList.add(Venue(null,
-                        "Entire Space at LDF KALLANG RIVERSIDE UPSTAIRS 楼上",
-                        "Kampong Bugis, 66, Singapore, 338987",
-                        R.drawable.img_venue32))
-    venueList.add(Venue(null,
-                        "Infinity at Village Hotel Changi",
-                        "Netheravon Road, 1, Singapore, 508502",
-                        R.drawable.img_venue33))
-    venueList.add(Venue(null,
-                        "Roof Deck Alfresco dining at Jayleen 1918",
-                        "Carpenter Street, 42, Singapore, 059921",
-                        R.drawable.img_venue34))
-    venueList.add(Venue(null,
-                        "Hive Café & Event Space at The Hive Lavender",
-                        "Kallang Junction, Level 6, 1, Singapore, 339263 ",
-                        R.drawable.img_venue35))
-    venueList.add(Venue(null,
-                        "Long Beach at Coastes",
-                        "Siloso Beach Walk, 50, Singapore, 099000 ",
-                        R.drawable.img_venue36))
-    venueList.add(Venue(null,
-                        "Whole Venue at HYPERSPACE",
-                        "Lavender Street, 91a, Singapore, 338719",
-                        R.drawable.img_venue37))
+    venueList.add(
+        Venue(
+            null,
+            "Main Dining Room",
+            "2 Circular Road, Singapore 049358",
+            50,
+            LOCATION_CITY,
+            gson.toJson(arrayListOf(PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "6805 818 1",
+            "7000"))
 
+    venueList.add(
+        Venue(
+            null,
+            "Sky Lounge",
+            "5 Coleman StreetSingapore 179805",
+            40,
+            LOCATION_CITY,
+            gson.toJson(arrayListOf(PARTY_TYPE_REUNION,
+                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "6416 1033",
+            "1500"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Rustic Studio Perfect for 21st Party",
+            "203D Lavender StreetSingapore 338763",
+            35,
+            LOCATION_CITY,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "6416 1033",
+            "500"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Beautiful Rooftop Perfect for 21st birthday",
+            "203D Lavender Street Singapore 338763",
+            35,
+            LOCATION_CITY,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "90234901",
+            "500"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Shake Farm HQ Level 2 Lounge",
+            "126 Telok Ayer StreetSingapore 0689595",
+            40,
+            LOCATION_CITY,
+            gson.toJson(arrayListOf(PARTY_TYPE_FORMAL_PARTY, PARTY_TYPE_BBQ_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "85029150",
+            "500"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Private Dining Space",
+            "Blk 8D Dempsey Road #01-01ASingapore 249672",
+            50,
+            LOCATION_CENTRAL,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "90107418",
+            "2000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Dining Lounge",
+            "2 Emerald Hill Road SingaporeSingapore 229287",
+            35,
+            LOCATION_CENTRAL,
+            gson.toJson(arrayListOf(PARTY_TYPE_FORMAL_PARTY,
+                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "67388818",
+            "1000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Private Room",
+            "2 Emerald Hill Road Singapore Singapore 229287",
+            50,
+            LOCATION_CENTRAL, gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                      PARTY_TYPE_CHRISTMAS_PARTY,
+                                                      PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                                      PARTY_TYPE_SWEET_18,
+                                                      PARTY_TYPE_BACHELOR_PARTY)),
+            "67388818",
+            "1000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Urbana",
+            "99 Irrawaddy RoadSingapore 329568",
+            34,
+            LOCATION_CENTRAL, gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                      PARTY_TYPE_CHRISTMAS_PARTY,
+                                                      PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                                      PARTY_TYPE_SWEET_18,
+                                                      PARTY_TYPE_BACHELOR_PARTY)),
+            "62500303",
+            "4000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Indoors Dining Area",
+            "33 Cuppage Road, Cuppage TerraceSingapore 229458",
+            36,
+            LOCATION_CENTRAL,
+            gson.toJson(arrayListOf(PARTY_TYPE_TEA_PARTY,
+                                    PARTY_TYPE_FORMAL_PARTY,
+                                    PARTY_TYPE_BBQ_PARTY, PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "93378432",
+            "1000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Fully Equipped Training Space",
+            "201 Henderson Road #07-26Singapore 159545",
+            50,
+            LOCATION_SOUTH,
+            gson.toJson(arrayListOf(PARTY_TYPE_FORMAL_PARTY,
+                                    PARTY_TYPE_BBQ_PARTY,
+                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION,
+                                    PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "91872149",
+            "101"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Swing Zone Area",
+            "1 Harbourfront Walk | #01-57 VivoCitySingapore 098585",
+            50,
+            LOCATION_SOUTH,
+            gson.toJson(arrayListOf(PARTY_TYPE_FORMAL_PARTY,
+                                    PARTY_TYPE_BBQ_PARTY, PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "91834910",
+            "1500"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Restaurant Space",
+            "5 Yong Siak StreetSingapore 168643",
+            48,
+            LOCATION_SOUTH,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "98246294",
+            "5000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Upper Place",
+            "",
+            40,
+            LOCATION_SOUTH,
+            gson.toJson(arrayListOf(PARTY_TYPE_FORMAL_PARTY,
+                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "65951380",
+            "2000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Function Room",
+            "1 Larkhill Road, Sentosa Island, Singapore 099394Singapore 099394",
+            50,
+            LOCATION_SOUTH,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "68253827",
+            "1000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "BAR SPACE (L•T•A LONG TIME AGO @ BOAT QUAY)",
+            "1 Fusionopolis Way #02-07 ConnexisSingapore 138632",
+            50,
+            LOCATION_WEST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "98761338",
+            "500"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Outdoor Event Space",
+            "44 Rochester ParkSingapore 139248",
+            40,
+            LOCATION_WEST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "81577236",
+            "1000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Rooftop Private Event Space",
+            "30 Tuas Bay DriveSingapore 637548",
+            50,
+            LOCATION_WEST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "97120047",
+            "1000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Rooftop Gallery Space",
+            "3Ikea TampinesSingapore 528559",
+            50,
+            LOCATION_EAST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "88509813",
+            "1000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Private Room",
+            "Kinex (Previously OneKM), #02-21, 11 Tanjong Katong Road Singapore 436950",
+            35,
+            LOCATION_EAST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "83281198",
+            "500"))
+    venueList.add(
+        Venue(
+            null,
+            "The Seagrill",
+            "Changi Beach Park, 260 Nicoll DriveSingapore 498991",
+            50,
+            LOCATION_EAST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "92279928",
+            "2000"))
+    venueList.add(
+        Venue(
+            null,
+            "Alfresco Dining Area",
+            "5 Changi Business Park Central #01-68/69 Changi City Point Singapore (486038)Singapore 486038",
+            33,
+            LOCATION_EAST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "90014554",
+            "1500"))
+    venueList.add(
+        Venue(
+            null,
+            "Event Room",
+            "1 Tampines Walk, #03-03 Our Tampines HubSingapore 520940",
+            50,
+            LOCATION_EAST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "67059416",
+            "250"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Meeting Room",
+            "217 Syed Alwi RoadSingapore 207776",
+            40,
+            LOCATION_NORTH_EAST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "91464302",
+            "500"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Alfresco Space",
+            "3 Punggol Point Road The Punggol Settlement #01-05Singapore 828694",
+            40,
+            LOCATION_NORTH_EAST,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "96458881",
+            "1000"))
+
+    venueList.add(
+        Venue(
+            null,
+            "Kingfisher Room",
+            "3 Punggol Point Road The Punggol Settlement #01-05 Singapore 828694",
+            40,
+            LOCATION_NORTH,
+            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                    PARTY_TYPE_REUNION, PARTY_TYPE_SWEET_21,
+                                    PARTY_TYPE_SWEET_18,
+                                    PARTY_TYPE_BACHELOR_PARTY)),
+            "64860872",
+            "500"))
     return venueList
 }
 
-fun getCatererList(): ArrayList<Caterers> {
-    val catererList = ArrayList<Caterers>()
+fun getCatererList(): ArrayList<Caterer> {
 
-    catererList.add(Caterers(null, "Sungei Road Laksa", "27 Jalan Berseh", R.drawable.img_venue1))
-    catererList.add(Caterers(null,
-                             "Outram Park Yahua Rou Gu Cha",
-                             "7 Keppel Rd, PSA Tanjong Pagar Complex, 089053",
-                             R.drawable.img_venue2))
-    catererList.add(Caterers(null,
-                             "Nam Sing Fried Hokkien Mee",
-                             "Old Airport Food Centre, 51 Old Airport Rd",
-                             R.drawable.img_venue3))
-    catererList.add(Caterers(null,
-                             "Tian Tian Chicken Rice",
-                             "Maxwell Food Centre, 1 Kadayanallur St",
-                             R.drawable.img_venue4))
-    catererList.add(Caterers(null,
-                             "Hill Street Char Kway Teow",
-                             ": #01-41,16 Bedok South Rd",
-                             R.drawable.img_venue5))
-    catererList.add(Caterers(null,
-                             "Song Zhou Luo Bo Gao",
-                             "#01-18, Bedok Interchange Food Centre, 207 New Upper Changi Road",
-                             R.drawable.img_venue6))
-    catererList.add(Caterers(null,
-                             "Jing Hua Sliced Fish Bee Hoon",
-                             "Stall #77 at Maxwell Food Centre, 1 Kadayanallur St",
-                             R.drawable.img_venue7))
-    catererList.add(Caterers(null,
-                             "Hill Street Tai Hwa Pork Noodles",
-                             "Block 466 Crawford Lane #01-12 Singapore 190465",
-                             R.drawable.img_venue8))
-    catererList.add(Caterers(null,
-                             "Ah Chuan Fried Oyster Omelette",
-                             "Toa Payoh Lor 7 Food Centre Stall #01-25, Singapore",
-                             R.drawable.img_venue9))
-    catererList.add(Caterers(null,
-                             "Yong Xiang Xing Tou Foo",
-                             "32 New Market Rd, 01-1084 People’s Park Food Centre",
-                             R.drawable.img_venue10))
-    catererList.add(Caterers(null,
-                             "Kim Heng Roasted Meat",
-                             "214 Serangoon Avenue 4, #01-88, Singapore 550214",
-                             R.drawable.img_venue11))
-    catererList.add(Caterers(null,
-                             "Kok Sen Restaurant",
-                             "30 Keong Saik Rd, Singapore",
-                             R.drawable.img_venue12))
-    catererList.add(Caterers(null,
-                             "Two Chefs Eating House",
-                             "116 Commonwealth Crescent #01-129, Singapore",
-                             R.drawable.img_venue13))
-    catererList.add(Caterers(null,
-                             "Selera Rasa Nasi Lemak",
-                             "2 Adam Rd, #01-02, Adam Road Food Centre, Singapore",
-                             R.drawable.img_venue14))
+    val catererList = ArrayList<Caterer>()
+
+    catererList.add(Caterer(null,
+                            "BBQ House Singapore Pte. Ltd foodline",
+                            "https://www.foodline.sg/catering/BBQ-House-Singapore-Pte.-Ltd/",
+                            "6100 0029",
+                            7.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BBQ_PARTY,
+                                                    PARTY_TYPE_BACHELOR_PARTY))
+    ))
+
+    catererList.add(Caterer(null,
+                            "Mmmm! foodline",
+                            "https://www.foodline.sg/catering/Mmmm!/",
+                            "6100 0029",
+                            6.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BBQ_PARTY,
+                                                    PARTY_TYPE_BACHELOR_PARTY))
+    ))
+
+    catererList.add(Caterer(null,
+                            "Catering Culture",
+                            "https://www.foodline.sg/catering/Catering-Culture/",
+                            "6100 0029",
+                            9.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BBQ_PARTY,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY))
+    ))
+
+    catererList.add(Caterer(null,
+                            "Angel's Restaurant foodline",
+                            "https://www.foodline.sg/catering/Angels-Restaurant/",
+                            "6100 0029",
+                            15.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BBQ_PARTY,
+                                                    PARTY_TYPE_REUNION,
+                                                    PARTY_TYPE_BACHELOR_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "FattyDaddyFattyMummy foodline",
+                            ": https://www.foodline.sg/catering/FattyDaddyFattyMummy/",
+                            "6100 0029",
+                            19.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BBQ_PARTY,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                                    PARTY_TYPE_BACHELOR_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Occasions Catering foodline",
+                            "https://www.foodline.sg/catering/Occasions-Catering/",
+                            "6100 0029",
+                            28.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BBQ_PARTY,
+                                                    PARTY_TYPE_REUNION,
+                                                    PARTY_TYPE_BACHELOR_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Opah Satay foodline",
+                            "https://www.foodline.sg/catering/Opah-Satay/",
+                            "6100 0029",
+                            35.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BBQ_PARTY,
+                                                    PARTY_TYPE_REUNION,
+                                                    PARTY_TYPE_BACHELOR_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "The Connoisseur Concerto- TCC foodline",
+                            "https://www.foodline.sg/catering/The-Connoisseur-Concerto--TCC/",
+                            "6100 0029",
+                            4.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_TEA_PARTY, PARTY_TYPE_FORMAL_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Fung Kee",
+                            "https://www.foodline.sg/catering/Fung-Kee/",
+                            "6100 0029",
+                            6.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_TEA_PARTY,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                                    PARTY_TYPE_FORMAL_PARTY, PARTY_TYPE_BREAK_FAST))
+    ))
+    catererList.add(Caterer(null,
+                            "QQ Catering",
+                            "https://www.foodline.sg/catering/QQ-Catering/",
+                            "6100 0029",
+                            8.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_TEA_PARTY,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                                    PARTY_TYPE_FORMAL_PARTY, PARTY_TYPE_BREAK_FAST))
+    ))
+    catererList.add(Caterer(null,
+                            "Papitto Gelato",
+                            "https://www.foodline.sg/catering/Papitto-Gelato/",
+                            "6100 0029",
+                            13.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_TEA_PARTY,
+                                                    PARTY_TYPE_FORMAL_PARTY,
+                                                    PARTY_TYPE_BREAK_FAST))
+    ))
+    catererList.add(Caterer(null,
+                            "Qi Ji",
+                            "https://www.foodline.sg/catering/Qi-Ji/",
+                            "6100 0029",
+                            6.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                                    PARTY_TYPE_BREAK_FAST))
+    ))
+    catererList.add(Caterer(null,
+                            "A-One Signature foodline",
+                            "https://www.foodline.sg/catering/A-One-Signature/",
+                            "6100 0029",
+                            12.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY,
+                                                    PARTY_TYPE_BBQ_PARTY, PARTY_TYPE_BREAK_FAST))
+    ))
+    catererList.add(Caterer(null,
+                            "Curry & Tandoor Pte Ltd",
+                            "https://www.foodline.sg/catering/Curry-N-Tandoor-Pte-Ltd/",
+                            "6100 0029",
+                            15.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY,
+                                                    PARTY_TYPE_BREAK_FAST))
+    ))
+    catererList.add(Caterer(null,
+                            "79 After Dark Catering",
+                            "https://www.foodline.sg/catering/79-After-Dark-Catering/",
+                            "6100 0029",
+                            20.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY, PARTY_TYPE_REUNION))
+    ))
+    catererList.add(Caterer(null,
+                            "Nosh Kitchen foodline",
+                            "https://www.foodline.sg/catering/Nosh-Kitchen/",
+                            "6100 0029",
+                            25.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY, PARTY_TYPE_REUNION))
+    ))
+    catererList.add(Caterer(null,
+                            "Fu Kwee Caterer Pte Ltd foodline",
+                            ": https://www.foodline.sg/catering/Fu-Kwee-Caterer-Pte-Ltd/",
+                            "6100 0029",
+                            30.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY, PARTY_TYPE_REUNION))
+    ))
+    catererList.add(Caterer(null,
+                            "Wee Nam Kee Chicken Rice foodline",
+                            "https://www.foodline.sg/catering/Wee-Nam-Kee-Chicken-Rice/",
+                            "6100 0029",
+                            32.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY, PARTY_TYPE_REUNION))
+    ))
+    catererList.add(Caterer(null,
+                            "Grain",
+                            "https://www.foodline.sg/catering/Grain/",
+                            "6100 0029",
+                            35.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY, PARTY_TYPE_REUNION))
+    ))
+    catererList.add(Caterer(null,
+                            "Time For Thai foodline",
+                            "https://www.foodline.sg/catering/Time-For-Thai/",
+                            "6100 0029",
+                            38.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY, PARTY_TYPE_REUNION))
+    ))
+    catererList.add(Caterer(null,
+                            "Mum’s Kitchen",
+                            "https://www.foodline.sg/catering/Mums-Kitchen/",
+                            "6100 0029",
+                            20.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY, PARTY_TYPE_REUNION))
+    ))
+    catererList.add(Caterer(null,
+                            "Big Boys Sizzling Hot Plate Western foodline",
+                            "https://www.foodline.sg/catering/Big-Boys-Sizzling-Hot-Plate-Western/",
+                            "6100 0029",
+                            45.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BACHELOR_PARTY, PARTY_TYPE_REUNION))
+    ))
+    catererList.add(Caterer(null,
+                            "Be Frank foodline",
+                            "https://www.foodline.sg/catering/Be-Frank/",
+                            "6100 0029",
+                            6.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21,
+                                                    PARTY_TYPE_SWEET_18))
+    ))
+    catererList.add(Caterer(null,
+                            "East West Fusion foodline",
+                            "https://www.foodline.sg/catering/East-West-Fusion/",
+                            "6100 0029",
+                            10.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                    PARTY_TYPE_SWEET_18,
+                                                    PARTY_TYPE_FORMAL_PARTY,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21))
+    ))
+    catererList.add(Caterer(null,
+                            "Delizio Catering (Thai Specialties) foodline",
+                            "https://www.foodline.sg/catering/Delizio-Catering-(Thai-Specialties)/",
+                            "6100 0029",
+                            13.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                    PARTY_TYPE_SWEET_18,
+                                                    PARTY_TYPE_FORMAL_PARTY,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21))
+    ))
+    catererList.add(Caterer(null,
+                            "WORD. Events and Catering foodline",
+                            "https://www.foodline.sg/catering/WORD.-Events-and-Catering/",
+                            "6100 0029",
+                            15.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21,
+                                                    PARTY_TYPE_SWEET_18))
+    ))
+    catererList.add(Caterer(null,
+                            "Sembawang Eating House Seafood Restaurant foodline",
+                            "https://www.foodline.sg/catering/Sembawang-Eating-House-Seafood-Restaurant/",
+                            "6100 0029",
+                            20.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                    PARTY_TYPE_SWEET_18,
+                                                    PARTY_TYPE_FORMAL_PARTY,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21))
+    ))
+    catererList.add(Caterer(null,
+                            "Xiang's Catering foodline",
+                            "https://www.foodline.sg/catering/Xiangs-Catering/",
+                            "6100 0029",
+                            25.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21,
+                                                    PARTY_TYPE_SWEET_18))
+    ))
+    catererList.add(Caterer(null,
+                            "Good Chance Catering foodline",
+                            "https://www.foodline.sg/catering/Good-Chance-Catering/",
+                            "6100 0029",
+                            30.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BABY_SHOWER,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21,
+                                                    PARTY_TYPE_SWEET_18))
+    ))
+    catererList.add(Caterer(null,
+                            "The Catering Concerto by TCC foodline",
+                            "https://www.foodline.sg/catering/The-Catering-Concerto-by-TCC/",
+                            "6100 0029",
+                            8.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BREAK_FAST, PARTY_TYPE_TEA_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "BellyGood Caterer foodline",
+                            "https://www.foodline.sg/catering/BellyGood-Caterer/",
+                            "6100 0029",
+                            10.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BREAK_FAST, PARTY_TYPE_TEA_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Serve Best Pte Ltd foodline",
+                            "https://www.foodline.sg/catering/Serve-Best-Pte-Ltd/",
+                            "6100 0029",
+                            15.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BREAK_FAST, PARTY_TYPE_TEA_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Katong Catering foodline",
+                            "https://www.foodline.sg/catering/Katong-Catering/",
+                            "6100 0029",
+                            17.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BREAK_FAST, PARTY_TYPE_TEA_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "WE Cater foodline",
+                            "https://www.foodline.sg/catering/WE-Cater/",
+                            "6100 0029",
+                            20.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BREAK_FAST, PARTY_TYPE_TEA_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            " East West Noodles (S11) @ Matrix Cafeteria ITE College West foodline",
+                            "https://www.foodline.sg/catering/East-West-Noodles-(S11)-@-Matrix-Cafeteria-ITE-College-West/",
+                            "6100 0029",
+                            22.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_BREAK_FAST, PARTY_TYPE_TEA_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Rasa Rasa Catering Services Pte Ltd foodline",
+                            "https://www.foodline.sg/catering/Rasa-Rasa-Catering-Services-Pte-Ltd/",
+                            "6100 0029",
+                            20.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_SWEET_18,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Fusion Spoon Catering Services foodline",
+                            "https://www.foodline.sg/catering/Fusion-Spoon-Catering-Services/",
+                            "6100 0029",
+                            25.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_SWEET_18,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "WEEAT foodline",
+                            "https://www.foodline.sg/catering/WEEAT/",
+                            "6100 0029",
+                            30.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_SWEET_18,
+                                                    PARTY_TYPE_KIDS_PARTY,
+                                                    PARTY_TYPE_SWEET_21,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Mixed Greens foodline",
+                            " https://www.foodline.sg/catering/Mixed-Greens/",
+                            "6100 0029",
+                            10.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_FORMAL_PARTY,
+                                                    PARTY_TYPE_REUNION,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "THAI-LICIOUS 泰好吃 foodline",
+                            "https://www.foodline.sg/catering/THAI-LICIOUS--%E6%B3%B0%E5%A5%BD%E5%90%83/",
+                            "6100 0029",
+                            30.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_FORMAL_PARTY,
+                                                    PARTY_TYPE_REUNION,
+                                                    PARTY_TYPE_CHRISTMAS_PARTY))
+    ))
+    catererList.add(Caterer(null,
+                            "Stamford Catering foodline",
+                            "https://www.foodline.sg/catering/Stamford-Catering/",
+                            "6100 0029",
+                            25.0,
+                            gson.toJson(arrayListOf(PARTY_TYPE_CHRISTMAS_PARTY,
+                                                    PARTY_TYPE_REUNION,
+                                                    PARTY_TYPE_BREAK_FAST))
+    ))
+
 
     return catererList
 }
 
 fun convertUnfinished(partyDetails: PartyDetails, uid: Int): UnfinishedDetails {
-    val gson = Gson()
     return UnfinishedDetails(
         null,
         uid,
@@ -294,15 +836,17 @@ fun convertUnfinished(partyDetails: PartyDetails, uid: Int): UnfinishedDetails {
         partyDetails.partyBudget,
         partyDetails.partyDestination,
         partyDetails.partyGuest,
-        partyDetails.partyType,
-        gson.toJson(partyDetails.selectedFood),
+        gson.toJson(partyDetails.partyType),
         gson.toJson(partyDetails.selectedDestination),
-        gson.toJson(partyDetails.selectedCaterers)
+        gson.toJson(partyDetails.selectedCaterer),
+        partyDetails.extraNote,
+        gson.toJson(partyDetails.guestNameList),
+        gson.toJson(partyDetails.checkedItemList),
+        gson.toJson(partyDetails.locations)
     )
 }
 
 fun convertSummary(partyDetails: PartyDetails, uid: Int): SummaryDetails {
-    val gson = Gson()
     return SummaryDetails(
         null,
         uid,
@@ -310,15 +854,17 @@ fun convertSummary(partyDetails: PartyDetails, uid: Int): SummaryDetails {
         partyDetails.partyBudget,
         partyDetails.partyDestination,
         partyDetails.partyGuest,
-        partyDetails.partyType,
-        gson.toJson(partyDetails.selectedFood),
+        gson.toJson(partyDetails.partyType),
         gson.toJson(partyDetails.selectedDestination),
-        gson.toJson(partyDetails.selectedCaterers)
+        gson.toJson(partyDetails.selectedCaterer),
+        partyDetails.extraNote,
+        gson.toJson(partyDetails.guestNameList),
+        gson.toJson(partyDetails.checkedItemList),
+        gson.toJson(partyDetails.locations)
     )
 }
 
 fun convertHistorySummary(partyDetails: PartyDetails, uid: Int): HistorySummary {
-    val gson = Gson()
     return HistorySummary(
         null,
         uid,
@@ -326,46 +872,63 @@ fun convertHistorySummary(partyDetails: PartyDetails, uid: Int): HistorySummary 
         partyDetails.partyBudget,
         partyDetails.partyDestination,
         partyDetails.partyGuest,
-        partyDetails.partyType,
-        gson.toJson(partyDetails.selectedFood),
+        gson.toJson(partyDetails.partyType),
         gson.toJson(partyDetails.selectedDestination),
-        gson.toJson(partyDetails.selectedCaterers)
+        gson.toJson(partyDetails.selectedCaterer),
+        partyDetails.extraNote,
+        gson.toJson(partyDetails.guestNameList),
+        gson.toJson(partyDetails.checkedItemList),
+        gson.toJson(partyDetails.locations)
     )
 }
 
 fun convertPartyFromSummary(summary: SummaryDetails): PartyDetails {
-    val gson = Gson()
 
-    val type = object : TypeToken<ArrayList<Food>>() {}.type
-    val selectedFood = gson.fromJson<ArrayList<Food>>(summary.selectedFood, type)
+    val type1 = object : TypeToken<ArrayList<String>>() {}.type
+    val type2 = object : TypeToken<ArrayList<CheckedItem>>() {}.type
+
+    val selectedPartyType = gson.fromJson<ArrayList<String>>(summary.partyType, type1)
+    val guestList = gson.fromJson<ArrayList<String>>(summary.guestNameList, type1)
+    val checkedItemList = gson.fromJson<ArrayList<CheckedItem>>(summary.checkedItemList, type2)
+    val selectedLocation = gson.fromJson<ArrayList<String>>(summary.locations, type1)
 
     return PartyDetails(
         gson.fromJson(summary.partyDate, Date::class.java),
         summary.partyBudget,
         summary.partyDestination,
         summary.partyGuest,
-        summary.partyType,
-        selectedFood,
+        selectedPartyType,
+        gson.fromJson(summary.selectedCaterers, Caterer::class.java),
         gson.fromJson(summary.selectedDestination, Venue::class.java),
-        gson.fromJson(summary.selectedCaterers, Caterers::class.java)
+        summary.extraNote,
+        guestList,
+        checkedItemList,
+        selectedLocation
     )
 }
 
 fun convertPartyFromHistorySummary(summary: HistorySummary): PartyDetails {
-    val gson = Gson()
 
-    val type = object : TypeToken<ArrayList<Food>>() {}.type
-    val selectedFood = gson.fromJson<ArrayList<Food>>(summary.selectedFood, type)
+    val type1 = object : TypeToken<ArrayList<String>>() {}.type
+    val type2 = object : TypeToken<ArrayList<CheckedItem>>() {}.type
+
+    val selectedPartyType = gson.fromJson<ArrayList<String>>(summary.partyType, type1)
+    val guestList = gson.fromJson<ArrayList<String>>(summary.guestNameList, type1)
+    val checkedItemList = gson.fromJson<ArrayList<CheckedItem>>(summary.checkedItemList, type2)
+    val selectedLocation = gson.fromJson<ArrayList<String>>(summary.locations, type1)
 
     return PartyDetails(
         gson.fromJson(summary.partyDate, Date::class.java),
         summary.partyBudget,
         summary.partyDestination,
         summary.partyGuest,
-        summary.partyType,
-        selectedFood,
+        selectedPartyType,
+        gson.fromJson(summary.selectedCaterers, Caterer::class.java),
         gson.fromJson(summary.selectedDestination, Venue::class.java),
-        gson.fromJson(summary.selectedCaterers, Caterers::class.java)
+        summary.extraNote,
+        guestList,
+        checkedItemList,
+        selectedLocation
     )
 }
 

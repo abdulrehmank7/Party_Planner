@@ -11,6 +11,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -185,7 +186,17 @@ fun isDoubleClicked(minimumClickTimeInMilli: Long): Boolean {
 
 fun getCurrentTimestamp() = System.currentTimeMillis()
 
-
+fun RecyclerView.initGridAdapter(
+    adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
+    hasFixedSize: Boolean,
+    gridSize: Int) {
+    val gll = GridLayoutManager(this.context, gridSize)
+    this.setHasFixedSize(hasFixedSize)
+    this.setItemViewCacheSize(10)
+    this.layoutManager = gll
+    adapter.setHasStableIds(true)
+    this.adapter = adapter
+}
 
 
 

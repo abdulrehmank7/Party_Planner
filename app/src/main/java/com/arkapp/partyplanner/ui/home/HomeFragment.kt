@@ -16,17 +16,19 @@ import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentHomeBinding
 import com.arkapp.partyplanner.utils.*
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
+    private lateinit var partyTypeAdapter: PartyTypeAdapter
     private val prefRepository by lazy { PrefRepository(requireContext()) }
-
     private val gson = Gson()
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -40,14 +42,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initPartyData()
-        initPartyTypeBtnListener()
+        resetPartyData()
+        initPartyTypeUI()
         initBudgetBtnListener()
         initDestinationBtnListener()
         initCalendar()
 
         binding.guestEt.doAfterTextChanged { text ->
             if (!text.isNullOrEmpty()) {
+                binding.guest.error = null
                 val details = prefRepository.getCurrentPartyDetails()
                 details.partyGuest = text.toString().toInt()
                 prefRepository.setCurrentPartyDetails(details)
@@ -55,18 +58,21 @@ class HomeFragment : Fragment() {
         }
 
         binding.proceedBtn.setOnClickListener {
-            if (binding.guestEt.text.toString().isEmpty()) {
+            if (binding.guestEt.text.toString().isEmpty() ||
+                binding.guestEt.text.toString().toInt() <= 0) {
                 binding.guest.error = "Please enter guest count!"
                 return@setOnClickListener
             }
+            binding.guest.error = null
+
             addUnfinishedData(lifecycleScope, requireContext(), prefRepository)
-            findNavController().navigate(R.id.action_homeFragment_to_foodListFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_caterersListFragment)
         }
 
         if (CURRENT_SELECTED_OPTION == OPTION_UNFINISHED)
-            initOldPartyData()
+            setUnfinishedPartyData()
         else
-            initLastEnteredData()
+            setLastEnteredData()
 
         requireActivity()
             .onBackPressedDispatcher
@@ -78,10 +84,13 @@ class HomeFragment : Fragment() {
                             null,
                             null,
                             null,
+                            ArrayList(),
                             null,
                             null,
                             null,
-                            null)
+                            null,
+                            null,
+                            ArrayList())
                     )
                 this.remove()
                 requireActivity().onBackPressed()
@@ -89,55 +98,7 @@ class HomeFragment : Fragment() {
             }
     }
 
-    private fun initLastEnteredData() {
-        val detail = prefRepository.getCurrentPartyDetails()
-
-        detail.partyDate.also {
-            if (it != null) {
-                val selectedDate = Calendar.getInstance()
-                selectedDate.time = it
-                binding.calendarView.date = selectedDate.timeInMillis
-            }
-        }
-
-        detail.partyBudget.also {
-            if (it != null) {
-                when (it) {
-                    getString(R.string.low) -> binding.lowBudget.performClick()
-                    getString(R.string.medium) -> binding.mediumBudget.performClick()
-                    getString(R.string.high) -> binding.highBudget.performClick()
-                    getString(R.string.very_high) -> binding.veryHighBudget.performClick()
-                    else -> binding.lowBudget.performClick()
-                }
-            }
-        }
-
-        detail.partyDestination.also {
-            if (it != null) {
-                if (it == getString(R.string.home)) {
-                    binding.homeParty.performClick()
-                } else
-                    binding.venueParty.performClick()
-            }
-        }
-
-        detail.partyGuest.also {
-            if (it != null) {
-                binding.guestEt.setText(it.toString())
-            }
-        }
-
-        detail.partyType.also {
-            if (it != null) {
-                if (it == PARTY_TYPE_BABY_SHOWER)
-                    binding.babyShowerBtn.performClick()
-                else
-                    binding.normalPartyBtn.performClick()
-            }
-        }
-    }
-
-    private fun initOldPartyData() {
+    private fun setUnfinishedPartyData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
             val unfinishedData = unfinishedDao.getUserUnfinished(prefRepository.getCurrentUser()?.uid!!)
@@ -185,10 +146,10 @@ class HomeFragment : Fragment() {
 
             unfinishedDetail.partyType.also {
                 if (it != null) {
-                    if (it == PARTY_TYPE_BABY_SHOWER)
-                        binding.babyShowerBtn.performClick()
-                    else
-                        binding.normalPartyBtn.performClick()
+                    val type = object : TypeToken<ArrayList<String>>() {}.type
+                    partyTypeAdapter.selectedPartyType =
+                        getPartyTypeFromString(gson.fromJson(it, type))
+                    partyTypeAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -285,36 +246,68 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initPartyTypeBtnListener() {
-        binding.babyShowerBtn.setOnClickListener {
-            binding.partyCheck.hide()
-            binding.babyShowerCheck.show()
+    private fun setLastEnteredData() {
+        val detail = prefRepository.getCurrentPartyDetails()
 
-            val details = prefRepository.getCurrentPartyDetails()
-            details.partyType = PARTY_TYPE_BABY_SHOWER
-            prefRepository.setCurrentPartyDetails(details)
+        detail.partyDate.also {
+            if (it != null) {
+                val selectedDate = Calendar.getInstance()
+                selectedDate.time = it
+                binding.calendarView.date = selectedDate.timeInMillis
+            }
         }
 
-        binding.normalPartyBtn.setOnClickListener {
-            binding.partyCheck.show()
-            binding.babyShowerCheck.hide()
+        detail.partyBudget.also {
+            if (it != null) {
+                when (it) {
+                    getString(R.string.low) -> binding.lowBudget.performClick()
+                    getString(R.string.medium) -> binding.mediumBudget.performClick()
+                    getString(R.string.high) -> binding.highBudget.performClick()
+                    getString(R.string.very_high) -> binding.veryHighBudget.performClick()
+                    else -> binding.lowBudget.performClick()
+                }
+            }
+        }
 
-            val details = prefRepository.getCurrentPartyDetails()
-            details.partyType = PARTY_TYPE_OTHER
-            prefRepository.setCurrentPartyDetails(details)
+        detail.partyDestination.also {
+            if (it != null) {
+                if (it == getString(R.string.home)) {
+                    binding.homeParty.performClick()
+                } else
+                    binding.venueParty.performClick()
+            }
+        }
+
+        detail.partyGuest.also {
+            if (it != null) {
+                binding.guestEt.setText(it.toString())
+            }
+        }
+
+        detail.partyType.also {
+            partyTypeAdapter.selectedPartyType = getPartyTypeFromString(it)
+            partyTypeAdapter.notifyDataSetChanged()
         }
     }
 
-    private fun initPartyData() {
+    private fun initPartyTypeUI() {
+        partyTypeAdapter = PartyTypeAdapter(getPartyTypes(), prefRepository)
+        binding.partyTypeRv.initGridAdapter(partyTypeAdapter, true, 3)
+    }
+
+    private fun resetPartyData() {
         val details = PartyDetails(
             Calendar.getInstance().time,
             getString(R.string.low),
             getString(R.string.home),
             null,
-            PARTY_TYPE_OTHER,
+            ArrayList(),
             null,
             null,
-            null
+            null,
+            null,
+            null,
+            ArrayList()
         )
         prefRepository.setCurrentPartyDetails(details)
     }

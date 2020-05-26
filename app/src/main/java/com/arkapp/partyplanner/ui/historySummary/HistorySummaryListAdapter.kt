@@ -47,12 +47,12 @@ class HistorySummaryListAdapter(
         binding.partyDestination.text = partyData.partyDestination
         binding.guest.text = "${partyData.partyGuest} Guests"
 
-        var estimatedBudget = 0.0
+/*        var estimatedBudget = 0.0
         for (food in partyData.selectedFood!!) {
             estimatedBudget += food.price
         }
 
-        binding.foodBudget.text = "$${estimatedBudget * partyData.partyGuest!!}"
+        binding.foodBudget.text = "$${estimatedBudget * partyData.partyGuest!!}"*/
 
         binding.parent.setOnClickListener {
             prefRepository.setCurrentPartyDetails(partyData)

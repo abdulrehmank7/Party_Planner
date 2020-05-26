@@ -1,11 +1,10 @@
 package com.arkapp.partyplanner.ui.signup
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -161,7 +160,6 @@ class SignUpFragment : Fragment() {
     private fun checkCredentials() {
 
         lifecycleScope.launch(Dispatchers.Main) {
-            insertFoodData()
             insertCaterersData()
             insertVenueData()
 
@@ -219,7 +217,6 @@ class SignUpFragment : Fragment() {
     private fun storeCredentials() {
 
         lifecycleScope.launch(Dispatchers.Main) {
-            insertFoodData()
             insertCaterersData()
             insertVenueData()
 
@@ -244,14 +241,6 @@ class SignUpFragment : Fragment() {
 
     }
 
-    private suspend fun insertFoodData() {
-        val foodDao = AppDatabase.getDatabase(requireContext()).foodDao()
-
-        for (food in getFoodList()) {
-            foodDao.insert(food)
-        }
-    }
-
     private suspend fun insertVenueData() {
         val venueDao = AppDatabase.getDatabase(requireContext()).venueDao()
 
@@ -269,50 +258,11 @@ class SignUpFragment : Fragment() {
     }
 
     private fun removeErrorOnChange() {
-        binding.userNameEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                binding.userName.error = null
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        binding.passwordEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                binding.password.error = null
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        binding.signUpUserNameEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                binding.signUpUserName.error = null
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        binding.signUpPasswordEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                binding.signUpPassword.error = null
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        binding.signUpConfirmPasswordEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                binding.signUpConfirmPassword.error = null
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
+        binding.userNameEt.doAfterTextChanged { binding.userName.error = null }
+        binding.passwordEt.doAfterTextChanged { binding.password.error = null }
+        binding.signUpUserNameEt.doAfterTextChanged { binding.signUpUserName.error = null }
+        binding.signUpPasswordEt.doAfterTextChanged { binding.signUpPassword.error = null }
+        binding.signUpConfirmPasswordEt.doAfterTextChanged { binding.signUpConfirmPassword.error = null }
     }
 
 }

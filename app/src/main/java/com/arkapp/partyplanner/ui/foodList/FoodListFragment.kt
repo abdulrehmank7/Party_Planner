@@ -7,11 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.repository.PrefRepository
-import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.utils.*
 import kotlinx.android.synthetic.main.fragment_food_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -32,7 +29,7 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
             else -> HIGH_BUDGED_LIMIT
         }
 
-        val toShowAlcohol = prefRepository.getCurrentPartyDetails().partyType != PARTY_TYPE_BABY_SHOWER
+        /*val toShowAlcohol = prefRepository.getCurrentPartyDetails().partyType != PARTY_TYPE_BABY_SHOWER
 
         lifecycleScope.launch(Dispatchers.Main) {
 
@@ -47,7 +44,7 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
                 foodList,
                 requireContext())
             foodListRv.initVerticalAdapter(adapter, true)
-        }
+        }*/
 
         proceedBtn.setOnClickListener {
 
@@ -57,7 +54,7 @@ class FoodListFragment : Fragment(R.layout.fragment_food_list) {
             }
 
             val detail = prefRepository.getCurrentPartyDetails()
-            detail.selectedFood = adapter.selectedFoodList
+            //detail.selectedFood = adapter.selectedFoodList
             prefRepository.setCurrentPartyDetails(detail)
 
             addUnfinishedData(lifecycleScope, requireContext(), prefRepository)

@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Venue
 import com.arkapp.partyplanner.data.repository.PrefRepository
-import com.arkapp.partyplanner.utils.loadImage
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 /**
  * Created by Abdul Rehman on 28-02-2020.
@@ -23,6 +24,8 @@ class VenueListAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val gson = Gson()
+    private val type = object : TypeToken<ArrayList<String>>() {}.type!!
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return VenueListViewHolder(
@@ -42,7 +45,18 @@ class VenueListAdapter(
         val venueData = venueList[position]
         binding.venueName.text = venueData.name
         binding.venueAdd.text = venueData.address
-        binding.venueImg.loadImage(venueData.resId)
+        binding.capacity.text = "${venueData.capacity} Guest"
+        binding.contact.text = venueData.contact
+        binding.price.text = "$${venueData.price}"
+        binding.location.text = venueData.location
+
+        val partyTypes = gson.fromJson<ArrayList<String>>(venueData.partyType, type)
+        var partyTypeString = ""
+
+        for (x in partyTypes) {
+            partyTypeString += "$x, "
+        }
+        binding.suitable.text = partyTypeString.substring(0, partyTypeString.length - 2)
 
 
         binding.parent.setOnClickListener {

@@ -17,6 +17,14 @@ data class Venue(
     val name: String,
     @ColumnInfo(name = "address")
     val address: String,
-    @ColumnInfo(name = "resId")
-    val resId: Int
+    @ColumnInfo(name = "capacity")
+    val capacity: Int,
+    @ColumnInfo(name = "location")
+    val location: String,
+    @ColumnInfo(name = "partyType")
+    val partyType: String,
+    @ColumnInfo(name = "contact")
+    val contact: String,
+    @ColumnInfo(name = "price")
+    val price: String
 )

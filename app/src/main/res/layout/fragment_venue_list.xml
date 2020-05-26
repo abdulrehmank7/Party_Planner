@@ -5,10 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.foodList.FoodListFragment">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha=".5"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_venue11" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/venueListRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/rv_venue" />
+        android:elevation="8dp"
+        tools:listitem="@layout/rv_caterer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

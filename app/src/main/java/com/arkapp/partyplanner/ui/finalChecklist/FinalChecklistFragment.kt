@@ -1,6 +1,5 @@
 package com.arkapp.partyplanner.ui.finalChecklist
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,18 +40,18 @@ class FinalChecklistFragment : Fragment() {
                     val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
 
                     details = convertPartyFromSummary(summaryData[0])
-                    setPartyData()
+                    //setPartyData()
                 }
             }
             OPTION_PAST -> {
                 deleteUnfinishedData()
                 details = prefRepository.getCurrentPartyDetails()
-                setPartyData()
+                //setPartyData()
             }
             else -> {
                 deleteUnfinishedData()
                 details = prefRepository.getCurrentPartyDetails()
-                setPartyData()
+                //setPartyData()
                 addSummaryData()
                 addHistorySummaryData()
             }
@@ -68,10 +67,13 @@ class FinalChecklistFragment : Fragment() {
                             null,
                             null,
                             null,
+                            ArrayList(),
                             null,
                             null,
                             null,
-                            null)
+                            null,
+                            null,
+                            ArrayList())
                     )
                 this.remove()
                 if (CURRENT_SELECTED_OPTION == OPTION_PAST)
@@ -82,7 +84,7 @@ class FinalChecklistFragment : Fragment() {
             }
     }
 
-    @SuppressLint("SetTextI18n")
+/*    @SuppressLint("SetTextI18n")
     private fun setPartyData() {
         binding.partyDate.text = details.partyDate?.getFormattedDate()
         binding.destinationType.text = details.partyDestination
@@ -96,7 +98,7 @@ class FinalChecklistFragment : Fragment() {
         binding.selectedFoodRv.initVerticalAdapter(SelectedFoodListAdapter(details.selectedFood!!),
                                                    true)
 
-        binding.include2.venueName.text = details.selectedCaterers?.name
+        binding.include2.venueName.text = details.selectedCaterer?.name
         binding.include2.venueAdd.text = details.selectedCaterers?.address
         binding.include2.venueImg.loadImage(details.selectedCaterers!!.resId)
         binding.include2.parent.isEnabled = false
@@ -118,7 +120,7 @@ class FinalChecklistFragment : Fragment() {
         }
 
         binding.partyBudget.text = "$${estimatedBudget * details.partyGuest!!}"
-    }
+    }*/
 
     private fun addSummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {

@@ -25,10 +25,16 @@ data class UnfinishedDetails(
     var partyGuest: Int?,
     @ColumnInfo(name = "partyType")
     var partyType: String?,
-    @ColumnInfo(name = "selectedFood")
-    var selectedFood: String?,
     @ColumnInfo(name = "selectedDestination")
     var selectedDestination: String?,
-    @ColumnInfo(name = "selectedCaterers")
-    var selectedCaterers: String?
+    @ColumnInfo(name = "selectedCaterer")
+    var selectedCaterers: String?,
+    @ColumnInfo(name = "extraNote")
+    var extraNote: String?,
+    @ColumnInfo(name = "guestNameList")
+    var guestNameList: String?,
+    @ColumnInfo(name = "checkedItemList")
+    var checkedItemList: String?,
+    @ColumnInfo(name = "locations")
+    var locations: String?
 )

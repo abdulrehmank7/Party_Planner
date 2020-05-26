@@ -26,8 +26,8 @@
         android:label="Party details"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_foodListFragment"
-            app:destination="@id/foodListFragment" />
+            android:id="@+id/action_homeFragment_to_caterersListFragment"
+            app:destination="@id/caterersListFragment" />
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
@@ -101,11 +101,11 @@
         android:name="com.arkapp.partyplanner.ui.catererList.CaterersListFragment"
         android:label="Select Caterer">
         <action
-            android:id="@+id/action_caterersListFragment_to_venueListFragment"
-            app:destination="@id/venueListFragment" />
-        <action
             android:id="@+id/action_caterersListFragment_to_finalChecklistFragment"
             app:destination="@id/finalChecklistFragment" />
+        <action
+            android:id="@+id/action_caterersListFragment_to_venueLocationFragment"
+            app:destination="@id/venueLocationFragment" />
     </fragment>
     <fragment
         android:id="@+id/historySummaryFragment"
@@ -115,5 +115,14 @@
         <action
             android:id="@+id/action_historySummaryFragment_to_finalChecklistFragment"
             app:destination="@id/finalChecklistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/venueLocationFragment"
+        android:name="com.arkapp.partyplanner.ui.venueLocation.VenueLocationFragment"
+        android:label="Select Venue Location"
+        tools:layout="@layout/fragment_venue_location">
+        <action
+            android:id="@+id/action_venueLocationFragment_to_venueListFragment"
+            app:destination="@id/venueListFragment" />
     </fragment>
 </navigation>

@@ -10,13 +10,18 @@ import androidx.room.PrimaryKey
  */
 
 @Entity(tableName = "CATERER")
-data class Caterers(
+data class Caterer(
     @PrimaryKey(autoGenerate = true)
     val uid: Int?,
     @ColumnInfo(name = "name")
     val name: String,
-    @ColumnInfo(name = "address")
-    val address: String,
-    @ColumnInfo(name = "resId")
-    val resId: Int
+    @ColumnInfo(name = "website")
+    val website: String,
+    @ColumnInfo(name = "contact")
+    val contact: String,
+    @ColumnInfo(name = "price")
+    val pricePerPax: Double,
+    @ColumnInfo(name = "partyType")
+    val partyType: String
+
 )

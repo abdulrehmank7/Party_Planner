@@ -1,6 +1,7 @@
 package com.arkapp.partyplanner.data.models
 
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Abdul Rehman on 17-05-2020.
@@ -12,8 +13,11 @@ data class PartyDetails(
     var partyBudget: String?,
     var partyDestination: String?,
     var partyGuest: Int?,
-    var partyType: String?,
-    var selectedFood: ArrayList<Food>?,
+    var partyType: ArrayList<String> = ArrayList(),
+    var selectedCaterer: Caterer?,
     var selectedDestination: Venue?,
-    var selectedCaterers: Caterers?
+    var extraNote: String?,
+    var guestNameList: ArrayList<String>?,
+    var checkedItemList: ArrayList<CheckedItem>?,
+    var locations: ArrayList<String>?
 )

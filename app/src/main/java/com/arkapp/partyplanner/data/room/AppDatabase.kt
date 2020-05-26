@@ -15,7 +15,7 @@ import com.arkapp.partyplanner.data.models.*
     UserLogin::class,
     Food::class,
     Venue::class,
-    Caterers::class,
+    Caterer::class,
     UnfinishedDetails::class,
     SummaryDetails::class,
     HistorySummary::class], version = 1)

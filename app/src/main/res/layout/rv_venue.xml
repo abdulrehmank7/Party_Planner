@@ -6,7 +6,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/parent"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:clickable="true"
         android:focusable="true"
@@ -14,27 +14,19 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.options.OptionsFragment">
-
-            <ImageView
-                android:id="@+id/venueImg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/venueName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:elevation="8dp"
-                android:textColor="@color/white"
+                android:gravity="center"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/venueAdd"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Name adresss" />
 
             <TextView
@@ -42,30 +34,123 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:elevation="8dp"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/venueName"
                 tools:text="adress adressssafdreasd" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toTopOf="@+id/venueName" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_person"
+                android:tint="@color/colorPrimaryCustomDark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/venueAdd" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@drawable/bg_gradient_dark"
+            <TextView
+                android:id="@+id/capacity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="@+id/imageView"
+                tools:text="34 Guest" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_call"
+                android:tint="@color/colorPrimaryCustomDark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/capacity" />
+
+            <TextView
+                android:id="@+id/contact"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/imageView2"
+                tools:text="6646853" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Price:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contact" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="@+id/textView"
+                tools:text="$500" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_location"
+                android:tint="@color/colorPrimaryCustomDark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/price" />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3"
+                tools:text="North" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Suitable For:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/suitable"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/suitable"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/suitable"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view"
-                tools:visibility="@string/hide_bottom_view_on_scroll_behavior" />
-
+                app:layout_constraintStart_toEndOf="@id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/location"
+                tools:text="sfgldsfjlkjflkgjsdflkgj lk dgjldfjglkdg ld gsjskdfjg flskf glksdfkjg s" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

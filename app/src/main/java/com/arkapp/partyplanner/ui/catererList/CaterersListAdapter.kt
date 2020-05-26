@@ -9,10 +9,11 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
-import com.arkapp.partyplanner.data.models.Caterers
+import com.arkapp.partyplanner.data.models.Caterer
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.utils.addUnfinishedData
-import com.arkapp.partyplanner.utils.loadImage
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 /**
  * Created by Abdul Rehman on 28-02-2020.
@@ -21,19 +22,21 @@ import com.arkapp.partyplanner.utils.loadImage
 
 class CaterersListAdapter(
     private val context: Context,
-    private val caterersList: List<Caterers>,
+    private val caterersList: List<Caterer>,
     private val navController: NavController,
     private val prefRepository: PrefRepository,
     private val lifecycleScope: LifecycleCoroutineScope
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val gson = Gson()
+    private val type = object : TypeToken<ArrayList<String>>() {}.type!!
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return CatereresListViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.rv_venue,
+                R.layout.rv_caterer,
                 parent,
                 false
             )
@@ -45,20 +48,26 @@ class CaterersListAdapter(
         val binding = (holder as CatereresListViewHolder).viewBinding
 
         val caterersData = caterersList[position]
-        binding.venueName.text = caterersData.name
-        binding.venueAdd.text = caterersData.address
-        binding.venueImg.loadImage(caterersData.resId)
+        binding.name.text = caterersData.name.trim()
+        binding.price.text = "$${caterersData.pricePerPax}"
 
+        val partyTypes = gson.fromJson<ArrayList<String>>(caterersData.partyType, type)
+        var partyTypeString = ""
+
+        for (x in partyTypes) {
+            partyTypeString += "$x, "
+        }
+        binding.partyTypeValue.text = partyTypeString.substring(0, partyTypeString.length - 2)
 
         binding.parent.setOnClickListener {
             val details = prefRepository.getCurrentPartyDetails()
-            details.selectedCaterers = caterersData
+            details.selectedCaterer = caterersData
             prefRepository.setCurrentPartyDetails(details)
 
             if (prefRepository.getCurrentPartyDetails().partyDestination == context.getString(R.string.home))
                 navController.navigate(R.id.action_caterersListFragment_to_finalChecklistFragment)
             else {
-                navController.navigate(R.id.action_caterersListFragment_to_venueListFragment)
+                navController.navigate(R.id.action_caterersListFragment_to_venueLocationFragment)
                 addUnfinishedData(lifecycleScope, context, prefRepository)
             }
         }
