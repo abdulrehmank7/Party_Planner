@@ -9,10 +9,7 @@ import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Caterer
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
-import com.arkapp.partyplanner.utils.HIGH_BUDGED_LIMIT
-import com.arkapp.partyplanner.utils.LOW_BUDGED_LIMIT
-import com.arkapp.partyplanner.utils.MEDIUM_BUDGED_LIMIT
-import com.arkapp.partyplanner.utils.initVerticalAdapter
+import com.arkapp.partyplanner.utils.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_venue_list.*
@@ -31,7 +28,7 @@ class CaterersListFragment : Fragment(R.layout.fragment_venue_list) {
             getString(R.string.low) -> LOW_BUDGED_LIMIT
             getString(R.string.medium) -> MEDIUM_BUDGED_LIMIT
             getString(R.string.high) -> HIGH_BUDGED_LIMIT
-            getString(R.string.very_high) -> HIGH_BUDGED_LIMIT
+            getString(R.string.very_high) -> VERY_HIGH_BUDGED_LIMIT
             else -> HIGH_BUDGED_LIMIT
         }
 

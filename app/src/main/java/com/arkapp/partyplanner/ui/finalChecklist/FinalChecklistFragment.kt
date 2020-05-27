@@ -1,5 +1,6 @@
 package com.arkapp.partyplanner.ui.finalChecklist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentFinalChecklistBinding
 import com.arkapp.partyplanner.utils.*
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,6 +25,7 @@ class FinalChecklistFragment : Fragment() {
 
     private lateinit var details: PartyDetails
     private lateinit var binding: FragmentFinalChecklistBinding
+    private val arrayListType = object : TypeToken<ArrayList<String>>() {}.type!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,18 +43,18 @@ class FinalChecklistFragment : Fragment() {
                     val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
 
                     details = convertPartyFromSummary(summaryData[0])
-                    //setPartyData()
+                    setAllPartyData()
                 }
             }
             OPTION_PAST -> {
                 deleteUnfinishedData()
                 details = prefRepository.getCurrentPartyDetails()
-                //setPartyData()
+                setAllPartyData()
             }
             else -> {
                 deleteUnfinishedData()
                 details = prefRepository.getCurrentPartyDetails()
-                //setPartyData()
+                setAllPartyData()
                 addSummaryData()
                 addHistorySummaryData()
             }
@@ -84,43 +87,99 @@ class FinalChecklistFragment : Fragment() {
             }
     }
 
-/*    @SuppressLint("SetTextI18n")
-    private fun setPartyData() {
+    @SuppressLint("SetTextI18n")
+    private fun setAllPartyData() {
         binding.partyDate.text = details.partyDate?.getFormattedDate()
         binding.destinationType.text = details.partyDestination
         binding.totalGuest.text = "${details.partyGuest} Guests"
-        binding.partyType.text =
-            if (details.partyType == PARTY_TYPE_BABY_SHOWER)
-                getString(R.string.baby_shower)
-            else
-                getString(R.string.party_celebration)
 
-        binding.selectedFoodRv.initVerticalAdapter(SelectedFoodListAdapter(details.selectedFood!!),
-                                                   true)
+        setLocations()
+        setBudget()
+        setSelectedPartyTypes()
+        setCatererDetails()
+        setVenueDetails()
+        setSpecialDetails()
+    }
 
-        binding.include2.venueName.text = details.selectedCaterer?.name
-        binding.include2.venueAdd.text = details.selectedCaterers?.address
-        binding.include2.venueImg.loadImage(details.selectedCaterers!!.resId)
+    private fun setLocations() {
+        var locationString = ""
+        for (x in details.locations!!) {
+            locationString += "$x, "
+        }
+        binding.locationSelected.text = locationString.substring(0, locationString.length - 2)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setBudget() {
+        val budgetLimit = when (details.partyBudget) {
+            getString(R.string.low) -> "$200 - $400"
+            getString(R.string.medium) -> "$400 - $600"
+            getString(R.string.high) -> "$600 - $800"
+            getString(R.string.very_high) -> "More than $800"
+            else -> "$200 - $400"
+        }
+        binding.budgetSelected.text = "$budgetLimit (${details.partyBudget})"
+        binding.partyBudget.text = "$${details.selectedCaterer!!.pricePerPax * details.partyGuest!!}"
+    }
+
+    private fun setSelectedPartyTypes() {
+        binding.selectedPartyTypeRv.initGridAdapter(
+            SelectedPartyTypeAdapter(getPartyTypeFromStringArray(details.partyType)), true, 3)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setCatererDetails() {
+        binding.include2.name.text = details.selectedCaterer!!.name.trim()
+        binding.include2.price.text = "$${details.selectedCaterer!!.pricePerPax}"
+        val partyTypes = gson.fromJson<ArrayList<String>>(details.selectedCaterer!!.partyType,
+                                                          arrayListType)
+        var partyTypeString = ""
+        for (x in partyTypes) {
+            partyTypeString += "$x, "
+        }
+        binding.include2.partyTypeValue.text = partyTypeString.substring(0,
+                                                                         partyTypeString.length - 2)
         binding.include2.parent.isEnabled = false
+    }
 
+    @SuppressLint("SetTextI18n")
+    private fun setVenueDetails() {
         if (details.partyDestination != getString(R.string.home)) {
-            binding.include.venueName.text = details.selectedDestination?.name
-            binding.include.venueAdd.text = details.selectedDestination?.address
-            binding.include.venueImg.loadImage(details.selectedDestination!!.resId)
+            binding.include.venueName.text = details.selectedDestination!!.name
+            binding.include.venueAdd.text = details.selectedDestination!!.address
+            binding.include.capacity.text = "${details.selectedDestination!!.capacity} Guest"
+            binding.include.contact.text = details.selectedDestination!!.contact
+            binding.include.price.text = "$${details.selectedDestination!!.price}"
+            binding.include.location.text = details.selectedDestination!!.location
+            val partyTypes = gson.fromJson<ArrayList<String>>(details.selectedDestination!!.partyType,
+                                                              arrayListType)
+            var partyTypeStringVenue = ""
 
+            for (x in partyTypes) {
+                partyTypeStringVenue += "$x, "
+            }
+            binding.include.suitable.text = partyTypeStringVenue.substring(0,
+                                                                           partyTypeStringVenue.length - 2)
             binding.include.parent.isEnabled = false
         } else {
             binding.include.parent.hide()
             binding.venueTitle.hide()
         }
+    }
 
-        var estimatedBudget = 0.0
-        for (food in details.selectedFood!!) {
-            estimatedBudget += food.price
-        }
+    private fun setSpecialDetails() {
+        if (details.partyType.contains(PARTY_TYPE_MAGIC_SHOW))
+            binding.magicianDetails.show()
 
-        binding.partyBudget.text = "$${estimatedBudget * details.partyGuest!!}"
-    }*/
+        if (details.partyType.contains(PARTY_TYPE_DECORATION))
+            binding.decoratorDetails.show()
+
+        if (details.partyType.contains(PARTY_TYPE_ALCOHOL))
+            binding.alcoholDetails.show()
+    }
+
+
+
 
     private fun addSummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {

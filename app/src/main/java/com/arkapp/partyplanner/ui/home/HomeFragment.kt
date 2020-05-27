@@ -148,7 +148,7 @@ class HomeFragment : Fragment() {
                 if (it != null) {
                     val type = object : TypeToken<ArrayList<String>>() {}.type
                     partyTypeAdapter.selectedPartyType =
-                        getPartyTypeFromString(gson.fromJson(it, type))
+                        getPartyTypeFromStringArray(gson.fromJson(it, type))
                     partyTypeAdapter.notifyDataSetChanged()
                 }
             }
@@ -285,7 +285,7 @@ class HomeFragment : Fragment() {
         }
 
         detail.partyType.also {
-            partyTypeAdapter.selectedPartyType = getPartyTypeFromString(it)
+            partyTypeAdapter.selectedPartyType = getPartyTypeFromStringArray(it)
             partyTypeAdapter.notifyDataSetChanged()
         }
     }

@@ -65,7 +65,7 @@ class CaterersListAdapter(
             prefRepository.setCurrentPartyDetails(details)
 
             if (prefRepository.getCurrentPartyDetails().partyDestination == context.getString(R.string.home))
-                navController.navigate(R.id.action_caterersListFragment_to_finalChecklistFragment)
+                navController.navigate(R.id.action_caterersListFragment_to_specialSelectionFragment)
             else {
                 navController.navigate(R.id.action_caterersListFragment_to_venueLocationFragment)
                 addUnfinishedData(lifecycleScope, context, prefRepository)

@@ -41,6 +41,8 @@ const val PARTY_TYPE_KIDS_PARTY = "Kids Party"
 const val PARTY_TYPE_FORMAL_PARTY = "Formal Party"
 const val PARTY_TYPE_CHRISTMAS_PARTY = "Christmas Party"
 const val PARTY_TYPE_ALCOHOL = "Alcohol"
+const val PARTY_TYPE_MAGIC_SHOW = "Magic Show"
+const val PARTY_TYPE_DECORATION = "Party Decoration"
 
 const val LOCATION_NORTH = "North"
 const val LOCATION_SOUTH = "South"
@@ -88,10 +90,14 @@ fun getLocation(): ArrayList<Location> {
     return list
 }
 
-fun getPartyTypeFromString(stringList: ArrayList<String>): ArrayList<PartyType> {
+fun getPartyTypeFromStringArray(stringList: ArrayList<String>): ArrayList<PartyType> {
     val newPartyTypeList = ArrayList<PartyType>()
+    val allPartyType = getPartyTypes()
+
     for (partyTypeName in stringList) {
-        newPartyTypeList.add(getPartyTypes().find { it.title == partyTypeName }!!)
+        allPartyType.find { it.title == partyTypeName }.also {
+            if (it != null) newPartyTypeList.add(it)
+        }
     }
 
     return newPartyTypeList

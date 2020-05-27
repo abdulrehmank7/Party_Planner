@@ -7,9 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.repository.PrefRepository
-import com.arkapp.partyplanner.utils.hide
-import com.arkapp.partyplanner.utils.loadImage
-import com.arkapp.partyplanner.utils.show
+import com.arkapp.partyplanner.utils.*
 import kotlinx.android.synthetic.main.fragment_special_selection.*
 import kotlinx.android.synthetic.main.rv_location.view.*
 
@@ -21,23 +19,23 @@ class SpecialSelectionFragment : Fragment(R.layout.fragment_special_selection) {
         super.onViewCreated(view, savedInstanceState)
 
         magician.icon.loadImage(R.drawable.ic_tarot)
-        magician.title.text = getString(R.string.magician)
+        magician.title.text = PARTY_TYPE_MAGIC_SHOW
 
         decoration.icon.loadImage(R.drawable.ic_balloon)
-        decoration.title.text = getString(R.string.decoration)
+        decoration.title.text = PARTY_TYPE_DECORATION
 
         magician.setOnClickListener {
             if (magician.tick.isVisible) {
 
                 val details = prefRepository.getCurrentPartyDetails()
-                details.partyType.remove(getString(R.string.magician))
+                details.partyType.remove(PARTY_TYPE_MAGIC_SHOW)
                 prefRepository.setCurrentPartyDetails(details)
 
                 magician.tick.hide()
             } else {
 
                 val details = prefRepository.getCurrentPartyDetails()
-                details.partyType.add(getString(R.string.magician))
+                details.partyType.add(PARTY_TYPE_MAGIC_SHOW)
                 prefRepository.setCurrentPartyDetails(details)
 
                 magician.tick.show()
@@ -48,14 +46,14 @@ class SpecialSelectionFragment : Fragment(R.layout.fragment_special_selection) {
             if (decoration.tick.isVisible) {
 
                 val details = prefRepository.getCurrentPartyDetails()
-                details.partyType.remove(getString(R.string.decoration))
+                details.partyType.remove(PARTY_TYPE_DECORATION)
                 prefRepository.setCurrentPartyDetails(details)
 
                 decoration.tick.hide()
             } else {
 
                 val details = prefRepository.getCurrentPartyDetails()
-                details.partyType.add(getString(R.string.decoration))
+                details.partyType.add(PARTY_TYPE_DECORATION)
                 prefRepository.setCurrentPartyDetails(details)
 
                 decoration.tick.show()

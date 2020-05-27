@@ -37,12 +37,14 @@
     <string name="party_type">Party Type:</string>
     <string name="selected_food">Selected Food</string>
     <string name="selected_venue">Selected Venue</string>
+    <string name="selected_party_type">Selected Party Type</string>
     <string name="estimated_party_budget">Estimated Party Budget</string>
     <string name="selected_caterer">Selected Caterer</string>
     <string name="logout">Logout</string>
 
     <string name="no_history_found">No history found!</string>
     <string name="generate_results">Generate Results</string>
-    <string name="magician">Magic Show</string>
-    <string name="decoration">Party Decoration</string>
+    <string name="budget_selected">Budget Selected:</string>
+    <string name="location_selected">Location Selected:</string>
+    <string name="enter_notes">Enter notes here…</string>
 </resources>

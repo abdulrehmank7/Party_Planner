@@ -91,11 +91,11 @@
         android:name="com.arkapp.partyplanner.ui.catererList.CaterersListFragment"
         android:label="Select Caterer">
         <action
-            android:id="@+id/action_caterersListFragment_to_finalChecklistFragment"
-            app:destination="@id/finalChecklistFragment" />
-        <action
             android:id="@+id/action_caterersListFragment_to_venueLocationFragment"
             app:destination="@id/venueLocationFragment" />
+        <action
+            android:id="@+id/action_caterersListFragment_to_specialSelectionFragment"
+            app:destination="@id/specialSelectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/historySummaryFragment"
