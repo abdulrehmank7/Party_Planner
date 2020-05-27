@@ -64,7 +64,7 @@ class VenueListAdapter(
             details.selectedDestination = venueData
             prefRepository.setCurrentPartyDetails(details)
 
-            navController.navigate(R.id.action_venueListFragment_to_finalChecklistFragment)
+            navController.navigate(R.id.action_venueListFragment_to_specialSelectionFragment)
         }
 
     }

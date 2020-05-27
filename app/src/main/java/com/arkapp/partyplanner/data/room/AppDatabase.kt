@@ -13,7 +13,6 @@ import com.arkapp.partyplanner.data.models.*
 
 @Database(entities = [
     UserLogin::class,
-    Food::class,
     Venue::class,
     Caterer::class,
     UnfinishedDetails::class,
@@ -22,8 +21,6 @@ import com.arkapp.partyplanner.data.models.*
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userLoginDao(): UserLoginDao
-
-    abstract fun foodDao(): FoodDao
 
     abstract fun venueDao(): VenueDao
 

@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
-import com.arkapp.partyplanner.data.models.Food
 
 /**
  * Created by Abdul Rehman on 28-02-2020.

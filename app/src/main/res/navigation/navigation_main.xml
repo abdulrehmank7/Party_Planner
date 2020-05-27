@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation_main"
     app:startDestination="@id/splashFragment">
 
     <fragment
@@ -63,21 +62,12 @@
             app:destination="@id/historySummaryFragment" />
     </fragment>
     <fragment
-        android:id="@+id/foodListFragment"
-        android:name="com.arkapp.partyplanner.ui.foodList.FoodListFragment"
-        android:label="Select Food item"
-        tools:layout="@layout/fragment_food_list">
-        <action
-            android:id="@+id/action_foodListFragment_to_caterersListFragment"
-            app:destination="@id/caterersListFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/venueListFragment"
         android:name="com.arkapp.partyplanner.ui.venueList.VenueListFragment"
         android:label="Select Venue">
         <action
-            android:id="@+id/action_venueListFragment_to_finalChecklistFragment"
-            app:destination="@id/finalChecklistFragment" />
+            android:id="@+id/action_venueListFragment_to_specialSelectionFragment"
+            app:destination="@id/specialSelectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/finalChecklistFragment"
@@ -124,5 +114,14 @@
         <action
             android:id="@+id/action_venueLocationFragment_to_venueListFragment"
             app:destination="@id/venueListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/specialSelectionFragment"
+        android:name="com.arkapp.partyplanner.ui.specialSelection.SpecialSelectionFragment"
+        android:label="Select special options"
+        tools:layout="@layout/fragment_special_selection">
+        <action
+            android:id="@+id/action_specialSelectionFragment_to_finalChecklistFragment"
+            app:destination="@id/finalChecklistFragment" />
     </fragment>
 </navigation>
