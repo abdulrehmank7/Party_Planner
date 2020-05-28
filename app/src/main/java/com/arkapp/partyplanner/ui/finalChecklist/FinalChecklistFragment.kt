@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -43,6 +44,8 @@ class FinalChecklistFragment : Fragment() {
                     val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
 
                     details = convertPartyFromSummary(summaryData[0])
+                    prefRepository.setCurrentPartyDetails(details)
+
                     setAllPartyData()
                 }
             }
@@ -55,8 +58,9 @@ class FinalChecklistFragment : Fragment() {
                 deleteUnfinishedData()
                 details = prefRepository.getCurrentPartyDetails()
                 setAllPartyData()
-                addSummaryData()
-                addHistorySummaryData()
+                updateSummaryData()
+                if (!OPENED_GUEST_LIST)
+                    updateHistorySummaryData()
             }
         }
 
@@ -66,6 +70,7 @@ class FinalChecklistFragment : Fragment() {
                 prefRepository
                     .setCurrentPartyDetails(
                         PartyDetails(
+                            null,
                             null,
                             null,
                             null,
@@ -92,6 +97,9 @@ class FinalChecklistFragment : Fragment() {
         binding.partyDate.text = details.partyDate?.getFormattedDate()
         binding.destinationType.text = details.partyDestination
         binding.totalGuest.text = "${details.partyGuest} Guests"
+        binding.notesEt.setText(details.extraNote)
+
+        setViewListeners()
 
         setLocations()
         setBudget()
@@ -101,12 +109,37 @@ class FinalChecklistFragment : Fragment() {
         setSpecialDetails()
     }
 
-    private fun setLocations() {
-        var locationString = ""
-        for (x in details.locations!!) {
-            locationString += "$x, "
+    private fun setViewListeners() {
+        binding.updateGuestBtn.setOnClickListener {
+            details.guestNameList.also {
+                GUEST_LIST_NAMES = it ?: ArrayList()
+            }
+            addEmptyGuest(details.partyGuest!!)
+            findNavController().navigate(R.id.action_finalChecklistFragment_to_guestListFragment)
         }
-        binding.locationSelected.text = locationString.substring(0, locationString.length - 2)
+
+        binding.notesEt.doAfterTextChanged {
+
+            val details = prefRepository.getCurrentPartyDetails()
+            details.extraNote = it.toString()
+            prefRepository.setCurrentPartyDetails(details)
+
+            if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST || CURRENT_SELECTED_OPTION == OPTION_CREATE)
+                updateSummaryData()
+        }
+    }
+
+    private fun setLocations() {
+        if (details.locations.isNullOrEmpty()) {
+            binding.locationSelected.hide()
+            binding.textView22.hide()
+        } else {
+            var locationString = ""
+            for (x in details.locations!!) {
+                locationString += "$x, "
+            }
+            binding.locationSelected.text = locationString.substring(0, locationString.length - 2)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -178,10 +211,7 @@ class FinalChecklistFragment : Fragment() {
             binding.alcoholDetails.show()
     }
 
-
-
-
-    private fun addSummaryData() {
+    private fun updateSummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
             summaryDao.delete(prefRepository.getCurrentUser()?.uid!!)
@@ -197,7 +227,7 @@ class FinalChecklistFragment : Fragment() {
         }
     }
 
-    private fun addHistorySummaryData() {
+    private fun updateHistorySummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val summaryDao = AppDatabase.getDatabase(requireContext()).historySummaryDao()
             summaryDao.insert(convertHistorySummary(prefRepository.getCurrentPartyDetails(),

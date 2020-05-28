@@ -23,7 +23,6 @@ const val MEDIUM_BUDGED_LIMIT = 400.0
 const val HIGH_BUDGED_LIMIT = 600.0
 const val VERY_HIGH_BUDGED_LIMIT = 100000.0
 
-
 const val OPTION_CREATE = 0
 const val OPTION_CHECKLIST = 1
 const val OPTION_UNFINISHED = 2
@@ -54,6 +53,8 @@ const val LOCATION_CENTRAL = "Central"
 
 var ENTERED_USER_NAME: String = ""
 var CURRENT_SELECTED_OPTION: Int = OPTION_CREATE
+var GUEST_LIST_NAMES = ArrayList<CheckedItem>()
+var OPENED_GUEST_LIST = false
 
 val gson = Gson()
 
@@ -836,7 +837,7 @@ fun getCatererList(): ArrayList<Caterer> {
 
 fun convertUnfinished(partyDetails: PartyDetails, uid: Int): UnfinishedDetails {
     return UnfinishedDetails(
-        null,
+        partyDetails.id,
         uid,
         gson.toJson(partyDetails.partyDate),
         partyDetails.partyBudget,
@@ -854,7 +855,7 @@ fun convertUnfinished(partyDetails: PartyDetails, uid: Int): UnfinishedDetails {
 
 fun convertSummary(partyDetails: PartyDetails, uid: Int): SummaryDetails {
     return SummaryDetails(
-        null,
+        partyDetails.id,
         uid,
         gson.toJson(partyDetails.partyDate),
         partyDetails.partyBudget,
@@ -872,7 +873,7 @@ fun convertSummary(partyDetails: PartyDetails, uid: Int): SummaryDetails {
 
 fun convertHistorySummary(partyDetails: PartyDetails, uid: Int): HistorySummary {
     return HistorySummary(
-        null,
+        partyDetails.id,
         uid,
         gson.toJson(partyDetails.partyDate),
         partyDetails.partyBudget,
@@ -894,11 +895,12 @@ fun convertPartyFromSummary(summary: SummaryDetails): PartyDetails {
     val type2 = object : TypeToken<ArrayList<CheckedItem>>() {}.type
 
     val selectedPartyType = gson.fromJson<ArrayList<String>>(summary.partyType, type1)
-    val guestList = gson.fromJson<ArrayList<String>>(summary.guestNameList, type1)
+    val guestList = gson.fromJson<ArrayList<CheckedItem>>(summary.guestNameList, type2)
     val checkedItemList = gson.fromJson<ArrayList<CheckedItem>>(summary.checkedItemList, type2)
     val selectedLocation = gson.fromJson<ArrayList<String>>(summary.locations, type1)
 
     return PartyDetails(
+        summary.id,
         gson.fromJson(summary.partyDate, Date::class.java),
         summary.partyBudget,
         summary.partyDestination,
@@ -919,11 +921,12 @@ fun convertPartyFromHistorySummary(summary: HistorySummary): PartyDetails {
     val type2 = object : TypeToken<ArrayList<CheckedItem>>() {}.type
 
     val selectedPartyType = gson.fromJson<ArrayList<String>>(summary.partyType, type1)
-    val guestList = gson.fromJson<ArrayList<String>>(summary.guestNameList, type1)
+    val guestList = gson.fromJson<ArrayList<CheckedItem>>(summary.guestNameList, type2)
     val checkedItemList = gson.fromJson<ArrayList<CheckedItem>>(summary.checkedItemList, type2)
     val selectedLocation = gson.fromJson<ArrayList<String>>(summary.locations, type1)
 
     return PartyDetails(
+        summary.id,
         gson.fromJson(summary.partyDate, Date::class.java),
         summary.partyBudget,
         summary.partyDestination,
@@ -947,3 +950,12 @@ fun addUnfinishedData(lifecycleScope: LifecycleCoroutineScope,
                                                prefRepository.getCurrentUser()?.uid!!))
     }
 }
+
+fun addEmptyGuest(totalGuest: Int) {
+    if (GUEST_LIST_NAMES.size < totalGuest)
+        for (guest in 0 until totalGuest - GUEST_LIST_NAMES.size) {
+            GUEST_LIST_NAMES.add(CheckedItem("", false))
+        }
+}
+
+fun getRandom() = (0..10000).random()

@@ -85,6 +85,9 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/historySummaryFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_finalChecklistFragment_to_guestListFragment"
+            app:destination="@id/guestListFragment" />
     </fragment>
     <fragment
         android:id="@+id/caterersListFragment"
@@ -123,5 +126,17 @@
         <action
             android:id="@+id/action_specialSelectionFragment_to_finalChecklistFragment"
             app:destination="@id/finalChecklistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/guestListFragment"
+        android:name="com.arkapp.partyplanner.ui.guestList.GuestListFragment"
+        android:label="Enter Guest details"
+        tools:layout="@layout/fragment_guest_list">
+        <action
+            android:id="@+id/action_guestListFragment_to_finalChecklistFragment"
+            app:destination="@id/finalChecklistFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/finalChecklistFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

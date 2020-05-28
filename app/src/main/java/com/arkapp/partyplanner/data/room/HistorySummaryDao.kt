@@ -19,4 +19,7 @@ interface HistorySummaryDao {
 
     @Query("SELECT * FROM HISTORY_SUMMARY WHERE uid = :userUid")
     suspend fun getHistorySummary(userUid: Int): List<HistorySummary>
+
+    @Query("DELETE FROM HISTORY_SUMMARY WHERE id = :id")
+    suspend fun delete(id: Int)
 }

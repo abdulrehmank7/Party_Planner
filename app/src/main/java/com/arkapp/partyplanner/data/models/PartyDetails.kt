@@ -9,6 +9,7 @@ import kotlin.collections.ArrayList
  */
 
 data class PartyDetails(
+    var id: Int?,
     var partyDate: Date?,
     var partyBudget: String?,
     var partyDestination: String?,
@@ -17,7 +18,7 @@ data class PartyDetails(
     var selectedCaterer: Caterer?,
     var selectedDestination: Venue?,
     var extraNote: String?,
-    var guestNameList: ArrayList<String>?,
+    var guestNameList: ArrayList<CheckedItem>?,
     var checkedItemList: ArrayList<CheckedItem>?,
     var locations: ArrayList<String>?
 )

@@ -24,6 +24,8 @@ class OptionsFragment : Fragment(R.layout.fragment_options) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        OPENED_GUEST_LIST = false
+
         addUserName()
 
         createChecklistBtn.setOnClickListener {

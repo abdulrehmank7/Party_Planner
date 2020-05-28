@@ -63,6 +63,12 @@ class HomeFragment : Fragment() {
                 binding.guest.error = "Please enter guest count!"
                 return@setOnClickListener
             }
+
+            if (prefRepository.getCurrentPartyDetails().partyType.isEmpty()) {
+                requireContext().toastShort("Please select party type")
+                return@setOnClickListener
+            }
+
             binding.guest.error = null
 
             addUnfinishedData(lifecycleScope, requireContext(), prefRepository)
@@ -80,6 +86,7 @@ class HomeFragment : Fragment() {
                 prefRepository
                     .setCurrentPartyDetails(
                         PartyDetails(
+                            null,
                             null,
                             null,
                             null,
@@ -297,6 +304,7 @@ class HomeFragment : Fragment() {
 
     private fun resetPartyData() {
         val details = PartyDetails(
+            null,
             Calendar.getInstance().time,
             getString(R.string.low),
             getString(R.string.home),
