@@ -38,7 +38,7 @@
     <string name="selected_food">Selected Food</string>
     <string name="selected_venue">Selected Venue</string>
     <string name="selected_party_type">Selected Party Type</string>
-    <string name="estimated_party_budget">Estimated Party Budget</string>
+    <string name="estimated_party_budget">Party Budget</string>
     <string name="selected_caterer">Selected Caterer</string>
     <string name="logout">Logout</string>
 
@@ -48,6 +48,4 @@
     <string name="location_selected">Location Selected:</string>
     <string name="enter_notes">Enter notes here…</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

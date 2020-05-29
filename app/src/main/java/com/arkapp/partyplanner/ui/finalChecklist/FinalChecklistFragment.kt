@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
+import com.arkapp.partyplanner.data.models.CheckedItem
 import com.arkapp.partyplanner.data.models.PartyDetails
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
@@ -36,6 +37,8 @@ class FinalChecklistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().hideKeyboard()
 
         when (CURRENT_SELECTED_OPTION) {
             OPTION_CHECKLIST -> {
@@ -99,14 +102,45 @@ class FinalChecklistFragment : Fragment() {
         binding.totalGuest.text = "${details.partyGuest} Guests"
         binding.notesEt.setText(details.extraNote)
 
-        setViewListeners()
-
+        setCheckBox()
         setLocations()
         setBudget()
         setSelectedPartyTypes()
         setCatererDetails()
         setVenueDetails()
         setSpecialDetails()
+
+        setViewListeners()
+    }
+
+    private fun setCheckBox() {
+        details.checkedItemList.also {
+            if (!it.isNullOrEmpty()) {
+                for (item in it) {
+                    when (item.itemName) {
+                        CB_PARTY_TYPE -> binding.selectedPartyTypeCb.isChecked = item.selected
+                        CB_CATERER -> binding.catererCb.isChecked = item.selected
+                        CB_VENUE -> binding.venueCb.isChecked = item.selected
+                        CB_DECORATOR -> binding.decorationCb.isChecked = item.selected
+                        CB_MAGIC_SHOW -> binding.magicCb.isChecked = item.selected
+                        CB_ALCOHOL -> binding.alcoholCb.isChecked = item.selected
+                        CB_BUDGET -> binding.budgetCb.isChecked = item.selected
+                    }
+                }
+            } else {
+                //adding blank values in the checked item list
+                details.checkedItemList = ArrayList()
+                details.checkedItemList!!.add(CheckedItem(CB_PARTY_TYPE, false))
+                details.checkedItemList!!.add(CheckedItem(CB_CATERER, false))
+                details.checkedItemList!!.add(CheckedItem(CB_VENUE, false))
+                details.checkedItemList!!.add(CheckedItem(CB_DECORATOR, false))
+                details.checkedItemList!!.add(CheckedItem(CB_MAGIC_SHOW, false))
+                details.checkedItemList!!.add(CheckedItem(CB_ALCOHOL, false))
+                details.checkedItemList!!.add(CheckedItem(CB_BUDGET, false))
+                prefRepository.setCurrentPartyDetails(details)
+                updateSummaryData()
+            }
+        }
     }
 
     private fun setViewListeners() {
@@ -127,6 +161,70 @@ class FinalChecklistFragment : Fragment() {
             if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST || CURRENT_SELECTED_OPTION == OPTION_CREATE)
                 updateSummaryData()
         }
+
+        binding.selectedPartyTypeCb.setOnCheckedChangeListener { _, isChecked ->
+            val lastValue = details.checkedItemList!!.find { it.itemName == CB_PARTY_TYPE }
+            details.checkedItemList?.remove(lastValue!!)
+            details.checkedItemList?.add(CheckedItem(CB_PARTY_TYPE, isChecked))
+
+            prefRepository.setCurrentPartyDetails(details)
+            updateSummaryData()
+        }
+
+        binding.catererCb.setOnCheckedChangeListener { _, isChecked ->
+            val lastValue = details.checkedItemList!!.find { it.itemName == CB_CATERER }
+            details.checkedItemList?.remove(lastValue!!)
+            details.checkedItemList?.add(CheckedItem(CB_CATERER, isChecked))
+
+            prefRepository.setCurrentPartyDetails(details)
+            updateSummaryData()
+        }
+
+        binding.venueCb.setOnCheckedChangeListener { _, isChecked ->
+            val lastValue = details.checkedItemList!!.find { it.itemName == CB_VENUE }
+            details.checkedItemList?.remove(lastValue!!)
+            details.checkedItemList?.add(CheckedItem(CB_VENUE, isChecked))
+
+            prefRepository.setCurrentPartyDetails(details)
+            updateSummaryData()
+        }
+
+        binding.magicCb.setOnCheckedChangeListener { _, isChecked ->
+            val lastValue = details.checkedItemList!!.find { it.itemName == CB_MAGIC_SHOW }
+            details.checkedItemList?.remove(lastValue!!)
+            details.checkedItemList?.add(CheckedItem(CB_MAGIC_SHOW, isChecked))
+
+            prefRepository.setCurrentPartyDetails(details)
+            updateSummaryData()
+        }
+
+        binding.decorationCb.setOnCheckedChangeListener { _, isChecked ->
+            val lastValue = details.checkedItemList!!.find { it.itemName == CB_DECORATOR }
+            details.checkedItemList?.remove(lastValue!!)
+            details.checkedItemList?.add(CheckedItem(CB_DECORATOR, isChecked))
+
+            prefRepository.setCurrentPartyDetails(details)
+            updateSummaryData()
+        }
+
+        binding.alcoholCb.setOnCheckedChangeListener { _, isChecked ->
+            val lastValue = details.checkedItemList!!.find { it.itemName == CB_ALCOHOL }
+            details.checkedItemList?.remove(lastValue!!)
+            details.checkedItemList?.add(CheckedItem(CB_ALCOHOL, isChecked))
+
+            prefRepository.setCurrentPartyDetails(details)
+            updateSummaryData()
+        }
+
+        binding.budgetCb.setOnCheckedChangeListener { _, isChecked ->
+            val lastValue = details.checkedItemList!!.find { it.itemName == CB_BUDGET }
+            details.checkedItemList?.remove(lastValue!!)
+            details.checkedItemList?.add(CheckedItem(CB_BUDGET, isChecked))
+
+            prefRepository.setCurrentPartyDetails(details)
+            updateSummaryData()
+        }
+
     }
 
     private fun setLocations() {
@@ -197,6 +295,7 @@ class FinalChecklistFragment : Fragment() {
         } else {
             binding.include.parent.hide()
             binding.venueTitle.hide()
+            binding.venueCb.hide()
         }
     }
 

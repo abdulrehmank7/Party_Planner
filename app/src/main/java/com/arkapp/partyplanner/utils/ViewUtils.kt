@@ -1,5 +1,6 @@
 package com.arkapp.partyplanner.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
+
 
 fun Context.toast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
@@ -198,5 +201,14 @@ fun RecyclerView.initGridAdapter(
     this.adapter = adapter
 }
 
+fun Activity.hideKeyboard() {
+    val inputManager: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
+    // check if no view has focus:
+    val currentFocusedView = currentFocus
+    if (currentFocusedView != null) {
+        inputManager.hideSoftInputFromWindow(currentFocusedView.windowToken,
+                                             InputMethodManager.HIDE_NOT_ALWAYS)
+    }
+}
 

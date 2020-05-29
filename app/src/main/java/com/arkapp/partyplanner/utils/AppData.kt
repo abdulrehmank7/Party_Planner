@@ -51,6 +51,15 @@ const val LOCATION_CITY = "City"
 const val LOCATION_NORTH_EAST = "North East"
 const val LOCATION_CENTRAL = "Central"
 
+const val CB_PARTY_TYPE = "CB_PARTY_TYPE"
+const val CB_CATERER = "CB_CATERER"
+const val CB_VENUE = "CB_VENUE"
+const val CB_DECORATOR = "CB_DECORATOR"
+const val CB_MAGIC_SHOW = "CB_MAGIC_SHOW"
+const val CB_ALCOHOL = "CB_ALCOHOL"
+const val CB_BUDGET = "CB_BUDGET"
+
+
 var ENTERED_USER_NAME: String = ""
 var CURRENT_SELECTED_OPTION: Int = OPTION_CREATE
 var GUEST_LIST_NAMES = ArrayList<CheckedItem>()

@@ -24,6 +24,8 @@ class CaterersListFragment : Fragment(R.layout.fragment_venue_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().hideKeyboard()
+
         val budgetLimit = when (prefRepository.getCurrentPartyDetails().partyBudget) {
             getString(R.string.low) -> LOW_BUDGED_LIMIT
             getString(R.string.medium) -> MEDIUM_BUDGED_LIMIT
