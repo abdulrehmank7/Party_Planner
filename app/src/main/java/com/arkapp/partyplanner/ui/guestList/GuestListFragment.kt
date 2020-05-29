@@ -36,11 +36,10 @@ class GuestListFragment : Fragment(R.layout.fragment_guest_list) {
                 prefRepository.setCurrentPartyDetails(partyDetails)
 
                 this.remove()
-                if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST || CURRENT_SELECTED_OPTION == OPTION_CREATE) {
+                if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST || CURRENT_SELECTED_OPTION == OPTION_CREATE)
                     updateSummaryData()
-                } else {
-                    findNavController().navigate(R.id.action_guestListFragment_to_finalChecklistFragment)
-                }
+                else
+                    updateHistorySummaryData()
 
                 true
             }
@@ -55,6 +54,16 @@ class GuestListFragment : Fragment(R.layout.fragment_guest_list) {
                                              prefRepository.getCurrentUser()?.uid!!))
             findNavController().navigate(R.id.action_guestListFragment_to_finalChecklistFragment)
 
+        }
+    }
+
+    private fun updateHistorySummaryData() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val summaryDao = AppDatabase.getDatabase(requireContext()).historySummaryDao()
+            summaryDao.delete(prefRepository.getCurrentPartyDetails().id!!)
+            summaryDao.insert(convertHistorySummary(prefRepository.getCurrentPartyDetails(),
+                                                    prefRepository.getCurrentUser()?.uid!!))
+            findNavController().navigate(R.id.action_guestListFragment_to_finalChecklistFragment)
         }
     }
 

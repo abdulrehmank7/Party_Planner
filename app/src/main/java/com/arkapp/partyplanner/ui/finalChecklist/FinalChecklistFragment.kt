@@ -168,6 +168,8 @@ class FinalChecklistFragment : Fragment() {
 
             if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST || CURRENT_SELECTED_OPTION == OPTION_CREATE)
                 updateSummaryData()
+            else
+                updateHistorySummaryData()
         }
 
         setCbListener()
@@ -277,7 +279,10 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.add(CheckedItem(CB_PARTY_TYPE, isChecked))
 
             prefRepository.setCurrentPartyDetails(details)
-            updateSummaryData()
+            if (CURRENT_SELECTED_OPTION == OPTION_PAST)
+                updateHistorySummaryData()
+            else
+                updateSummaryData()
         }
 
         binding.catererCb.setOnCheckedChangeListener { _, isChecked ->
@@ -286,7 +291,10 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.add(CheckedItem(CB_CATERER, isChecked))
 
             prefRepository.setCurrentPartyDetails(details)
-            updateSummaryData()
+            if (CURRENT_SELECTED_OPTION == OPTION_PAST)
+                updateHistorySummaryData()
+            else
+                updateSummaryData()
         }
 
         binding.venueCb.setOnCheckedChangeListener { _, isChecked ->
@@ -295,7 +303,10 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.add(CheckedItem(CB_VENUE, isChecked))
 
             prefRepository.setCurrentPartyDetails(details)
-            updateSummaryData()
+            if (CURRENT_SELECTED_OPTION == OPTION_PAST)
+                updateHistorySummaryData()
+            else
+                updateSummaryData()
         }
 
         binding.magicCb.setOnCheckedChangeListener { _, isChecked ->
@@ -304,7 +315,10 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.add(CheckedItem(CB_MAGIC_SHOW, isChecked))
 
             prefRepository.setCurrentPartyDetails(details)
-            updateSummaryData()
+            if (CURRENT_SELECTED_OPTION == OPTION_PAST)
+                updateHistorySummaryData()
+            else
+                updateSummaryData()
         }
 
         binding.decorationCb.setOnCheckedChangeListener { _, isChecked ->
@@ -313,7 +327,10 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.add(CheckedItem(CB_DECORATOR, isChecked))
 
             prefRepository.setCurrentPartyDetails(details)
-            updateSummaryData()
+            if (CURRENT_SELECTED_OPTION == OPTION_PAST)
+                updateHistorySummaryData()
+            else
+                updateSummaryData()
         }
 
         binding.alcoholCb.setOnCheckedChangeListener { _, isChecked ->
@@ -322,7 +339,10 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.add(CheckedItem(CB_ALCOHOL, isChecked))
 
             prefRepository.setCurrentPartyDetails(details)
-            updateSummaryData()
+            if (CURRENT_SELECTED_OPTION == OPTION_PAST)
+                updateHistorySummaryData()
+            else
+                updateSummaryData()
         }
 
         binding.budgetCb.setOnCheckedChangeListener { _, isChecked ->
@@ -331,7 +351,10 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.add(CheckedItem(CB_BUDGET, isChecked))
 
             prefRepository.setCurrentPartyDetails(details)
-            updateSummaryData()
+            if (CURRENT_SELECTED_OPTION == OPTION_PAST)
+                updateHistorySummaryData()
+            else
+                updateSummaryData()
         }
     }
 
@@ -422,6 +445,7 @@ class FinalChecklistFragment : Fragment() {
 
 
     private fun updateSummaryData() {
+        println("updateSummaryData called")
         lifecycleScope.launch(Dispatchers.Main) {
             val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
             summaryDao.delete(prefRepository.getCurrentUser()?.uid!!)
@@ -440,15 +464,24 @@ class FinalChecklistFragment : Fragment() {
     private fun updateHistorySummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val summaryDao = AppDatabase.getDatabase(requireContext()).historySummaryDao()
-            summaryDao.insert(convertHistorySummary(prefRepository.getCurrentPartyDetails(),
-                                                    prefRepository.getCurrentUser()?.uid!!))
+            if (prefRepository.getCurrentPartyDetails().id == null) {
+                val details = prefRepository.getCurrentPartyDetails()
+                details.id = getRandom()
+                summaryDao.insert(convertHistorySummary(details,
+                                                        prefRepository.getCurrentUser()?.uid!!))
+            } else {
+                summaryDao.delete(prefRepository.getCurrentPartyDetails().id!!)
+                summaryDao.insert(convertHistorySummary(prefRepository.getCurrentPartyDetails(),
+                                                        prefRepository.getCurrentUser()?.uid!!))
+            }
         }
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        requireActivity().menuInflater.inflate(R.menu.menu_toolbar, menu)
+        if (CURRENT_SELECTED_OPTION != OPTION_PAST)
+            requireActivity().menuInflater.inflate(R.menu.menu_toolbar, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

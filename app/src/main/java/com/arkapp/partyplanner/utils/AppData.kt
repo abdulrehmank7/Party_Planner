@@ -898,6 +898,33 @@ fun convertHistorySummary(partyDetails: PartyDetails, uid: Int): HistorySummary 
     )
 }
 
+fun convertPartyFromUnfinished(unfinishedDetails: UnfinishedDetails): PartyDetails {
+
+    val type1 = object : TypeToken<ArrayList<String>>() {}.type
+    val type2 = object : TypeToken<ArrayList<CheckedItem>>() {}.type
+
+    val selectedPartyType = gson.fromJson<ArrayList<String>>(unfinishedDetails.partyType, type1)
+    val guestList = gson.fromJson<ArrayList<CheckedItem>>(unfinishedDetails.guestNameList, type2)
+    val checkedItemList = gson.fromJson<ArrayList<CheckedItem>>(unfinishedDetails.checkedItemList,
+                                                                type2)
+    val selectedLocation = gson.fromJson<ArrayList<String>>(unfinishedDetails.locations, type1)
+
+    return PartyDetails(
+        unfinishedDetails.id,
+        gson.fromJson(unfinishedDetails.partyDate, Date::class.java),
+        unfinishedDetails.partyBudget,
+        unfinishedDetails.partyDestination,
+        unfinishedDetails.partyGuest,
+        selectedPartyType,
+        gson.fromJson(unfinishedDetails.selectedCaterers, Caterer::class.java),
+        gson.fromJson(unfinishedDetails.selectedDestination, Venue::class.java),
+        unfinishedDetails.extraNote,
+        guestList,
+        checkedItemList,
+        selectedLocation
+    )
+}
+
 fun convertPartyFromSummary(summary: SummaryDetails): PartyDetails {
 
     val type1 = object : TypeToken<ArrayList<String>>() {}.type

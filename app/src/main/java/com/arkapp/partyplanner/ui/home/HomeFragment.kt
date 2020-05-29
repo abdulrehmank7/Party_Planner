@@ -15,8 +15,6 @@ import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentHomeBinding
 import com.arkapp.partyplanner.utils.*
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -29,7 +27,6 @@ class HomeFragment : Fragment() {
 
     private lateinit var partyTypeAdapter: PartyTypeAdapter
     private val prefRepository by lazy { PrefRepository(requireContext()) }
-    private val gson = Gson()
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -110,17 +107,14 @@ class HomeFragment : Fragment() {
             val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
             val unfinishedData = unfinishedDao.getUserUnfinished(prefRepository.getCurrentUser()?.uid!!)
 
-            val unfinishedDetail = unfinishedData[0]
+            val unfinishedDetail = convertPartyFromUnfinished(unfinishedData[0])
 
             unfinishedDetail.partyDate.also {
                 if (it != null) {
 
-                    val time = gson.fromJson(it, Date::class.java)
-                    if (time != null) {
-                        val selectedDate = Calendar.getInstance()
-                        selectedDate.time = time
-                        binding.calendarView.date = selectedDate.timeInMillis
-                    }
+                    val selectedDate = Calendar.getInstance()
+                    selectedDate.time = it
+                    binding.calendarView.date = selectedDate.timeInMillis
                 }
             }
 
@@ -152,12 +146,11 @@ class HomeFragment : Fragment() {
             }
 
             unfinishedDetail.partyType.also {
-                if (it != null) {
-                    val type = object : TypeToken<ArrayList<String>>() {}.type
-                    partyTypeAdapter.selectedPartyType =
-                        getPartyTypeFromStringArray(gson.fromJson(it, type))
-                    partyTypeAdapter.notifyDataSetChanged()
-                }
+                partyTypeAdapter.selectedPartyType = getPartyTypeFromStringArray(it)
+                partyTypeAdapter.notifyDataSetChanged()
+                val details = prefRepository.getCurrentPartyDetails()
+                details.partyType = it
+                prefRepository.setCurrentPartyDetails(details)
             }
         }
 
@@ -244,8 +237,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.venueParty.setOnClickListener {
-            binding.homeParty.background = requireContext().getDrawableRes(R.drawable.bg_unselected_start)
-            binding.venueParty.background = requireContext().getDrawableRes(R.drawable.bg_selected_end)
+            binding.homeParty.background = requireContext().getDrawable(R.drawable.bg_unselected_start)
+            binding.venueParty.background = requireContext().getDrawable(R.drawable.bg_selected_end)
 
             val details = prefRepository.getCurrentPartyDetails()
             details.partyDestination = getString(R.string.other_venue)
