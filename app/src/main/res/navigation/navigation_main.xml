@@ -68,6 +68,12 @@
         <action
             android:id="@+id/action_venueListFragment_to_specialSelectionFragment"
             app:destination="@id/specialSelectionFragment" />
+        <action
+            android:id="@+id/action_venueListFragment_to_finalChecklistFragment"
+            app:destination="@id/finalChecklistFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/finalChecklistFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/finalChecklistFragment"
@@ -88,6 +94,15 @@
         <action
             android:id="@+id/action_finalChecklistFragment_to_guestListFragment"
             app:destination="@id/guestListFragment" />
+        <action
+            android:id="@+id/action_finalChecklistFragment_to_caterersListFragment"
+            app:destination="@id/caterersListFragment" />
+        <action
+            android:id="@+id/action_finalChecklistFragment_to_venueListFragment"
+            app:destination="@id/venueListFragment" />
+        <action
+            android:id="@+id/action_finalChecklistFragment_to_venueLocationFragment"
+            app:destination="@id/venueLocationFragment" />
     </fragment>
     <fragment
         android:id="@+id/caterersListFragment"
@@ -99,6 +114,12 @@
         <action
             android:id="@+id/action_caterersListFragment_to_specialSelectionFragment"
             app:destination="@id/specialSelectionFragment" />
+        <action
+            android:id="@+id/action_caterersListFragment_to_finalChecklistFragment"
+            app:destination="@id/finalChecklistFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/finalChecklistFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/historySummaryFragment"
@@ -117,6 +138,12 @@
         <action
             android:id="@+id/action_venueLocationFragment_to_venueListFragment"
             app:destination="@id/venueListFragment" />
+        <action
+            android:id="@+id/action_venueLocationFragment_to_finalChecklistFragment"
+            app:destination="@id/finalChecklistFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/finalChecklistFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/specialSelectionFragment"

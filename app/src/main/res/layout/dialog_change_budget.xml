@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/select_budget"
+                android:textColor="@color/colorPrimaryCustomDark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/lowBudget"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_selected_start"
+                app:layout_constraintEnd_toStartOf="@+id/mediumBudget"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView24" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="$200 - $400"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/lowBudget"
+                app:layout_constraintEnd_toEndOf="@+id/lowBudget"
+                app:layout_constraintStart_toStartOf="@+id/lowBudget"
+                app:layout_constraintTop_toTopOf="@+id/lowBudget" />
+
+            <View
+                android:id="@+id/mediumBudget"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_unselected"
+                app:layout_constraintEnd_toStartOf="@+id/highBudget"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/lowBudget"
+                app:layout_constraintTop_toTopOf="@+id/lowBudget" />
+
+            <TextView
+                android:id="@+id/imageView3"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="$400 - $600"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/mediumBudget"
+                app:layout_constraintEnd_toEndOf="@+id/mediumBudget"
+                app:layout_constraintStart_toEndOf="@+id/lowBudget"
+                app:layout_constraintStart_toStartOf="@+id/mediumBudget"
+                app:layout_constraintTop_toTopOf="@+id/mediumBudget" />
+
+            <View
+                android:id="@+id/highBudget"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_unselected"
+                app:layout_constraintEnd_toStartOf="@+id/veryHighBudget"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/mediumBudget"
+                app:layout_constraintTop_toTopOf="@+id/mediumBudget" />
+
+            <TextView
+                android:id="@+id/imageView7"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="$600 - $800"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/highBudget"
+                app:layout_constraintEnd_toEndOf="@id/highBudget"
+                app:layout_constraintStart_toEndOf="@+id/mediumBudget"
+                app:layout_constraintStart_toStartOf="@+id/highBudget"
+                app:layout_constraintTop_toTopOf="@+id/highBudget" />
+
+            <View
+                android:id="@+id/veryHighBudget"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_unselected_end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/highBudget"
+                app:layout_constraintTop_toTopOf="@+id/highBudget" />
+
+            <TextView
+                android:id="@+id/imageView9"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="@string/more_than_800"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/veryHighBudget"
+                app:layout_constraintEnd_toEndOf="@id/veryHighBudget"
+                app:layout_constraintStart_toEndOf="@+id/highBudget"
+                app:layout_constraintStart_toStartOf="@+id/veryHighBudget"
+                app:layout_constraintTop_toTopOf="@+id/veryHighBudget" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/doneBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="Done"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lowBudget"
+                app:layout_constraintVertical_bias="1.0" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

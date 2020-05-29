@@ -183,10 +183,10 @@ class HomeFragment : Fragment() {
         binding.lowBudget.setOnClickListener {
             binding.budget.text = getString(R.string.low)
 
-            binding.lowBudget.background = requireContext().getDrawable(R.drawable.bg_selected_start)
-            binding.mediumBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
-            binding.highBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
-            binding.veryHighBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_end)
+            binding.lowBudget.background = requireContext().getDrawableRes(R.drawable.bg_selected_start)
+            binding.mediumBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
+            binding.highBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
+            binding.veryHighBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_end)
 
             val details = prefRepository.getCurrentPartyDetails()
             details.partyBudget = getString(R.string.low)
@@ -196,10 +196,10 @@ class HomeFragment : Fragment() {
         binding.mediumBudget.setOnClickListener {
             binding.budget.text = getString(R.string.medium)
 
-            binding.lowBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_start)
-            binding.mediumBudget.background = requireContext().getDrawable(R.drawable.bg_selected)
-            binding.highBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
-            binding.veryHighBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_end)
+            binding.lowBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_start)
+            binding.mediumBudget.background = requireContext().getDrawableRes(R.drawable.bg_selected)
+            binding.highBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
+            binding.veryHighBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_end)
 
             val details = prefRepository.getCurrentPartyDetails()
             details.partyBudget = getString(R.string.medium)
@@ -209,10 +209,10 @@ class HomeFragment : Fragment() {
         binding.highBudget.setOnClickListener {
             binding.budget.text = getString(R.string.high)
 
-            binding.lowBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_start)
-            binding.mediumBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
-            binding.highBudget.background = requireContext().getDrawable(R.drawable.bg_selected)
-            binding.veryHighBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_end)
+            binding.lowBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_start)
+            binding.mediumBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
+            binding.highBudget.background = requireContext().getDrawableRes(R.drawable.bg_selected)
+            binding.veryHighBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_end)
 
             val details = prefRepository.getCurrentPartyDetails()
             details.partyBudget = getString(R.string.high)
@@ -222,10 +222,10 @@ class HomeFragment : Fragment() {
         binding.veryHighBudget.setOnClickListener {
             binding.budget.text = getString(R.string.very_high)
 
-            binding.lowBudget.background = requireContext().getDrawable(R.drawable.bg_unselected_start)
-            binding.mediumBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
-            binding.highBudget.background = requireContext().getDrawable(R.drawable.bg_unselected)
-            binding.veryHighBudget.background = requireContext().getDrawable(R.drawable.bg_selected_end)
+            binding.lowBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_start)
+            binding.mediumBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
+            binding.highBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
+            binding.veryHighBudget.background = requireContext().getDrawableRes(R.drawable.bg_selected_end)
 
             val details = prefRepository.getCurrentPartyDetails()
             details.partyBudget = getString(R.string.very_high)
@@ -235,8 +235,8 @@ class HomeFragment : Fragment() {
 
     private fun initDestinationBtnListener() {
         binding.homeParty.setOnClickListener {
-            binding.homeParty.background = requireContext().getDrawable(R.drawable.bg_selected_start)
-            binding.venueParty.background = requireContext().getDrawable(R.drawable.bg_unselected_end)
+            binding.homeParty.background = requireContext().getDrawableRes(R.drawable.bg_selected_start)
+            binding.venueParty.background = requireContext().getDrawableRes(R.drawable.bg_unselected_end)
 
             val details = prefRepository.getCurrentPartyDetails()
             details.partyDestination = getString(R.string.home)
@@ -244,8 +244,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.venueParty.setOnClickListener {
-            binding.homeParty.background = requireContext().getDrawable(R.drawable.bg_unselected_start)
-            binding.venueParty.background = requireContext().getDrawable(R.drawable.bg_selected_end)
+            binding.homeParty.background = requireContext().getDrawableRes(R.drawable.bg_unselected_start)
+            binding.venueParty.background = requireContext().getDrawableRes(R.drawable.bg_selected_end)
 
             val details = prefRepository.getCurrentPartyDetails()
             details.partyDestination = getString(R.string.other_venue)

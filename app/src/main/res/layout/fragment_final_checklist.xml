@@ -40,20 +40,40 @@
 
             <TextView
                 android:id="@+id/partyDate"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="4dp"
+                android:gravity="center_vertical|end"
                 app:layout_constraintBottom_toBottomOf="@+id/textView15"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/editDateBtn"
+                app:layout_constraintStart_toEndOf="@+id/textView15"
                 app:layout_constraintTop_toTopOf="@+id/textView15"
                 tools:text="28-june-2020" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/editDateBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/partyDate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/partyDate">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="18dp"
                 android:text="@string/destination_type"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
@@ -62,21 +82,40 @@
 
             <TextView
                 android:id="@+id/destinationType"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:gravity="center_vertical|end"
                 app:layout_constraintBottom_toBottomOf="@+id/textView"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/editDestinationBtn"
+                app:layout_constraintStart_toEndOf="@+id/textView"
                 app:layout_constraintTop_toTopOf="@+id/textView"
                 tools:text="Home" />
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/editDestinationBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/destinationType"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/destinationType">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="18dp"
                 android:text="@string/total_guest"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
@@ -85,20 +124,40 @@
 
             <TextView
                 android:id="@+id/totalGuest"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:gravity="center_vertical|end"
                 app:layout_constraintBottom_toBottomOf="@+id/textView1"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/editGuestBtn"
+                app:layout_constraintStart_toEndOf="@+id/textView1"
                 app:layout_constraintTop_toTopOf="@+id/textView1"
                 tools:text="20 Guest" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/editGuestBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/totalGuest"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/totalGuest">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="18dp"
                 android:text="@string/budget_selected"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
@@ -107,20 +166,40 @@
 
             <TextView
                 android:id="@+id/budgetSelected"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:gravity="center_vertical|end"
                 app:layout_constraintBottom_toBottomOf="@+id/textView2"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/editBudgetBtn"
+                app:layout_constraintStart_toEndOf="@+id/textView2"
                 app:layout_constraintTop_toTopOf="@+id/textView2"
                 tools:text="$800" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/editBudgetBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/budgetSelected"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/budgetSelected">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/textView22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="18dp"
                 android:text="@string/location_selected"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
@@ -129,13 +208,41 @@
 
             <TextView
                 android:id="@+id/locationSelected"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:gravity="center_vertical|end"
                 app:layout_constraintBottom_toBottomOf="@+id/textView22"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/editLocationBtn"
+                app:layout_constraintStart_toEndOf="@+id/textView22"
                 app:layout_constraintTop_toTopOf="@+id/textView22"
                 tools:text="North,South" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/editLocationBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/locationSelected"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/locationSelected">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/groupEditBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="editBudgetBtn,editDateBtn,editDestinationBtn,editGuestBtn,editCatererBtn,editPartyTypeBtn" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/updateGuestBtn"
@@ -179,7 +286,7 @@
                 android:id="@+id/selectedPartyTypeCb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="24dp"
                 android:text="Done"
                 android:textColor="@color/colorPrimaryCustomDark"
                 app:layout_constraintBottom_toBottomOf="@+id/textView16"
@@ -188,11 +295,30 @@
                 app:layout_constraintStart_toEndOf="@+id/textView16"
                 app:layout_constraintTop_toTopOf="@+id/textView16" />
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/editPartyTypeBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/textView16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView16">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit" />
+            </com.google.android.material.card.MaterialCardView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/selectedPartyTypeRv"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never"
@@ -218,7 +344,7 @@
                 android:id="@+id/catererCb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="24dp"
                 android:text="Done"
                 android:textColor="@color/colorPrimaryCustomDark"
                 app:layout_constraintBottom_toBottomOf="@+id/catererTitle"
@@ -226,6 +352,24 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/catererTitle"
                 app:layout_constraintTop_toTopOf="@+id/catererTitle" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/editCatererBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/catererTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/catererTitle">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit" />
+            </com.google.android.material.card.MaterialCardView>
 
             <include
                 android:id="@+id/include2"
@@ -257,7 +401,7 @@
                 android:id="@+id/venueCb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="24dp"
                 android:text="Done"
                 android:textColor="@color/colorPrimaryCustomDark"
                 app:layout_constraintBottom_toBottomOf="@+id/venueTitle"
@@ -265,6 +409,25 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/venueTitle"
                 app:layout_constraintTop_toTopOf="@+id/venueTitle" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/editVenueBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/venueTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/venueTitle">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_edit" />
+            </com.google.android.material.card.MaterialCardView>
 
             <include
                 android:id="@+id/include"
@@ -656,7 +819,7 @@
                 android:id="@+id/budgetCb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="24dp"
                 android:text="Done"
                 android:textColor="@color/colorPrimaryCustomDark"
                 app:layout_constraintBottom_toBottomOf="@+id/textView18"
@@ -701,12 +864,6 @@
                     android:minLines="5" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/cbGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="catererCb,budgetCb,venueCb,selectedPartyTypeCb" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

@@ -11,9 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Caterer
 import com.arkapp.partyplanner.data.repository.PrefRepository
+import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.utils.addUnfinishedData
+import com.arkapp.partyplanner.utils.convertSummary
+import com.arkapp.partyplanner.utils.toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Created by Abdul Rehman on 28-02-2020.
@@ -64,11 +69,15 @@ class CaterersListAdapter(
             details.selectedCaterer = caterersData
             prefRepository.setCurrentPartyDetails(details)
 
-            if (prefRepository.getCurrentPartyDetails().partyDestination == context.getString(R.string.home))
-                navController.navigate(R.id.action_caterersListFragment_to_specialSelectionFragment)
-            else {
-                navController.navigate(R.id.action_caterersListFragment_to_venueLocationFragment)
-                addUnfinishedData(lifecycleScope, context, prefRepository)
+            when {
+                prefRepository.getCurrentPartyDetails().partyDestination == context.getString(R.string.home) ->
+                    navController.navigate(R.id.action_caterersListFragment_to_specialSelectionFragment)
+                !prefRepository.getCurrentPartyDetails().checkedItemList.isNullOrEmpty() ->
+                    updateSummaryData()
+                else -> {
+                    navController.navigate(R.id.action_caterersListFragment_to_venueLocationFragment)
+                    addUnfinishedData(lifecycleScope, context, prefRepository)
+                }
             }
         }
 
@@ -79,6 +88,18 @@ class CaterersListAdapter(
 
     override fun getItemId(position: Int): Long {
         return caterersList[position].hashCode().toLong()
+    }
+
+    private fun updateSummaryData() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            context.toast("Please wait saving data...")
+            val summaryDao = AppDatabase.getDatabase(context).summaryDao()
+            summaryDao.delete(prefRepository.getCurrentUser()?.uid!!)
+            summaryDao.insert(convertSummary(prefRepository.getCurrentPartyDetails(),
+                                             prefRepository.getCurrentUser()?.uid!!))
+            navController.navigate(R.id.action_caterersListFragment_to_finalChecklistFragment)
+
+        }
     }
 
 }

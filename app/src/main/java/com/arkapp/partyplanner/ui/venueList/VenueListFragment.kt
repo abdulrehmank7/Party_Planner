@@ -51,7 +51,12 @@ class VenueListFragment : Fragment(R.layout.fragment_venue_list) {
             }
 
 
-            val adapter = VenueListAdapter(filteredVenueList, findNavController(), prefRepository)
+            val adapter = VenueListAdapter(
+                requireContext(),
+                filteredVenueList,
+                findNavController(),
+                prefRepository,
+                lifecycleScope)
             venueListRv.initVerticalAdapter(adapter, true)
         }
 

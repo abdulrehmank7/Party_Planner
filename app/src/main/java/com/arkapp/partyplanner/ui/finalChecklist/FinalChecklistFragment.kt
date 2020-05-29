@@ -1,11 +1,11 @@
 package com.arkapp.partyplanner.ui.finalChecklist
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -16,10 +16,16 @@ import com.arkapp.partyplanner.data.models.PartyDetails
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentFinalChecklistBinding
+import com.arkapp.partyplanner.ui.finalChecklist.utils.DialogChangeBudget
+import com.arkapp.partyplanner.ui.finalChecklist.utils.DialogChangeGuest
+import com.arkapp.partyplanner.ui.finalChecklist.utils.DialogChangePartyType
+import com.arkapp.partyplanner.ui.finalChecklist.utils.DialogDestinationSelection
 import com.arkapp.partyplanner.utils.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FinalChecklistFragment : Fragment() {
 
@@ -31,6 +37,7 @@ class FinalChecklistFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         binding = FragmentFinalChecklistBinding.inflate(inflater)
         return binding.root
     }
@@ -94,6 +101,7 @@ class FinalChecklistFragment : Fragment() {
                 true
             }
     }
+
 
     @SuppressLint("SetTextI18n")
     private fun setAllPartyData() {
@@ -162,6 +170,107 @@ class FinalChecklistFragment : Fragment() {
                 updateSummaryData()
         }
 
+        setCbListener()
+        setEditBtnListener()
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setEditBtnListener() {
+        binding.editDateBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+            val currentDate = Calendar.getInstance()
+
+            val listener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+
+                val selectedDate = Calendar.getInstance()
+                selectedDate.set(Calendar.YEAR, year)
+                selectedDate.set(Calendar.MONTH, month)
+                selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                details.partyDate = selectedDate.time
+
+                binding.partyDate.text = selectedDate.time.getFormattedDate()
+
+                prefRepository.setCurrentPartyDetails(details)
+                updateSummaryData()
+            }
+
+            val datePicker = DatePickerDialog(requireContext(),
+                                              listener,
+                                              currentDate.get(Calendar.YEAR),
+                                              currentDate.get(Calendar.MONTH),
+                                              currentDate.get(Calendar.DAY_OF_MONTH))
+
+            datePicker.datePicker.minDate = currentDate.timeInMillis
+            datePicker.show()
+        }
+
+        binding.editDestinationBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+            val dialog = DialogDestinationSelection(requireContext(), prefRepository)
+            dialog.show()
+            dialog.setOnDismissListener {
+                binding.destinationType.text = prefRepository.getCurrentPartyDetails().partyDestination
+                updateSummaryData()
+            }
+        }
+
+        binding.editGuestBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+
+            val dialog = DialogChangeGuest(requireContext(), prefRepository)
+            dialog.show()
+            dialog.setOnDismissListener {
+                binding.totalGuest.text = "${prefRepository.getCurrentPartyDetails().partyGuest} Guests"
+                details = prefRepository.getCurrentPartyDetails()
+                setBudget()
+                updateSummaryData()
+            }
+        }
+
+        binding.editBudgetBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+
+            val dialog = DialogChangeBudget(requireContext(), prefRepository)
+            dialog.show()
+            dialog.setOnDismissListener {
+                details = prefRepository.getCurrentPartyDetails()
+                setBudget()
+                updateSummaryData()
+            }
+        }
+
+        binding.editLocationBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+            findNavController().navigate(R.id.action_finalChecklistFragment_to_venueLocationFragment)
+        }
+
+        binding.editPartyTypeBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+
+            val dialog = DialogChangePartyType(requireContext(), prefRepository)
+            dialog.show()
+            dialog.setOnDismissListener {
+                details = prefRepository.getCurrentPartyDetails()
+                setSelectedPartyTypes()
+                updateSummaryData()
+            }
+        }
+
+        binding.editCatererBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+            findNavController().navigate(R.id.action_finalChecklistFragment_to_caterersListFragment)
+        }
+
+        binding.editVenueBtn.setOnClickListener {
+            if (isDoubleClicked(1000)) return@setOnClickListener
+            findNavController().navigate(R.id.action_finalChecklistFragment_to_venueListFragment)
+        }
+
+    }
+
+    private fun setCbListener() {
         binding.selectedPartyTypeCb.setOnCheckedChangeListener { _, isChecked ->
             val lastValue = details.checkedItemList!!.find { it.itemName == CB_PARTY_TYPE }
             details.checkedItemList?.remove(lastValue!!)
@@ -224,8 +333,8 @@ class FinalChecklistFragment : Fragment() {
             prefRepository.setCurrentPartyDetails(details)
             updateSummaryData()
         }
-
     }
+
 
     private fun setLocations() {
         if (details.locations.isNullOrEmpty()) {
@@ -296,6 +405,7 @@ class FinalChecklistFragment : Fragment() {
             binding.include.parent.hide()
             binding.venueTitle.hide()
             binding.venueCb.hide()
+            binding.editVenueBtn.hide()
         }
     }
 
@@ -309,6 +419,7 @@ class FinalChecklistFragment : Fragment() {
         if (details.partyType.contains(PARTY_TYPE_ALCOHOL))
             binding.alcoholDetails.show()
     }
+
 
     private fun updateSummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
@@ -332,6 +443,34 @@ class FinalChecklistFragment : Fragment() {
             summaryDao.insert(convertHistorySummary(prefRepository.getCurrentPartyDetails(),
                                                     prefRepository.getCurrentUser()?.uid!!))
         }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        requireActivity().menuInflater.inflate(R.menu.menu_toolbar, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.edit) {
+            if (binding.groupEditBtn.isVisible) {
+                item.icon = requireContext().getDrawableRes(R.drawable.ic_edit)
+                binding.groupEditBtn.hide()
+                if (details.partyDestination != getString(R.string.home)) {
+                    binding.editLocationBtn.hide()
+                    binding.editVenueBtn.hide()
+                }
+            } else {
+                item.icon = requireContext().getDrawableRes(R.drawable.ic_save)
+                binding.groupEditBtn.show()
+                if (details.partyDestination != getString(R.string.home)) {
+                    binding.editLocationBtn.show()
+                    binding.editVenueBtn.show()
+                }
+            }
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

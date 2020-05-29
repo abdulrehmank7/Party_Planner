@@ -1,16 +1,23 @@
 package com.arkapp.partyplanner.ui.venueList
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Venue
 import com.arkapp.partyplanner.data.repository.PrefRepository
+import com.arkapp.partyplanner.data.room.AppDatabase
+import com.arkapp.partyplanner.utils.convertSummary
+import com.arkapp.partyplanner.utils.toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Created by Abdul Rehman on 28-02-2020.
@@ -18,9 +25,11 @@ import com.google.gson.reflect.TypeToken
  */
 
 class VenueListAdapter(
+    private val context: Context,
     private val venueList: List<Venue>,
     private val navController: NavController,
-    private val prefRepository: PrefRepository
+    private val prefRepository: PrefRepository,
+    private val lifecycleScope: LifecycleCoroutineScope
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -64,7 +73,10 @@ class VenueListAdapter(
             details.selectedDestination = venueData
             prefRepository.setCurrentPartyDetails(details)
 
-            navController.navigate(R.id.action_venueListFragment_to_specialSelectionFragment)
+            if (!prefRepository.getCurrentPartyDetails().checkedItemList.isNullOrEmpty()) {
+                updateSummaryData()
+            } else
+                navController.navigate(R.id.action_venueListFragment_to_specialSelectionFragment)
         }
 
     }
@@ -76,4 +88,15 @@ class VenueListAdapter(
         return venueList[position].hashCode().toLong()
     }
 
+    private fun updateSummaryData() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            context.toast("Please wait saving data...")
+            val summaryDao = AppDatabase.getDatabase(context).summaryDao()
+            summaryDao.delete(prefRepository.getCurrentUser()?.uid!!)
+            summaryDao.insert(convertSummary(prefRepository.getCurrentPartyDetails(),
+                                             prefRepository.getCurrentUser()?.uid!!))
+            navController.navigate(R.id.action_venueListFragment_to_finalChecklistFragment)
+
+        }
+    }
 }

@@ -155,7 +155,7 @@ fun Context.dpFromPx(px: Float) = px / resources.displayMetrics.density
 
 fun Context.pxFromDp(dp: Float) = dp * resources.displayMetrics.density
 
-fun Context.getDrawable(resId: Int) = ContextCompat.getDrawable(this, resId)
+fun Context.getDrawableRes(resId: Int) = ContextCompat.getDrawable(this, resId)
 
 fun RecyclerView.initVerticalAdapter(
     adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,

@@ -63,6 +63,6 @@ class MainActivity : AppCompatActivity() {
                 onBackPressed()
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 }
