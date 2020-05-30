@@ -31,23 +31,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="32dp"
                 android:text="@string/party_date"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/partyDate"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView14" />
+                app:layout_constraintTop_toTopOf="@+id/partyDate" />
 
             <TextView
                 android:id="@+id/partyDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="4dp"
                 android:gravity="center_vertical|end"
-                app:layout_constraintBottom_toBottomOf="@+id/textView15"
                 app:layout_constraintEnd_toStartOf="@+id/editDateBtn"
                 app:layout_constraintStart_toEndOf="@+id/textView15"
-                app:layout_constraintTop_toTopOf="@+id/textView15"
+                app:layout_constraintTop_toBottomOf="@+id/textView14"
                 tools:text="28-june-2020" />
 
             <com.google.android.material.card.MaterialCardView
@@ -73,23 +74,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="18dp"
                 android:text="@string/destination_type"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/destinationType"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView15" />
+                app:layout_constraintTop_toTopOf="@+id/destinationType" />
 
             <TextView
                 android:id="@+id/destinationType"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center_vertical|end"
-                app:layout_constraintBottom_toBottomOf="@+id/textView"
                 app:layout_constraintEnd_toStartOf="@+id/editDestinationBtn"
                 app:layout_constraintStart_toEndOf="@+id/textView"
-                app:layout_constraintTop_toTopOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/partyDate"
                 tools:text="Home" />
 
             <com.google.android.material.card.MaterialCardView
@@ -115,23 +117,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="18dp"
                 android:text="@string/total_guest"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/totalGuest"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toTopOf="@+id/totalGuest" />
 
             <TextView
                 android:id="@+id/totalGuest"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center_vertical|end"
-                app:layout_constraintBottom_toBottomOf="@+id/textView1"
                 app:layout_constraintEnd_toStartOf="@id/editGuestBtn"
                 app:layout_constraintStart_toEndOf="@+id/textView1"
-                app:layout_constraintTop_toTopOf="@+id/textView1"
+                app:layout_constraintTop_toBottomOf="@+id/destinationType"
                 tools:text="20 Guest" />
 
             <com.google.android.material.card.MaterialCardView
@@ -157,23 +160,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="18dp"
                 android:text="@string/budget_selected"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/budgetSelected"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView1" />
+                app:layout_constraintTop_toTopOf="@+id/budgetSelected" />
 
             <TextView
                 android:id="@+id/budgetSelected"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center_vertical|end"
-                app:layout_constraintBottom_toBottomOf="@+id/textView2"
                 app:layout_constraintEnd_toStartOf="@id/editBudgetBtn"
                 app:layout_constraintStart_toEndOf="@+id/textView2"
-                app:layout_constraintTop_toTopOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/totalGuest"
                 tools:text="$800" />
 
             <com.google.android.material.card.MaterialCardView
@@ -199,23 +203,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="18dp"
                 android:text="@string/location_selected"
                 android:textColor="@color/colorPrimaryCustomDark"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/locationSelected"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                app:layout_constraintTop_toTopOf="@+id/locationSelected" />
 
             <TextView
                 android:id="@+id/locationSelected"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center_vertical|end"
-                app:layout_constraintBottom_toBottomOf="@+id/textView22"
                 app:layout_constraintEnd_toStartOf="@id/editLocationBtn"
                 app:layout_constraintStart_toEndOf="@+id/textView22"
-                app:layout_constraintTop_toTopOf="@+id/textView22"
+                app:layout_constraintTop_toBottomOf="@+id/budgetSelected"
                 tools:text="North,South" />
 
             <com.google.android.material.card.MaterialCardView
@@ -257,8 +262,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView22"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toBottomOf="@+id/locationSelected" />
 
             <View
                 android:id="@+id/view"
