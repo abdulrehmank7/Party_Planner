@@ -215,6 +215,34 @@ class FinalChecklistFragment : Fragment() {
             dialog.setOnDismissListener {
                 binding.destinationType.text = prefRepository.getCurrentPartyDetails().partyDestination
                 updateSummaryData()
+
+                details = prefRepository.getCurrentPartyDetails()
+
+                if (prefRepository.getCurrentPartyDetails().partyDestination != getString(R.string.home)) {
+
+                    binding.include.parent.show()
+                    binding.venueTitle.show()
+                    binding.venueCb.show()
+                    binding.editVenueBtn.show()
+
+                    binding.locationSelected.show()
+                    binding.textView22.show()
+                    binding.editLocationBtn.show()
+
+                    prefRepository.getCurrentPartyDetails().selectedDestination.also {
+                        if (it == null || it.name.isEmpty()) {
+                            binding.include.venueName.text = "Click edit icon to select venue!"
+                            binding.locationSelected.text = "Select location!"
+                        } else {
+                            setLocations()
+                            setVenueDetails()
+                        }
+
+                    }
+                } else {
+                    setLocations()
+                    setVenueDetails()
+                }
             }
         }
 
@@ -267,6 +295,10 @@ class FinalChecklistFragment : Fragment() {
 
         binding.editVenueBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
+            if (prefRepository.getCurrentPartyDetails().locations.isNullOrEmpty()) {
+                requireContext().toastShort("First Select location!")
+                return@setOnClickListener
+            }
             findNavController().navigate(R.id.action_finalChecklistFragment_to_venueListFragment)
         }
 
@@ -360,15 +392,21 @@ class FinalChecklistFragment : Fragment() {
 
 
     private fun setLocations() {
-        if (details.locations.isNullOrEmpty()) {
+        if (details.partyDestination == getString(R.string.home)) {
             binding.locationSelected.hide()
             binding.textView22.hide()
+            binding.editLocationBtn.hide()
         } else {
-            var locationString = ""
-            for (x in details.locations!!) {
-                locationString += "$x, "
+            if (details.locations.isNullOrEmpty()) {
+                binding.locationSelected.text = "Select location!"
+            } else {
+                var locationString = ""
+                for (x in details.locations!!) {
+                    locationString += "$x, "
+                }
+                binding.locationSelected.text =
+                    locationString.substring(0, locationString.length - 2)
             }
-            binding.locationSelected.text = locationString.substring(0, locationString.length - 2)
         }
     }
 
@@ -408,22 +446,24 @@ class FinalChecklistFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun setVenueDetails() {
         if (details.partyDestination != getString(R.string.home)) {
-            binding.include.venueName.text = details.selectedDestination!!.name
-            binding.include.venueAdd.text = details.selectedDestination!!.address
-            binding.include.capacity.text = "${details.selectedDestination!!.capacity} Guest"
-            binding.include.contact.text = details.selectedDestination!!.contact
-            binding.include.price.text = "$${details.selectedDestination!!.price}"
-            binding.include.location.text = details.selectedDestination!!.location
-            val partyTypes = gson.fromJson<ArrayList<String>>(details.selectedDestination!!.partyType,
-                                                              arrayListType)
-            var partyTypeStringVenue = ""
-
-            for (x in partyTypes) {
-                partyTypeStringVenue += "$x, "
-            }
-            binding.include.suitable.text = partyTypeStringVenue.substring(0,
-                                                                           partyTypeStringVenue.length - 2)
             binding.include.parent.isEnabled = false
+            if (details.selectedDestination != null) {
+                binding.include.venueName.text = details.selectedDestination!!.name
+                binding.include.venueAdd.text = details.selectedDestination!!.address
+                binding.include.capacity.text = "${details.selectedDestination!!.capacity} Guest"
+                binding.include.contact.text = details.selectedDestination!!.contact
+                binding.include.price.text = "$${details.selectedDestination!!.price}"
+                binding.include.location.text = details.selectedDestination!!.location
+                val partyTypes = gson.fromJson<ArrayList<String>>(details.selectedDestination!!.partyType,
+                                                                  arrayListType)
+                var partyTypeStringVenue = ""
+
+                for (x in partyTypes) {
+                    partyTypeStringVenue += "$x, "
+                }
+                binding.include.suitable.text =
+                    partyTypeStringVenue.substring(0, partyTypeStringVenue.length - 2)
+            }
         } else {
             binding.include.parent.hide()
             binding.venueTitle.hide()

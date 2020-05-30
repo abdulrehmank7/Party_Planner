@@ -58,6 +58,12 @@ class CaterersListFragment : Fragment(R.layout.fragment_venue_list) {
                 }
             }
 
+            if (filteredCatererList.isEmpty()) {
+                noItemFound.text = "No caterer found with the selection.\nChange selection and try again"
+                noItemFound.show()
+                return@launch
+            }
+
             val adapter =
                 CaterersListAdapter(
                     requireContext(),

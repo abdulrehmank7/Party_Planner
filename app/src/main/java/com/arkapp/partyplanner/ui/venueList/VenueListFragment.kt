@@ -10,6 +10,7 @@ import com.arkapp.partyplanner.data.models.Venue
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.utils.initVerticalAdapter
+import com.arkapp.partyplanner.utils.show
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_venue_list.*
@@ -48,6 +49,12 @@ class VenueListFragment : Fragment(R.layout.fragment_venue_list) {
                         }
                     }
                 }
+            }
+
+            if (filteredVenueList.isEmpty()) {
+                noItemFound.text = "No venue found with the selection.\nChange selection and try again"
+                noItemFound.show()
+                return@launch
             }
 
 
