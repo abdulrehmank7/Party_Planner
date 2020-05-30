@@ -55,6 +55,8 @@ class CaterersListAdapter(
         val caterersData = caterersList[position]
         binding.name.text = caterersData.name.trim()
         binding.price.text = "$${caterersData.pricePerPax}"
+        binding.totalGuestPriceTv.text = "${prefRepository.getCurrentPartyDetails().partyGuest} Pax total"
+        binding.totalGuestPrice.text = "$${caterersData.pricePerPax * prefRepository.getCurrentPartyDetails().partyGuest!!}"
 
         val partyTypes = gson.fromJson<ArrayList<String>>(caterersData.partyType, type)
         var partyTypeString = ""

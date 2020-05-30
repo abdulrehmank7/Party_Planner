@@ -215,6 +215,7 @@ class FinalChecklistFragment : Fragment() {
             dialog.setOnDismissListener {
                 binding.destinationType.text = prefRepository.getCurrentPartyDetails().partyDestination
                 updateSummaryData()
+                setBudget()
 
                 details = prefRepository.getCurrentPartyDetails()
 
@@ -285,6 +286,7 @@ class FinalChecklistFragment : Fragment() {
                 details = prefRepository.getCurrentPartyDetails()
                 setSelectedPartyTypes()
                 updateSummaryData()
+                setBudget()
             }
         }
 
@@ -420,7 +422,41 @@ class FinalChecklistFragment : Fragment() {
             else -> "$200 - $400"
         }
         binding.budgetSelected.text = "$budgetLimit (${details.partyBudget})"
-        binding.partyBudget.text = "$${details.selectedCaterer!!.pricePerPax * details.partyGuest!!}"
+
+        var budgetDistributionText = ""
+
+        val catererPrice = prefRepository.getCurrentPartyDetails().selectedCaterer!!.pricePerPax * prefRepository.getCurrentPartyDetails().partyGuest!!
+        budgetDistributionText += "Caterer($${catererPrice}), "
+
+        val venuePrice =
+            if (prefRepository.getCurrentPartyDetails().partyDestination != getString(R.string.home)) {
+                budgetDistributionText += "Venue($${prefRepository.getCurrentPartyDetails().selectedDestination!!.price.toInt()}), "
+                prefRepository.getCurrentPartyDetails().selectedDestination!!.price.toInt()
+            } else
+                0
+        val alcoholPrice =
+            if (prefRepository.getCurrentPartyDetails().partyType.contains(PARTY_TYPE_ALCOHOL)) {
+                budgetDistributionText += "Alcohol($${10 * prefRepository.getCurrentPartyDetails().partyGuest!!}), "
+                10 * prefRepository.getCurrentPartyDetails().partyGuest!!
+            } else
+                0
+        val magicPrice =
+            if (prefRepository.getCurrentPartyDetails().partyType.contains(PARTY_TYPE_MAGIC_SHOW)) {
+                budgetDistributionText += "Magic Show($200), "
+                200
+            } else
+                0
+        val decoration =
+            if (prefRepository.getCurrentPartyDetails().partyType.contains(PARTY_TYPE_DECORATION)) {
+                budgetDistributionText += "Decoration($100), "
+                100
+            } else
+                0
+
+        val totalBudget = venuePrice + catererPrice + alcoholPrice + magicPrice + decoration
+        binding.partyBudget.text = "$${totalBudget}"
+        binding.budgetDistribution.text =
+            budgetDistributionText.substring(0, budgetDistributionText.length - 2)
     }
 
     private fun setSelectedPartyTypes() {
@@ -432,14 +468,17 @@ class FinalChecklistFragment : Fragment() {
     private fun setCatererDetails() {
         binding.include2.name.text = details.selectedCaterer!!.name.trim()
         binding.include2.price.text = "$${details.selectedCaterer!!.pricePerPax}"
-        val partyTypes = gson.fromJson<ArrayList<String>>(details.selectedCaterer!!.partyType,
-                                                          arrayListType)
+        binding.include2.totalGuestPriceTv.text = "${prefRepository.getCurrentPartyDetails().partyGuest} Pax total"
+        binding.include2.totalGuestPrice.text = "$${prefRepository.getCurrentPartyDetails().selectedCaterer!!.pricePerPax * prefRepository.getCurrentPartyDetails().partyGuest!!}"
+
+        val partyTypes =
+            gson.fromJson<ArrayList<String>>(details.selectedCaterer!!.partyType, arrayListType)
         var partyTypeString = ""
         for (x in partyTypes) {
             partyTypeString += "$x, "
         }
-        binding.include2.partyTypeValue.text = partyTypeString.substring(0,
-                                                                         partyTypeString.length - 2)
+        binding.include2.partyTypeValue.text =
+            partyTypeString.substring(0, partyTypeString.length - 2)
         binding.include2.parent.isEnabled = false
     }
 

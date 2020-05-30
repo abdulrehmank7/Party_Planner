@@ -56,6 +56,29 @@
                 tools:text="$15" />
 
             <TextView
+                android:id="@+id/totalGuestPriceTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Total Price"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/price" />
+
+            <TextView
+                android:id="@+id/totalGuestPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:elevation="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/partyTypeValue"
+                app:layout_constraintTop_toBottomOf="@+id/price"
+                tools:text="$15" />
+
+            <TextView
                 android:id="@+id/partyType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,7 +94,7 @@
                 android:id="@+id/partyTypeValue"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
@@ -79,7 +102,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/partyType"
-                app:layout_constraintTop_toBottomOf="@+id/price" />
+                app:layout_constraintTop_toBottomOf="@+id/totalGuestPriceTv" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
