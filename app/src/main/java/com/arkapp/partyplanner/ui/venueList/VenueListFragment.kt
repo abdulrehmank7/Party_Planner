@@ -33,6 +33,7 @@ class VenueListFragment : Fragment(R.layout.fragment_venue_list) {
         val gson = Gson()
 
 
+        //Fetching all the venues from the SQL DB and show a list of the result
         lifecycleScope.launch(Dispatchers.Main) {
 
             val venueDao = AppDatabase.getDatabase(requireContext()).venueDao()

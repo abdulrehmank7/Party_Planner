@@ -14,6 +14,10 @@ import com.arkapp.partyplanner.data.models.CheckedItem
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * Recycler view adapter of guest checklist in the checklist screen
+ * */
 class GuestListAdapter(private val guestList: List<CheckedItem>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -32,6 +36,7 @@ class GuestListAdapter(private val guestList: List<CheckedItem>) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as GuestListViewHolder).binding
 
+        //Showing the guest name and selection status
         val guest = guestList[position]
         binding.guestEt.setText(guest.itemName)
         binding.guestCb.isChecked = guest.selected

@@ -17,6 +17,9 @@ import com.arkapp.partyplanner.utils.getFormattedDate
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * Recycler view adapter of history screen
+ * */
 class HistorySummaryListAdapter(
     private val foodList: List<HistorySummary>,
     private val navController: NavController,
@@ -47,13 +50,7 @@ class HistorySummaryListAdapter(
         binding.partyDestination.text = partyData.partyDestination
         binding.guest.text = "${partyData.partyGuest} Guests"
 
-/*        var estimatedBudget = 0.0
-        for (food in partyData.selectedFood!!) {
-            estimatedBudget += food.price
-        }
-
-        binding.foodBudget.text = "$${estimatedBudget * partyData.partyGuest!!}"*/
-
+        //On clicking the history will open the check list screen.
         binding.parent.setOnClickListener {
             prefRepository.setCurrentPartyDetails(partyData)
             navController.navigate(R.id.action_historySummaryFragment_to_finalChecklistFragment)

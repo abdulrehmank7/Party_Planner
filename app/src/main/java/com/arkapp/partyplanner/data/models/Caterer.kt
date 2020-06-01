@@ -9,6 +9,10 @@ import androidx.room.PrimaryKey
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * Caterer SQL table is created using the following class definition
+ * This table is used to store caterer data
+ * */
 @Entity(tableName = "CATERER")
 data class Caterer(
     @PrimaryKey(autoGenerate = true)

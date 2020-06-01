@@ -11,6 +11,10 @@ import com.arkapp.partyplanner.data.models.Venue
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * This class is used to define query for the Venue table
+ * */
+
 @Dao
 interface VenueDao {
 

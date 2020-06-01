@@ -9,6 +9,11 @@ import androidx.room.PrimaryKey
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * History summary SQL table is created using the following class definition
+ * This sql table is used for storing history of user
+ * */
+
 @Entity(tableName = "HISTORY_SUMMARY")
 data class HistorySummary(
     @PrimaryKey(autoGenerate = true)

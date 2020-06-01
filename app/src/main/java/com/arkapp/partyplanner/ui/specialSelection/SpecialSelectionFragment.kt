@@ -11,6 +11,9 @@ import com.arkapp.partyplanner.utils.*
 import kotlinx.android.synthetic.main.fragment_special_selection.*
 import kotlinx.android.synthetic.main.rv_location.view.*
 
+/**
+ * Special option selection fragment for magic show and decoration.
+ * */
 
 class SpecialSelectionFragment : Fragment(R.layout.fragment_special_selection) {
 

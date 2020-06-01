@@ -27,6 +27,7 @@ class VenueLocationFragment : Fragment(R.layout.fragment_venue_location) {
         details.locations?.clear()
         prefRepository.setCurrentPartyDetails(details)
 
+        //Location Recycler view to show all the location type
         val adapter = LocationAdapter(getLocation(), prefRepository)
         locationRv.initGridAdapter(adapter, true, 2)
 

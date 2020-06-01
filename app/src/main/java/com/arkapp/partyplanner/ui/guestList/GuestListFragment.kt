@@ -27,6 +27,7 @@ class GuestListFragment : Fragment(R.layout.fragment_guest_list) {
         val adapter = GuestListAdapter(GUEST_LIST_NAMES)
         guestListRv.initVerticalAdapter(adapter, true)
 
+        //Handling the back click
         requireActivity()
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner) {
@@ -35,6 +36,7 @@ class GuestListFragment : Fragment(R.layout.fragment_guest_list) {
                 partyDetails.guestNameList = GUEST_LIST_NAMES
                 prefRepository.setCurrentPartyDetails(partyDetails)
 
+                //Storing the guest check list in the SQL when back is pressed.
                 this.remove()
                 if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST || CURRENT_SELECTED_OPTION == OPTION_CREATE)
                     updateSummaryData()
@@ -45,6 +47,7 @@ class GuestListFragment : Fragment(R.layout.fragment_guest_list) {
             }
     }
 
+    //Storing summary in SQL
     private fun updateSummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             requireContext().toast("Please wait... Saving data!")
@@ -57,6 +60,7 @@ class GuestListFragment : Fragment(R.layout.fragment_guest_list) {
         }
     }
 
+    //Storing History in SQL
     private fun updateHistorySummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val summaryDao = AppDatabase.getDatabase(requireContext()).historySummaryDao()

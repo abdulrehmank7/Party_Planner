@@ -25,6 +25,10 @@ import kotlinx.coroutines.launch
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * This is a recycler view adapter used to show caterers list
+ * */
 class CaterersListAdapter(
     private val context: Context,
     private val caterersList: List<Caterer>,
@@ -58,6 +62,7 @@ class CaterersListAdapter(
         binding.totalGuestPriceTv.text = "${prefRepository.getCurrentPartyDetails().partyGuest} Pax total"
         binding.totalGuestPrice.text = "$${caterersData.pricePerPax * prefRepository.getCurrentPartyDetails().partyGuest!!}"
 
+        //This will show all the supported party type of the caterer
         val partyTypes = gson.fromJson<ArrayList<String>>(caterersData.partyType, type)
         var partyTypeString = ""
 
@@ -66,6 +71,7 @@ class CaterersListAdapter(
         }
         binding.partyTypeValue.text = partyTypeString.substring(0, partyTypeString.length - 2)
 
+        //On clicking the caterer it open the different screen according to party detail
         binding.parent.setOnClickListener {
             val details = prefRepository.getCurrentPartyDetails()
             details.selectedCaterer = caterersData
@@ -92,6 +98,7 @@ class CaterersListAdapter(
         return caterersList[position].hashCode().toLong()
     }
 
+    // Used to update the summary data in SQL table
     private fun updateSummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             context.toast("Please wait saving data...")

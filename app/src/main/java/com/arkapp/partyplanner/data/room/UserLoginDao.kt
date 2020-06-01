@@ -11,6 +11,9 @@ import com.arkapp.partyplanner.data.models.UserLogin
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * This class is used to define query for the Login table
+ * */
 @Dao
 interface UserLoginDao {
 

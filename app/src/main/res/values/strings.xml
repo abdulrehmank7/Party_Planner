@@ -47,5 +47,6 @@
     <string name="budget_selected">Budget Selected:</string>
     <string name="location_selected">Location Selected:</string>
     <string name="enter_notes">Enter notes here…</string>
+    <string name="select_caterer_budget">Select Caterer Budget</string>
 
 </resources>

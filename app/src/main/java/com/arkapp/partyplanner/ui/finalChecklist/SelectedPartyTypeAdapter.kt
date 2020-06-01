@@ -15,6 +15,10 @@ import com.arkapp.partyplanner.utils.loadImage
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * Recycler view adapter of selected party type in the checklist screen
+ * */
+
 class SelectedPartyTypeAdapter(private val partyTypes: List<PartyType>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

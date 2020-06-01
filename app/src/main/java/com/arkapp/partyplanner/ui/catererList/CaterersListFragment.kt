@@ -26,6 +26,7 @@ class CaterersListFragment : Fragment(R.layout.fragment_venue_list) {
 
         requireActivity().hideKeyboard()
 
+        //Budget list is identified here
         val budgetLimit = when (prefRepository.getCurrentPartyDetails().partyBudget) {
             getString(R.string.low) -> LOW_BUDGED_LIMIT
             getString(R.string.medium) -> MEDIUM_BUDGED_LIMIT
@@ -39,8 +40,8 @@ class CaterersListFragment : Fragment(R.layout.fragment_venue_list) {
         val type = object : TypeToken<ArrayList<String>>() {}.type
         val gson = Gson()
 
+        //Fetching the caterer data from SQL in background thread
         lifecycleScope.launch(Dispatchers.Main) {
-
             val catererDao = AppDatabase.getDatabase(requireContext()).catererDao()
             val catererList =
                 catererDao
@@ -48,6 +49,7 @@ class CaterersListFragment : Fragment(R.layout.fragment_venue_list) {
                         budgetLimit,
                         prefRepository.getCurrentPartyDetails().partyGuest!!)
 
+            //Filtering the caterer after getting the caterer data
             for (caterer in catererList) {
                 val catererPartyType = gson.fromJson<ArrayList<String>>(caterer.partyType, type)
                 for (partyType in catererPartyType) {
@@ -64,6 +66,7 @@ class CaterersListFragment : Fragment(R.layout.fragment_venue_list) {
                 return@launch
             }
 
+            //Setting the caterer using Recycler view in the fragment.
             val adapter =
                 CaterersListAdapter(
                     requireContext(),

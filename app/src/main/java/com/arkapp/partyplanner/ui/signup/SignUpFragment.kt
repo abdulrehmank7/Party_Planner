@@ -36,6 +36,7 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Initializing the button listeners for sign up and sign in
         binding.signUpBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
             if (binding.signUpBtn.text == getString(R.string.sign_up)) {
@@ -85,6 +86,7 @@ class SignUpFragment : Fragment() {
         removeErrorOnChange()
     }
 
+    //Validating all data before signup
     private fun onSignUpClicked() {
         if (binding.signUpUserNameEt.text!!.isEmpty()) {
             binding.signUpUserName.error = "Username required!"
@@ -137,6 +139,7 @@ class SignUpFragment : Fragment() {
         checkIfUserNameExist()
     }
 
+    //Validating all data before login
     private fun onLoginClicked() {
         if (binding.userNameEt.text!!.isEmpty()) {
             binding.userName.error = "Username required!"
@@ -157,6 +160,7 @@ class SignUpFragment : Fragment() {
         checkCredentials()
     }
 
+    //Used to check the credential of user in the SQL table
     private fun checkCredentials() {
 
         lifecycleScope.launch(Dispatchers.Main) {
@@ -187,6 +191,7 @@ class SignUpFragment : Fragment() {
 
     }
 
+    //Check if the user is exist before the signup in SQL tables
     private fun checkIfUserNameExist() {
 
         lifecycleScope.launch(Dispatchers.Main) {
@@ -208,12 +213,14 @@ class SignUpFragment : Fragment() {
         }
     }
 
+    //Opening the app on successfull signup or login
     private fun onLoginSuccess() {
         requireContext().toast("Login success")
         prefRepository.setLoggedIn(true)
         findNavController().navigate(R.id.action_signupFragment_to_splashFragment)
     }
 
+    //Store the signup credential in the SQL table
     private fun storeCredentials() {
 
         lifecycleScope.launch(Dispatchers.Main) {
@@ -241,6 +248,7 @@ class SignUpFragment : Fragment() {
 
     }
 
+    //Insert the all the venue in venue table
     private suspend fun insertVenueData() {
         val venueDao = AppDatabase.getDatabase(requireContext()).venueDao()
 
@@ -249,6 +257,7 @@ class SignUpFragment : Fragment() {
         }
     }
 
+    //Insert the all the caterer in caterer table
     private suspend fun insertCaterersData() {
         val catererDao = AppDatabase.getDatabase(requireContext()).catererDao()
 
@@ -257,6 +266,7 @@ class SignUpFragment : Fragment() {
         }
     }
 
+    //Remove error on changing the values.
     private fun removeErrorOnChange() {
         binding.userNameEt.doAfterTextChanged { binding.userName.error = null }
         binding.passwordEt.doAfterTextChanged { binding.password.error = null }

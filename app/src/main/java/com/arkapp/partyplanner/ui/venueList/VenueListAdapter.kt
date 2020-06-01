@@ -23,7 +23,9 @@ import kotlinx.coroutines.launch
  * Created by Abdul Rehman on 28-02-2020.
  * Contact email - abdulrehman0796@gmail.com
  */
-
+/**
+ * Recycler view adapter of venue list venue selection screen
+ * */
 class VenueListAdapter(
     private val context: Context,
     private val venueList: List<Venue>,
@@ -88,6 +90,7 @@ class VenueListAdapter(
         return venueList[position].hashCode().toLong()
     }
 
+    //adding the selected venue in the SQL db
     private fun updateSummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             context.toast("Please wait saving data...")

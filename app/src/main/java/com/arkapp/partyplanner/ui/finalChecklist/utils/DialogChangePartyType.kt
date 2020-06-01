@@ -14,6 +14,11 @@ import kotlinx.android.synthetic.main.dialog_destination_selection.*
  * Created by Abdul Rehman on 29-05-2020.
  * Contact email - abdulrehman0796@gmail.com
  */
+
+/**
+ * This dialog is used for changing the party type in the checklist screen
+ * */
+
 class DialogChangePartyType(context: Context,
                             private val prefRepository: PrefRepository) : Dialog(context) {
 
@@ -28,6 +33,7 @@ class DialogChangePartyType(context: Context,
         setCanceledOnTouchOutside(false)
         setCancelable(false)
 
+        //Setting the party type in the recycler view
         val partyTypeAdapter = PartyTypeAdapter(getPartyTypes(), prefRepository)
         partyTypeAdapter.selectedPartyType = getPartyTypeFromStringArray(prefRepository.getCurrentPartyDetails().partyType)
         binding.selectedPartyTypeRv.initGridAdapter(partyTypeAdapter, true, 3)

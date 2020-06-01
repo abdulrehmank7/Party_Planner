@@ -9,6 +9,12 @@ import androidx.room.PrimaryKey
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * Unfinished SQL table is created using the following class definition
+ * This sql table is used for storing unfinished checklist.
+ * */
+
 @Entity(tableName = "UNFINISHED")
 data class UnfinishedDetails(
     @PrimaryKey(autoGenerate = true)

@@ -11,6 +11,10 @@ import com.arkapp.partyplanner.data.models.*
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * This class is used to create SQL db for the app. All tables are created and defined in this class.
+ * */
 @Database(entities = [
     UserLogin::class,
     Venue::class,

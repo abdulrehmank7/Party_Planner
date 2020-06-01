@@ -18,6 +18,11 @@ import kotlin.collections.ArrayList
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * This file contain all the constant value used in the app
+ * */
+
+
 const val LOW_BUDGED_LIMIT = 200.0
 const val MEDIUM_BUDGED_LIMIT = 400.0
 const val HIGH_BUDGED_LIMIT = 600.0
@@ -67,6 +72,7 @@ var OPENED_GUEST_LIST = false
 
 val gson = Gson()
 
+//Get all the party type supported in app
 fun getPartyTypes(): ArrayList<PartyType> {
     val list = ArrayList<PartyType>()
 
@@ -86,6 +92,7 @@ fun getPartyTypes(): ArrayList<PartyType> {
     return list
 }
 
+//Get all the location for the venues
 fun getLocation(): ArrayList<Location> {
     val list = ArrayList<Location>()
 
@@ -100,6 +107,7 @@ fun getLocation(): ArrayList<Location> {
     return list
 }
 
+//Get all the party type from the SQL value
 fun getPartyTypeFromStringArray(stringList: ArrayList<String>): ArrayList<PartyType> {
     val newPartyTypeList = ArrayList<PartyType>()
     val allPartyType = getPartyTypes()
@@ -113,6 +121,7 @@ fun getPartyTypeFromStringArray(stringList: ArrayList<String>): ArrayList<PartyT
     return newPartyTypeList
 }
 
+//Get all the venues supported in app
 fun getVenueList(): ArrayList<Venue> {
     val venueList = ArrayList<Venue>()
 
@@ -542,6 +551,7 @@ fun getVenueList(): ArrayList<Venue> {
     return venueList
 }
 
+//Get all the caterer supported in app
 fun getCatererList(): ArrayList<Caterer> {
 
     val catererList = ArrayList<Caterer>()

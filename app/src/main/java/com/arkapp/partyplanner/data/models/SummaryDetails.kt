@@ -9,6 +9,12 @@ import androidx.room.PrimaryKey
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * Summary SQL table is created using the following class definition
+ * This sql table is used for storing current checklist.
+ * */
+
 @Entity(tableName = "SUMMARY")
 data class SummaryDetails(
     @PrimaryKey(autoGenerate = true)

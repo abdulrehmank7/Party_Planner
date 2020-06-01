@@ -9,6 +9,11 @@ import androidx.room.PrimaryKey
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * User login SQL table is created using the following class definition
+ * This sql table is used for storing login details of user.
+ * */
 @Entity(tableName = "USER_LOGIN")
 data class UserLogin(
     @PrimaryKey(autoGenerate = true)

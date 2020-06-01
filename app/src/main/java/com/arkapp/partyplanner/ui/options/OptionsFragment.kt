@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 /**
  * A simple [Fragment] subclass.
  */
+
+
 class OptionsFragment : Fragment(R.layout.fragment_options) {
 
     private val prefRepository by lazy { PrefRepository(requireContext()) }
@@ -27,6 +29,8 @@ class OptionsFragment : Fragment(R.layout.fragment_options) {
         OPENED_GUEST_LIST = false
 
         addUserName()
+
+        //Opening different screen on different options
 
         createChecklistBtn.setOnClickListener {
             CURRENT_SELECTED_OPTION = OPTION_CREATE
@@ -82,6 +86,7 @@ class OptionsFragment : Fragment(R.layout.fragment_options) {
         }
     }
 
+    //Adding username on starting app
     private fun addUserName() {
         if (ENTERED_USER_NAME.isNotEmpty()) {
             lifecycleScope.launch(Dispatchers.Main) {

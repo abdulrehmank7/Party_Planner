@@ -32,6 +32,7 @@ class HomeFragment : Fragment() {
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+        //Creating the binding variable which will contain all the view of the layout.
         binding = FragmentHomeBinding.inflate(inflater)
         return binding.root
     }
@@ -45,6 +46,7 @@ class HomeFragment : Fragment() {
         initDestinationBtnListener()
         initCalendar()
 
+        //Used to store the guest count
         binding.guestEt.doAfterTextChanged { text ->
             if (!text.isNullOrEmpty()) {
                 binding.guest.error = null
@@ -54,6 +56,7 @@ class HomeFragment : Fragment() {
             }
         }
 
+        //Validating the screen input on button click
         binding.proceedBtn.setOnClickListener {
             if (binding.guestEt.text.toString().isEmpty() ||
                 binding.guestEt.text.toString().toInt() <= 0) {
@@ -77,11 +80,13 @@ class HomeFragment : Fragment() {
         else
             setLastEnteredData()
 
+        //Handling back click
         requireActivity()
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner) {
                 prefRepository
                     .setCurrentPartyDetails(
+                        //Resetting the party details
                         PartyDetails(
                             null,
                             null,
@@ -102,6 +107,7 @@ class HomeFragment : Fragment() {
             }
     }
 
+    //Setting the Unfinished party data in SQL
     private fun setUnfinishedPartyData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
@@ -156,6 +162,7 @@ class HomeFragment : Fragment() {
 
     }
 
+    //Initializing the calendar UI
     private fun initCalendar() {
         binding.calendarView.minDate = Calendar.getInstance().timeInMillis
 
@@ -172,6 +179,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //Initializing the Budget UI
     private fun initBudgetBtnListener() {
         binding.lowBudget.setOnClickListener {
             binding.budget.text = getString(R.string.low)
@@ -226,6 +234,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //Initializing the Destination selection UI
     private fun initDestinationBtnListener() {
         binding.homeParty.setOnClickListener {
             binding.homeParty.background = requireContext().getDrawableRes(R.drawable.bg_selected_start)
@@ -246,6 +255,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //Set the last entered data
     private fun setLastEnteredData() {
         val detail = prefRepository.getCurrentPartyDetails()
 

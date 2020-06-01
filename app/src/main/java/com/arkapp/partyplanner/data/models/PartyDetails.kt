@@ -8,6 +8,10 @@ import kotlin.collections.ArrayList
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * This model class is used to store the store the party details before storing them in SQL
+ * */
 data class PartyDetails(
     var id: Int?,
     var partyDate: Date?,

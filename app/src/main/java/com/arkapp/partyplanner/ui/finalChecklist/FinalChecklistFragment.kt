@@ -47,8 +47,10 @@ class FinalChecklistFragment : Fragment() {
 
         requireActivity().hideKeyboard()
 
+        //Checking from where the checklist screen is opened and setting appropriate data
         when (CURRENT_SELECTED_OPTION) {
             OPTION_CHECKLIST -> {
+                //Fetching the summary table in background
                 lifecycleScope.launch(Dispatchers.Main) {
                     val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
                     val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
@@ -60,23 +62,29 @@ class FinalChecklistFragment : Fragment() {
                 }
             }
             OPTION_PAST -> {
+                //Deleting the unfinished data and setting all the party data
                 deleteUnfinishedData()
                 details = prefRepository.getCurrentPartyDetails()
                 setAllPartyData()
             }
             else -> {
+                //Deleting the unfinished data and setting all the party data
                 deleteUnfinishedData()
                 details = prefRepository.getCurrentPartyDetails()
                 setAllPartyData()
                 updateSummaryData()
+
+                //Not adding in history if screen is opened from the guest checklist
                 if (!OPENED_GUEST_LIST)
                     updateHistorySummaryData()
             }
         }
 
+        //Handling back press in checklist screen.
         requireActivity()
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner) {
+                //Resetting the shared preferences party data
                 prefRepository
                     .setCurrentPartyDetails(
                         PartyDetails(
@@ -103,6 +111,7 @@ class FinalChecklistFragment : Fragment() {
     }
 
 
+    //Used to set all the party data displayed on the checklist data
     @SuppressLint("SetTextI18n")
     private fun setAllPartyData() {
         binding.partyDate.text = details.partyDate?.getFormattedDate()
@@ -121,7 +130,9 @@ class FinalChecklistFragment : Fragment() {
         setViewListeners()
     }
 
+    //Used to set the checkbox data of all items.
     private fun setCheckBox() {
+        //Checking the checkbox data in the party data and setting accordingly
         details.checkedItemList.also {
             if (!it.isNullOrEmpty()) {
                 for (item in it) {
@@ -151,7 +162,10 @@ class FinalChecklistFragment : Fragment() {
         }
     }
 
+    //Used to set the listener of button and edit text etc
     private fun setViewListeners() {
+
+        //Opening the guest checklist on clicking update guest button
         binding.updateGuestBtn.setOnClickListener {
             details.guestNameList.also {
                 GUEST_LIST_NAMES = it ?: ArrayList()
@@ -160,6 +174,7 @@ class FinalChecklistFragment : Fragment() {
             findNavController().navigate(R.id.action_finalChecklistFragment_to_guestListFragment)
         }
 
+        //Storing the notes on updating
         binding.notesEt.doAfterTextChanged {
 
             val details = prefRepository.getCurrentPartyDetails()
@@ -177,12 +192,17 @@ class FinalChecklistFragment : Fragment() {
 
     }
 
+    //Setting the edit button listeners.
     @SuppressLint("SetTextI18n")
     private fun setEditBtnListener() {
+
         binding.editDateBtn.setOnClickListener {
+
+            //Checking if the button is not double clicked
             if (isDoubleClicked(1000)) return@setOnClickListener
             val currentDate = Calendar.getInstance()
 
+            //Showing the date picker dialog
             val listener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
 
                 val selectedDate = Calendar.getInstance()
@@ -204,6 +224,7 @@ class FinalChecklistFragment : Fragment() {
                                               currentDate.get(Calendar.MONTH),
                                               currentDate.get(Calendar.DAY_OF_MONTH))
 
+            //Setting minimim date as current date.
             datePicker.datePicker.minDate = currentDate.timeInMillis
             datePicker.show()
         }
@@ -212,6 +233,8 @@ class FinalChecklistFragment : Fragment() {
             if (isDoubleClicked(1000)) return@setOnClickListener
             val dialog = DialogDestinationSelection(requireContext(), prefRepository)
             dialog.show()
+
+            //Checking and updating the value selected after the dialog is closed.
             dialog.setOnDismissListener {
                 binding.destinationType.text = prefRepository.getCurrentPartyDetails().partyDestination
                 updateSummaryData()
@@ -219,6 +242,7 @@ class FinalChecklistFragment : Fragment() {
 
                 details = prefRepository.getCurrentPartyDetails()
 
+                //On changing the party type, updating the option in the checklist screen
                 if (prefRepository.getCurrentPartyDetails().partyDestination != getString(R.string.home)) {
 
                     binding.include.parent.show()
@@ -247,6 +271,7 @@ class FinalChecklistFragment : Fragment() {
             }
         }
 
+        //Used to update the guest count of party
         binding.editGuestBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
 
@@ -260,6 +285,7 @@ class FinalChecklistFragment : Fragment() {
             }
         }
 
+        //Used to edit the budget of the party
         binding.editBudgetBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
 
@@ -272,11 +298,13 @@ class FinalChecklistFragment : Fragment() {
             }
         }
 
+        //Open the location screen on clicking the edit location button
         binding.editLocationBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
             findNavController().navigate(R.id.action_finalChecklistFragment_to_venueLocationFragment)
         }
 
+        //Used to update the selected party options
         binding.editPartyTypeBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
 
@@ -290,11 +318,13 @@ class FinalChecklistFragment : Fragment() {
             }
         }
 
+        //This will open the caterer screen to change the caterers
         binding.editCatererBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
             findNavController().navigate(R.id.action_finalChecklistFragment_to_caterersListFragment)
         }
 
+        //This will open the venue screen to change the venue
         binding.editVenueBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
             if (prefRepository.getCurrentPartyDetails().locations.isNullOrEmpty()) {
@@ -306,7 +336,9 @@ class FinalChecklistFragment : Fragment() {
 
     }
 
+    //Used to set the checkbox listeners
     private fun setCbListener() {
+        //Used to store the changed status of checkbox of party type
         binding.selectedPartyTypeCb.setOnCheckedChangeListener { _, isChecked ->
             val lastValue = details.checkedItemList!!.find { it.itemName == CB_PARTY_TYPE }
             details.checkedItemList?.remove(lastValue!!)
@@ -319,6 +351,7 @@ class FinalChecklistFragment : Fragment() {
                 updateSummaryData()
         }
 
+        //Used to store the changed status of checkbox of caterer
         binding.catererCb.setOnCheckedChangeListener { _, isChecked ->
             val lastValue = details.checkedItemList!!.find { it.itemName == CB_CATERER }
             details.checkedItemList?.remove(lastValue!!)
@@ -331,6 +364,7 @@ class FinalChecklistFragment : Fragment() {
                 updateSummaryData()
         }
 
+        //Used to store the changed status of checkbox of venue
         binding.venueCb.setOnCheckedChangeListener { _, isChecked ->
             val lastValue = details.checkedItemList!!.find { it.itemName == CB_VENUE }
             details.checkedItemList?.remove(lastValue!!)
@@ -343,6 +377,7 @@ class FinalChecklistFragment : Fragment() {
                 updateSummaryData()
         }
 
+        //Used to store the changed status of checkbox of magic show
         binding.magicCb.setOnCheckedChangeListener { _, isChecked ->
             val lastValue = details.checkedItemList!!.find { it.itemName == CB_MAGIC_SHOW }
             details.checkedItemList?.remove(lastValue!!)
@@ -355,6 +390,7 @@ class FinalChecklistFragment : Fragment() {
                 updateSummaryData()
         }
 
+        //Used to store the changed status of checkbox of decoration
         binding.decorationCb.setOnCheckedChangeListener { _, isChecked ->
             val lastValue = details.checkedItemList!!.find { it.itemName == CB_DECORATOR }
             details.checkedItemList?.remove(lastValue!!)
@@ -367,6 +403,7 @@ class FinalChecklistFragment : Fragment() {
                 updateSummaryData()
         }
 
+        //Used to store the changed status of checkbox of alcohol
         binding.alcoholCb.setOnCheckedChangeListener { _, isChecked ->
             val lastValue = details.checkedItemList!!.find { it.itemName == CB_ALCOHOL }
             details.checkedItemList?.remove(lastValue!!)
@@ -379,6 +416,7 @@ class FinalChecklistFragment : Fragment() {
                 updateSummaryData()
         }
 
+        //Used to store the changed status of checkbox of budget
         binding.budgetCb.setOnCheckedChangeListener { _, isChecked ->
             val lastValue = details.checkedItemList!!.find { it.itemName == CB_BUDGET }
             details.checkedItemList?.remove(lastValue!!)
@@ -393,6 +431,7 @@ class FinalChecklistFragment : Fragment() {
     }
 
 
+    //Used to set the location of venue and updating the UI accordingly.
     private fun setLocations() {
         if (details.partyDestination == getString(R.string.home)) {
             binding.locationSelected.hide()
@@ -412,6 +451,7 @@ class FinalChecklistFragment : Fragment() {
         }
     }
 
+    //Used to set the budget of the party after calculating
     @SuppressLint("SetTextI18n")
     private fun setBudget() {
         val budgetLimit = when (details.partyBudget) {
@@ -459,11 +499,13 @@ class FinalChecklistFragment : Fragment() {
             budgetDistributionText.substring(0, budgetDistributionText.length - 2)
     }
 
+    //Used to set the selected party type in the recycler view
     private fun setSelectedPartyTypes() {
         binding.selectedPartyTypeRv.initGridAdapter(
             SelectedPartyTypeAdapter(getPartyTypeFromStringArray(details.partyType)), true, 3)
     }
 
+    //Used to set the selected caterer detail
     @SuppressLint("SetTextI18n")
     private fun setCatererDetails() {
         binding.include2.name.text = details.selectedCaterer!!.name.trim()
@@ -482,6 +524,7 @@ class FinalChecklistFragment : Fragment() {
         binding.include2.parent.isEnabled = false
     }
 
+    //Used to set the selected venue data after checking selected destination type
     @SuppressLint("SetTextI18n")
     private fun setVenueDetails() {
         if (details.partyDestination != getString(R.string.home)) {
@@ -511,6 +554,8 @@ class FinalChecklistFragment : Fragment() {
         }
     }
 
+    //Used to set the phone no. and other details
+    //of the magic show, decoration and alcohol if they are selected
     private fun setSpecialDetails() {
         if (details.partyType.contains(PARTY_TYPE_MAGIC_SHOW))
             binding.magicianDetails.show()
@@ -523,6 +568,7 @@ class FinalChecklistFragment : Fragment() {
     }
 
 
+    //Used to store the summary data in the SQL in background thread
     private fun updateSummaryData() {
         println("updateSummaryData called")
         lifecycleScope.launch(Dispatchers.Main) {
@@ -533,6 +579,7 @@ class FinalChecklistFragment : Fragment() {
         }
     }
 
+    //Used to delete the unfinished data from the SQL in background thread
     private fun deleteUnfinishedData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
@@ -540,6 +587,7 @@ class FinalChecklistFragment : Fragment() {
         }
     }
 
+    //Used to store the history summary data in the SQL in background thread
     private fun updateHistorySummaryData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val summaryDao = AppDatabase.getDatabase(requireContext()).historySummaryDao()
@@ -557,13 +605,16 @@ class FinalChecklistFragment : Fragment() {
     }
 
 
+    //Used for showing the edit icon in the toolbar
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         if (CURRENT_SELECTED_OPTION != OPTION_PAST)
             requireActivity().menuInflater.inflate(R.menu.menu_toolbar, menu)
     }
 
+    //Toolbar edit icon click listener
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        //Changing the edit and save icon on clicking
         if (item.itemId == R.id.edit) {
             if (binding.groupEditBtn.isVisible) {
                 item.icon = requireContext().getDrawableRes(R.drawable.ic_edit)

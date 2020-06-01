@@ -16,6 +16,10 @@ import kotlinx.android.synthetic.main.dialog_destination_selection.*
  * Created by Abdul Rehman on 29-05-2020.
  * Contact email - abdulrehman0796@gmail.com
  */
+
+/**
+ * This dialog is used for changing the budget in the checklist screen
+ * */
 class DialogChangeBudget(context: Context,
                          private val prefRepository: PrefRepository) : Dialog(context) {
 

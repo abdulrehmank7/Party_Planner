@@ -9,6 +9,11 @@ import androidx.room.PrimaryKey
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * Venue SQL table is created using the following class definition
+ * This sql table is used for storing all venue data.
+ * */
+
 @Entity(tableName = "VENUE")
 data class Venue(
     @PrimaryKey(autoGenerate = true)

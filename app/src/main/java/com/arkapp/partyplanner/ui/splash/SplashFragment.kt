@@ -15,10 +15,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
+/**
+ * First screen fragment of the app. This is opened every time app is launched
+ * */
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
     private val prefRepository by lazy { PrefRepository(requireContext()) }
 
+    //Checking if the user is signed up or not
     private fun initSignUpBtn() {
         if (!prefRepository.setLoggedIn()) {
             signUpBtn.setOnClickListener {

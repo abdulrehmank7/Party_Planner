@@ -23,6 +23,9 @@ import java.util.*
 import kotlin.math.roundToInt
 
 
+/**
+ * This is a utility class consisting of Kotlin Extension function
+ * */
 fun Context.toast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 }

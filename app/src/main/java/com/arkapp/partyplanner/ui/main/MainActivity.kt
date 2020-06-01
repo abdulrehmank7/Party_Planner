@@ -1,7 +1,5 @@
 package com.arkapp.partyplanner.ui.main
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -9,13 +7,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.arkapp.partyplanner.R
-import com.arkapp.partyplanner.data.authentication.RC_SIGN_IN
 import com.arkapp.partyplanner.data.repository.PrefRepository
-import com.arkapp.partyplanner.utils.hide
-import com.arkapp.partyplanner.utils.toast
-import com.firebase.ui.auth.IdpResponse
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.fragment_splash.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Initializing the navigation component, Used to open different screen
         val navController = findNavController(R.id.fragment)
         val appBarConfiguration = AppBarConfiguration
             .Builder(R.id.optionsFragment, R.id.finalChecklistFragment)
@@ -36,24 +29,6 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar!!.hide()
             else
                 supportActionBar!!.show()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-
-            if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
-                prefRepository.setLoggedIn(true)
-                signUpBtn.hide()
-            } else {
-                toast(getString(R.string.login_failed))
-                finish()
-            }
         }
     }
 

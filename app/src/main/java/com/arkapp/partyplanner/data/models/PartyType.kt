@@ -5,6 +5,10 @@ package com.arkapp.partyplanner.data.models
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * This model class is used to store the party type UI
+ * */
 data class PartyType(
     val title: String,
     val resId: Int)

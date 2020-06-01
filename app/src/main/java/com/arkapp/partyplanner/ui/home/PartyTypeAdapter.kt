@@ -18,6 +18,10 @@ import com.arkapp.partyplanner.utils.show
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * Recycler view adapter of selected party type in the home screen
+ * */
 class PartyTypeAdapter(private val partyTypes: List<PartyType>,
                        private val prefRepository: PrefRepository) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

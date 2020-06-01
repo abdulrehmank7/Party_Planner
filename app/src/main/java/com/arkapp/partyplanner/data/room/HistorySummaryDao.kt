@@ -11,6 +11,11 @@ import com.arkapp.partyplanner.data.models.HistorySummary
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * This class is used to define query for the History Summary table
+ * */
+
 @Dao
 interface HistorySummaryDao {
 

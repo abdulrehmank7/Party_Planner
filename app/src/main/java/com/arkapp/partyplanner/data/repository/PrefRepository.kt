@@ -11,6 +11,9 @@ import com.arkapp.partyplanner.data.preferences.PREF_USER_LOGIN
 import com.google.gson.Gson
 
 
+/**
+ * This is the UTILITY class for using shared preferences easily.
+ * */
 class PrefRepository(val context: Context) {
 
     private val pref: SharedPreferences = context.getSharedPreferences(
@@ -64,12 +67,14 @@ class PrefRepository(val context: Context) {
         editor.commit()
     }
 
+    //used to store if user logged in or not
     fun setLoggedIn(isLoggedIn: Boolean) {
         PREF_LOGGED_IN.put(isLoggedIn)
     }
 
     fun setLoggedIn() = PREF_LOGGED_IN.getBoolean()
 
+    //Used to store current party details
     fun setCurrentPartyDetails(partyDetails: PartyDetails) {
         PREF_PARTY_DETAILS.put(gson.toJson(partyDetails))
     }
@@ -94,6 +99,7 @@ class PrefRepository(val context: Context) {
         }
     }
 
+    //Store current logged in used details
     fun setCurrentUser(userLogin: UserLogin) {
         PREF_USER_LOGIN.put(gson.toJson(userLogin))
     }

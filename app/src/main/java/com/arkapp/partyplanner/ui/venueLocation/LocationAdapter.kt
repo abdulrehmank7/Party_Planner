@@ -18,6 +18,10 @@ import com.arkapp.partyplanner.utils.show
  * Contact email - abdulrehman0796@gmail.com
  */
 
+
+/**
+ * Recycler view adapter of location selection before the venue selection
+ * */
 class LocationAdapter(private val locations: List<Location>,
                       private val prefRepository: PrefRepository) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -46,6 +50,7 @@ class LocationAdapter(private val locations: List<Location>,
         if (locationSelected.contains(location))
             binding.tick.show()
 
+        //Rotating the compass icon in different location
         when (position) {
             0 -> binding.icon.rotation = -45f
             1 -> binding.icon.rotation = 135f
@@ -53,6 +58,7 @@ class LocationAdapter(private val locations: List<Location>,
             4 -> binding.icon.rotation = 45f
         }
 
+        //Storing the selected location in the shared preferences
         binding.parent.setOnClickListener {
             if (binding.tick.isVisible) {
                 locationSelected.remove(location)

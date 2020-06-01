@@ -11,6 +11,10 @@ import com.arkapp.partyplanner.data.models.UnfinishedDetails
  * Contact email - abdulrehman0796@gmail.com
  */
 
+/**
+ * This class is used to define query for the Unfinished data table
+ * */
+
 @Dao
 interface UnfinishedDetailsDao {
 

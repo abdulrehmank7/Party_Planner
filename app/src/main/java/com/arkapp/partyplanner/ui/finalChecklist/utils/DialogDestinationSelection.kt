@@ -16,6 +16,10 @@ import kotlinx.android.synthetic.main.dialog_destination_selection.*
  * Created by Abdul Rehman on 29-05-2020.
  * Contact email - abdulrehman0796@gmail.com
  */
+
+/**
+ * This dialog is used for changing the destination(Home/Other venue) in the checklist screen
+ * */
 class DialogDestinationSelection(context: Context,
                                  private val prefRepository: PrefRepository) : Dialog(context) {
 
