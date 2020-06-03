@@ -1,15 +1,13 @@
 package com.arkapp.partyplanner.utils
 
-import android.content.Context
-import androidx.lifecycle.LifecycleCoroutineScope
+import android.app.Activity
+import android.os.AsyncTask
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.*
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -1046,13 +1044,14 @@ fun convertPartyFromHistorySummary(summary: HistorySummary): PartyDetails {
     )
 }
 
-fun addUnfinishedData(lifecycleScope: LifecycleCoroutineScope,
-                      context: Context,
-                      prefRepository: PrefRepository) {
-    lifecycleScope.launch(Dispatchers.Main) {
-        val unfinishedDao = AppDatabase.getDatabase(context).unfinishedDao()
-        unfinishedDao.insert(convertUnfinished(prefRepository.getCurrentPartyDetails(),
-                                               prefRepository.getCurrentUser()?.uid!!))
+class AddUnfinishedAsyncTask(private val context: Activity,
+                             private val prefRepository: PrefRepository) : AsyncTask<Void, Void, Void?>() {
+
+    override fun doInBackground(vararg params: Void?): Void? {
+        val unfinishedDao = AppDatabase.Companion().getDatabase(context).unfinishedDao()
+        unfinishedDao.insert(convertUnfinished(prefRepository.currentPartyDetails,
+                                               prefRepository.currentUser?.uid!!))
+        return null
     }
 }
 

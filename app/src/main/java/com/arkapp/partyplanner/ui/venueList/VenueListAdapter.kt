@@ -1,12 +1,14 @@
 package com.arkapp.partyplanner.ui.venueList
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.app.Activity
+import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Venue
@@ -16,8 +18,6 @@ import com.arkapp.partyplanner.utils.convertSummary
 import com.arkapp.partyplanner.utils.toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * Created by Abdul Rehman on 28-02-2020.
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
  * Recycler view adapter of venue list venue selection screen
  * */
 class VenueListAdapter(
-    private val context: Context,
+    private val context: Activity,
     private val venueList: List<Venue>,
     private val navController: NavController,
     private val prefRepository: PrefRepository,
@@ -71,12 +71,13 @@ class VenueListAdapter(
 
 
         binding.parent.setOnClickListener {
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.selectedDestination = venueData
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
 
-            if (!prefRepository.getCurrentPartyDetails().checkedItemList.isNullOrEmpty()) {
-                updateSummaryData()
+            if (!prefRepository.currentPartyDetails.checkedItemList.isNullOrEmpty()) {
+                context.toast("Please wait saving data...")
+                UpdateSummaryAsyncTask(context, prefRepository).execute()
             } else
                 navController.navigate(R.id.action_venueListFragment_to_specialSelectionFragment)
         }
@@ -91,15 +92,21 @@ class VenueListAdapter(
     }
 
     //adding the selected venue in the SQL db
-    private fun updateSummaryData() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            context.toast("Please wait saving data...")
-            val summaryDao = AppDatabase.getDatabase(context).summaryDao()
-            summaryDao.delete(prefRepository.getCurrentUser()?.uid!!)
-            summaryDao.insert(convertSummary(prefRepository.getCurrentPartyDetails(),
-                                             prefRepository.getCurrentUser()?.uid!!))
-            navController.navigate(R.id.action_venueListFragment_to_finalChecklistFragment)
+    private class UpdateSummaryAsyncTask(private val context: Activity,
+                                         private val prefRepository: PrefRepository) : AsyncTask<Void, Void, Void?>() {
 
+        override fun doInBackground(vararg params: Void?): Void? {
+            val summaryDao = AppDatabase.Companion().getDatabase(context).summaryDao()
+            summaryDao.delete(prefRepository.currentUser?.uid!!)
+            summaryDao.insert(convertSummary(prefRepository.currentPartyDetails,
+                                             prefRepository.currentUser?.uid!!))
+            return null
+        }
+
+        @SuppressLint("SetTextI18n")
+        override fun onPostExecute(summaryData: Void?) {
+            context.findNavController(R.id.fragment)
+                .navigate(R.id.action_venueListFragment_to_finalChecklistFragment)
         }
     }
 }

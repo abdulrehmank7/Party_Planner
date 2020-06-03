@@ -1,29 +1,26 @@
 package com.arkapp.partyplanner.ui.finalChecklist
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.*
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.CheckedItem
 import com.arkapp.partyplanner.data.models.PartyDetails
+import com.arkapp.partyplanner.data.models.SummaryDetails
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentFinalChecklistBinding
-import com.arkapp.partyplanner.ui.finalChecklist.utils.DialogChangeBudget
-import com.arkapp.partyplanner.ui.finalChecklist.utils.DialogChangeGuest
-import com.arkapp.partyplanner.ui.finalChecklist.utils.DialogChangePartyType
-import com.arkapp.partyplanner.ui.finalChecklist.utils.DialogDestinationSelection
+import com.arkapp.partyplanner.ui.finalChecklist.utils.*
 import com.arkapp.partyplanner.utils.*
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -51,32 +48,29 @@ class FinalChecklistFragment : Fragment() {
         when (CURRENT_SELECTED_OPTION) {
             OPTION_CHECKLIST -> {
                 //Fetching the summary table in background
-                lifecycleScope.launch(Dispatchers.Main) {
-                    val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
-                    val summaryData = summaryDao.getUserSummary(prefRepository.getCurrentUser()?.uid!!)
-
-                    details = convertPartyFromSummary(summaryData[0])
-                    prefRepository.setCurrentPartyDetails(details)
-
+                val taskListener = GetSummaryListener {
+                    details = convertPartyFromSummary(it[0])
+                    prefRepository.currentPartyDetails = details
                     setAllPartyData()
                 }
+                GetSummaryAsyncTask(requireActivity(), prefRepository, taskListener).execute()
             }
             OPTION_PAST -> {
                 //Deleting the unfinished data and setting all the party data
-                deleteUnfinishedData()
-                details = prefRepository.getCurrentPartyDetails()
+                DeleteUnfinishedSummaryAsyncTask(requireActivity(), prefRepository).execute()
+                details = prefRepository.currentPartyDetails
                 setAllPartyData()
             }
             else -> {
                 //Deleting the unfinished data and setting all the party data
-                deleteUnfinishedData()
-                details = prefRepository.getCurrentPartyDetails()
+                DeleteUnfinishedSummaryAsyncTask(requireActivity(), prefRepository).execute()
+                details = prefRepository.currentPartyDetails
                 setAllPartyData()
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
 
                 //Not adding in history if screen is opened from the guest checklist
                 if (!OPENED_GUEST_LIST)
-                    updateHistorySummaryData()
+                    UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
             }
         }
 
@@ -85,22 +79,19 @@ class FinalChecklistFragment : Fragment() {
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner) {
                 //Resetting the shared preferences party data
-                prefRepository
-                    .setCurrentPartyDetails(
-                        PartyDetails(
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            ArrayList(),
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            ArrayList())
-                    )
+                prefRepository.currentPartyDetails = PartyDetails(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    ArrayList<String>(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    ArrayList<String>())
                 this.remove()
                 if (CURRENT_SELECTED_OPTION == OPTION_PAST)
                     findNavController().navigate(R.id.action_finalChecklistFragment_to_historySummaryFragment)
@@ -156,8 +147,8 @@ class FinalChecklistFragment : Fragment() {
                 details.checkedItemList!!.add(CheckedItem(CB_MAGIC_SHOW, false))
                 details.checkedItemList!!.add(CheckedItem(CB_ALCOHOL, false))
                 details.checkedItemList!!.add(CheckedItem(CB_BUDGET, false))
-                prefRepository.setCurrentPartyDetails(details)
-                updateSummaryData()
+                prefRepository.currentPartyDetails = details
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
             }
         }
     }
@@ -177,14 +168,14 @@ class FinalChecklistFragment : Fragment() {
         //Storing the notes on updating
         binding.notesEt.doAfterTextChanged {
 
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.extraNote = it.toString()
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
 
             if (CURRENT_SELECTED_OPTION == OPTION_CHECKLIST || CURRENT_SELECTED_OPTION == OPTION_CREATE)
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
             else
-                updateHistorySummaryData()
+                UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
         }
 
         setCbListener()
@@ -214,8 +205,8 @@ class FinalChecklistFragment : Fragment() {
 
                 binding.partyDate.text = selectedDate.time.getFormattedDate()
 
-                prefRepository.setCurrentPartyDetails(details)
-                updateSummaryData()
+                prefRepository.currentPartyDetails = details
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
             }
 
             val datePicker = DatePickerDialog(requireContext(),
@@ -236,14 +227,14 @@ class FinalChecklistFragment : Fragment() {
 
             //Checking and updating the value selected after the dialog is closed.
             dialog.setOnDismissListener {
-                binding.destinationType.text = prefRepository.getCurrentPartyDetails().partyDestination
-                updateSummaryData()
+                binding.destinationType.text = prefRepository.currentPartyDetails.partyDestination
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
                 setBudget()
 
-                details = prefRepository.getCurrentPartyDetails()
+                details = prefRepository.currentPartyDetails
 
                 //On changing the party type, updating the option in the checklist screen
-                if (prefRepository.getCurrentPartyDetails().partyDestination != getString(R.string.home)) {
+                if (prefRepository.currentPartyDetails.partyDestination != getString(R.string.home)) {
 
                     binding.include.parent.show()
                     binding.venueTitle.show()
@@ -254,7 +245,7 @@ class FinalChecklistFragment : Fragment() {
                     binding.textView22.show()
                     binding.editLocationBtn.show()
 
-                    prefRepository.getCurrentPartyDetails().selectedDestination.also {
+                    prefRepository.currentPartyDetails.selectedDestination.also {
                         if (it == null || it.name.isEmpty()) {
                             binding.include.venueName.text = "Click edit icon to select venue!"
                             binding.locationSelected.text = "Select location!"
@@ -278,10 +269,10 @@ class FinalChecklistFragment : Fragment() {
             val dialog = DialogChangeGuest(requireContext(), prefRepository)
             dialog.show()
             dialog.setOnDismissListener {
-                binding.totalGuest.text = "${prefRepository.getCurrentPartyDetails().partyGuest} Guests"
-                details = prefRepository.getCurrentPartyDetails()
+                binding.totalGuest.text = "${prefRepository.currentPartyDetails.partyGuest} Guests"
+                details = prefRepository.currentPartyDetails
                 setBudget()
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
             }
         }
 
@@ -292,9 +283,9 @@ class FinalChecklistFragment : Fragment() {
             val dialog = DialogChangeBudget(requireContext(), prefRepository)
             dialog.show()
             dialog.setOnDismissListener {
-                details = prefRepository.getCurrentPartyDetails()
+                details = prefRepository.currentPartyDetails
                 setBudget()
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
             }
         }
 
@@ -311,9 +302,9 @@ class FinalChecklistFragment : Fragment() {
             val dialog = DialogChangePartyType(requireContext(), prefRepository)
             dialog.show()
             dialog.setOnDismissListener {
-                details = prefRepository.getCurrentPartyDetails()
+                details = prefRepository.currentPartyDetails
                 setSelectedPartyTypes()
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
                 setBudget()
             }
         }
@@ -327,7 +318,7 @@ class FinalChecklistFragment : Fragment() {
         //This will open the venue screen to change the venue
         binding.editVenueBtn.setOnClickListener {
             if (isDoubleClicked(1000)) return@setOnClickListener
-            if (prefRepository.getCurrentPartyDetails().locations.isNullOrEmpty()) {
+            if (prefRepository.currentPartyDetails.locations.isNullOrEmpty()) {
                 requireContext().toastShort("First Select location!")
                 return@setOnClickListener
             }
@@ -344,11 +335,11 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.remove(lastValue!!)
             details.checkedItemList?.add(CheckedItem(CB_PARTY_TYPE, isChecked))
 
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
             if (CURRENT_SELECTED_OPTION == OPTION_PAST)
-                updateHistorySummaryData()
+                UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
             else
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
         }
 
         //Used to store the changed status of checkbox of caterer
@@ -357,11 +348,11 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.remove(lastValue!!)
             details.checkedItemList?.add(CheckedItem(CB_CATERER, isChecked))
 
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
             if (CURRENT_SELECTED_OPTION == OPTION_PAST)
-                updateHistorySummaryData()
+                UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
             else
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
         }
 
         //Used to store the changed status of checkbox of venue
@@ -370,11 +361,11 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.remove(lastValue!!)
             details.checkedItemList?.add(CheckedItem(CB_VENUE, isChecked))
 
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
             if (CURRENT_SELECTED_OPTION == OPTION_PAST)
-                updateHistorySummaryData()
+                UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
             else
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
         }
 
         //Used to store the changed status of checkbox of magic show
@@ -383,11 +374,11 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.remove(lastValue!!)
             details.checkedItemList?.add(CheckedItem(CB_MAGIC_SHOW, isChecked))
 
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
             if (CURRENT_SELECTED_OPTION == OPTION_PAST)
-                updateHistorySummaryData()
+                UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
             else
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
         }
 
         //Used to store the changed status of checkbox of decoration
@@ -396,11 +387,11 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.remove(lastValue!!)
             details.checkedItemList?.add(CheckedItem(CB_DECORATOR, isChecked))
 
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
             if (CURRENT_SELECTED_OPTION == OPTION_PAST)
-                updateHistorySummaryData()
+                UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
             else
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
         }
 
         //Used to store the changed status of checkbox of alcohol
@@ -409,11 +400,11 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.remove(lastValue!!)
             details.checkedItemList?.add(CheckedItem(CB_ALCOHOL, isChecked))
 
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
             if (CURRENT_SELECTED_OPTION == OPTION_PAST)
-                updateHistorySummaryData()
+                UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
             else
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
         }
 
         //Used to store the changed status of checkbox of budget
@@ -422,11 +413,11 @@ class FinalChecklistFragment : Fragment() {
             details.checkedItemList?.remove(lastValue!!)
             details.checkedItemList?.add(CheckedItem(CB_BUDGET, isChecked))
 
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
             if (CURRENT_SELECTED_OPTION == OPTION_PAST)
-                updateHistorySummaryData()
+                UpdateHistorySummaryAsyncTask(requireActivity(), prefRepository).execute()
             else
-                updateSummaryData()
+                UpdateSummaryAsyncTask(requireActivity(), prefRepository).execute()
         }
     }
 
@@ -465,29 +456,31 @@ class FinalChecklistFragment : Fragment() {
 
         var budgetDistributionText = ""
 
-        val catererPrice = prefRepository.getCurrentPartyDetails().selectedCaterer!!.pricePerPax * prefRepository.getCurrentPartyDetails().partyGuest!!
+        val catererPrice = prefRepository.currentPartyDetails.selectedCaterer!!.pricePerPax * prefRepository.currentPartyDetails.partyGuest!!
         budgetDistributionText += "Caterer($${catererPrice}), "
 
         val venuePrice =
-            if (prefRepository.getCurrentPartyDetails().partyDestination != getString(R.string.home)) {
-                budgetDistributionText += "Venue($${prefRepository.getCurrentPartyDetails().selectedDestination!!.price.toInt()}), "
-                prefRepository.getCurrentPartyDetails().selectedDestination!!.price.toInt()
+            if (prefRepository.currentPartyDetails.partyDestination != getString(R.string.home)) {
+                if (prefRepository.currentPartyDetails.selectedDestination != null) {
+                    budgetDistributionText += "Venue($${prefRepository.currentPartyDetails.selectedDestination!!.price.toInt()}), "
+                    prefRepository.currentPartyDetails.selectedDestination!!.price.toInt()
+                } else 0
             } else
                 0
         val alcoholPrice =
-            if (prefRepository.getCurrentPartyDetails().partyType.contains(PARTY_TYPE_ALCOHOL)) {
-                budgetDistributionText += "Alcohol($${10 * prefRepository.getCurrentPartyDetails().partyGuest!!}), "
-                10 * prefRepository.getCurrentPartyDetails().partyGuest!!
+            if (prefRepository.currentPartyDetails.partyType.contains(PARTY_TYPE_ALCOHOL)) {
+                budgetDistributionText += "Alcohol($${10 * prefRepository.currentPartyDetails.partyGuest!!}), "
+                10 * prefRepository.currentPartyDetails.partyGuest!!
             } else
                 0
         val magicPrice =
-            if (prefRepository.getCurrentPartyDetails().partyType.contains(PARTY_TYPE_MAGIC_SHOW)) {
+            if (prefRepository.currentPartyDetails.partyType.contains(PARTY_TYPE_MAGIC_SHOW)) {
                 budgetDistributionText += "Magic Show($200), "
                 200
             } else
                 0
         val decoration =
-            if (prefRepository.getCurrentPartyDetails().partyType.contains(PARTY_TYPE_DECORATION)) {
+            if (prefRepository.currentPartyDetails.partyType.contains(PARTY_TYPE_DECORATION)) {
                 budgetDistributionText += "Decoration($100), "
                 100
             } else
@@ -510,8 +503,8 @@ class FinalChecklistFragment : Fragment() {
     private fun setCatererDetails() {
         binding.include2.name.text = details.selectedCaterer!!.name.trim()
         binding.include2.price.text = "$${details.selectedCaterer!!.pricePerPax}"
-        binding.include2.totalGuestPriceTv.text = "${prefRepository.getCurrentPartyDetails().partyGuest} Pax total"
-        binding.include2.totalGuestPrice.text = "$${prefRepository.getCurrentPartyDetails().selectedCaterer!!.pricePerPax * prefRepository.getCurrentPartyDetails().partyGuest!!}"
+        binding.include2.totalGuestPriceTv.text = "${prefRepository.currentPartyDetails.partyGuest} Pax total"
+        binding.include2.totalGuestPrice.text = "$${prefRepository.currentPartyDetails.selectedCaterer!!.pricePerPax * prefRepository.currentPartyDetails.partyGuest!!}"
 
         val partyTypes =
             gson.fromJson<ArrayList<String>>(details.selectedCaterer!!.partyType, arrayListType)
@@ -569,38 +562,65 @@ class FinalChecklistFragment : Fragment() {
 
 
     //Used to store the summary data in the SQL in background thread
-    private fun updateSummaryData() {
-        println("updateSummaryData called")
-        lifecycleScope.launch(Dispatchers.Main) {
-            val summaryDao = AppDatabase.getDatabase(requireContext()).summaryDao()
-            summaryDao.delete(prefRepository.getCurrentUser()?.uid!!)
-            summaryDao.insert(convertSummary(prefRepository.getCurrentPartyDetails(),
-                                             prefRepository.getCurrentUser()?.uid!!))
+    private class UpdateSummaryAsyncTask(private val context: Activity,
+                                         private val prefRepository: PrefRepository) : AsyncTask<Void, Void, Void?>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            val summaryDao = AppDatabase.Companion().getDatabase(context).summaryDao()
+            summaryDao.delete(prefRepository.currentUser?.uid!!)
+            summaryDao.insert(convertSummary(prefRepository.currentPartyDetails,
+                                             prefRepository.currentUser?.uid!!))
+            return null
+        }
+    }
+
+    //Used to store the summary data in the SQL in background thread
+    private class GetSummaryAsyncTask(private val context: Activity,
+                                      private val prefRepository: PrefRepository,
+                                      val taskListener: GetSummaryListener) : AsyncTask<Void, Void, MutableList<SummaryDetails>?>() {
+
+        override fun doInBackground(vararg params: Void?): MutableList<SummaryDetails>? {
+            val summaryDao = AppDatabase.Companion().getDatabase(context).summaryDao()
+            return summaryDao.getUserSummary(prefRepository.currentUser?.uid!!)
+        }
+
+        override fun onPostExecute(result: MutableList<SummaryDetails>?) {
+            super.onPostExecute(result)
+            taskListener.onTaskEnded(result)
         }
     }
 
     //Used to delete the unfinished data from the SQL in background thread
-    private fun deleteUnfinishedData() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
-            unfinishedDao.delete(prefRepository.getCurrentUser()?.uid!!)
+    private class DeleteUnfinishedSummaryAsyncTask(private val context: Activity,
+                                                   private val prefRepository: PrefRepository) : AsyncTask<Void, Void, Void>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            val unfinishedDao = AppDatabase.Companion().getDatabase(context)
+                .unfinishedDao()
+            unfinishedDao.delete(prefRepository.currentUser?.uid!!)
+            return null
         }
     }
 
+
     //Used to store the history summary data in the SQL in background thread
-    private fun updateHistorySummaryData() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val summaryDao = AppDatabase.getDatabase(requireContext()).historySummaryDao()
-            if (prefRepository.getCurrentPartyDetails().id == null) {
-                val details = prefRepository.getCurrentPartyDetails()
+    private class UpdateHistorySummaryAsyncTask(private val context: Activity,
+                                                private val prefRepository: PrefRepository) : AsyncTask<Void, Void, Void>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            val summaryDao = AppDatabase.Companion().getDatabase(context).historySummaryDao()
+            if (prefRepository.currentPartyDetails.id == null) {
+                val details = prefRepository.currentPartyDetails
                 details.id = getRandom()
                 summaryDao.insert(convertHistorySummary(details,
-                                                        prefRepository.getCurrentUser()?.uid!!))
+                                                        prefRepository.currentUser?.uid!!))
             } else {
-                summaryDao.delete(prefRepository.getCurrentPartyDetails().id!!)
-                summaryDao.insert(convertHistorySummary(prefRepository.getCurrentPartyDetails(),
-                                                        prefRepository.getCurrentUser()?.uid!!))
+                summaryDao.delete(prefRepository.currentPartyDetails.id!!)
+                summaryDao.insert(convertHistorySummary(prefRepository.currentPartyDetails,
+                                                        prefRepository.currentUser?.uid!!))
             }
+
+            return null
         }
     }
 

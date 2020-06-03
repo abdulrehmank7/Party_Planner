@@ -1,12 +1,14 @@
 package com.arkapp.partyplanner.ui.signup
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.UserLogin
@@ -14,9 +16,6 @@ import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentSignupBinding
 import com.arkapp.partyplanner.utils.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -162,55 +161,57 @@ class SignUpFragment : Fragment() {
 
     //Used to check the credential of user in the SQL table
     private fun checkCredentials() {
+        insertCaterersData()
+        insertVenueData()
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            insertCaterersData()
-            insertVenueData()
+        val taskListener = object : AddUserListener {
+            override fun onTaskEnded() {}
 
-            val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
+            override fun onTaskEnded(userData: MutableList<UserLogin>?) {
+                ENTERED_USER_NAME = binding.userNameEt.text.toString()
 
-            val userData = userLoginDao.getLoggedInUser(
-                binding.userNameEt.text.toString(),
-                binding.passwordEt.text.toString()
-            )
-
-            ENTERED_USER_NAME = binding.userNameEt.text.toString()
-
-            if (userData.isEmpty()) {
-                requireContext().toast("Login failed!")
-                binding.userName.error = "Check username and password!"
-                binding.loginProgress.hide()
-                requireActivity().window.enableTouch()
-            } else {
-                delay(1000)
-                binding.loginProgress.hide()
-                requireActivity().window.enableTouch()
-                onLoginSuccess()
+                if (userData.isNullOrEmpty()) {
+                    requireContext().toast("Login failed!")
+                    binding.userName.error = "Check username and password!"
+                    binding.loginProgress.hide()
+                    requireActivity().window.enableTouch()
+                } else {
+                    binding.loginProgress.hide()
+                    requireActivity().window.enableTouch()
+                    onLoginSuccess()
+                }
             }
         }
+        GetLoggedInUserAsyncTask(requireActivity(),
+                                 binding.userNameEt.text.toString(),
+                                 binding.passwordEt.text.toString(),
+                                 taskListener)
+            .execute()
 
     }
 
     //Check if the user is exist before the signup in SQL tables
     private fun checkIfUserNameExist() {
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        val taskListener = object : AddUserListener {
+            override fun onTaskEnded() {}
+            override fun onTaskEnded(data: MutableList<UserLogin>?) {
+                if (!data.isNullOrEmpty()) {
+                    requireContext().toast("Signup failed!")
+                    binding.signUpUserName.error = "Username already exits!"
 
-            val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
-
-            val userData = userLoginDao.checkLoggedInUser(
-                binding.signUpUserNameEt.text.toString()
-            )
-
-            if (userData.isNotEmpty()) {
-                requireContext().toast("Signup failed!")
-                binding.signUpUserName.error = "Username already exits!"
-
-                binding.signupProgress.hide()
-                requireActivity().window.enableTouch()
-            } else
-                storeCredentials()
+                    binding.signupProgress.hide()
+                    requireActivity().window.enableTouch()
+                } else
+                    storeCredentials()
+            }
         }
+
+        CheckLoggedInUserAsyncTask(
+            requireActivity(),
+            binding.signUpUserNameEt.text.toString(),
+            taskListener)
+            .execute()
     }
 
     //Opening the app on successfull signup or login
@@ -222,48 +223,100 @@ class SignUpFragment : Fragment() {
 
     //Store the signup credential in the SQL table
     private fun storeCredentials() {
+        insertCaterersData()
+        insertVenueData()
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            insertCaterersData()
-            insertVenueData()
+        val taskListener = object : AddUserListener {
+            override fun onTaskEnded() {
+                ENTERED_USER_NAME = binding.signUpUserNameEt.text.toString()
+                binding.signupProgress.hide()
+                requireActivity().window.enableTouch()
 
-            val userLoginDao = AppDatabase.getDatabase(requireContext()).userLoginDao()
+                onLoginSuccess()
+            }
 
-            userLoginDao.insert(
-                UserLogin(
-                    null,
-                    binding.signUpUserNameEt.text.toString(),
-                    binding.signUpPasswordEt.text.toString()
-                )
-            )
-
-            ENTERED_USER_NAME = binding.signUpUserNameEt.text.toString()
-
-            delay(1000)
-            binding.signupProgress.hide()
-            requireActivity().window.enableTouch()
-
-            onLoginSuccess()
+            override fun onTaskEnded(data: MutableList<UserLogin>?) {}
         }
 
+        AddUserAsyncTask(requireActivity(),
+                         binding.signUpUserNameEt.text.toString(),
+                         binding.signUpPasswordEt.text.toString(),
+                         taskListener).execute()
+    }
+
+    private class AddUserAsyncTask(private val context: Activity,
+                                   private val username: String,
+                                   private val password: String,
+                                   private val taskListener: AddUserListener) : AsyncTask<Void, Void, Void?>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            val userLoginDao = AppDatabase.Companion().getDatabase(context).userLoginDao()
+            userLoginDao.insert(UserLogin(null, username, password))
+            Thread.sleep(1000)
+            return null
+        }
+
+        @SuppressLint("SetTextI18n")
+        override fun onPostExecute(unfinisedSummary: Void?) {
+            taskListener.onTaskEnded()
+        }
+    }
+
+    private class GetLoggedInUserAsyncTask(private val context: Activity,
+                                           private val username: String,
+                                           private val password: String,
+                                           private val taskListener: AddUserListener) : AsyncTask<Void, Void, MutableList<UserLogin>?>() {
+
+        override fun doInBackground(vararg params: Void?): MutableList<UserLogin>? {
+            val userLoginDao = AppDatabase.Companion().getDatabase(context).userLoginDao()
+            val data = userLoginDao.getLoggedInUser(username, password)
+            Thread.sleep(1000)
+            return data
+        }
+
+        @SuppressLint("SetTextI18n")
+        override fun onPostExecute(data: MutableList<UserLogin>?) {
+            taskListener.onTaskEnded(data)
+        }
+    }
+
+    private class CheckLoggedInUserAsyncTask(private val context: Activity,
+                                             private val username: String,
+                                             private val taskListener: AddUserListener) : AsyncTask<Void, Void, MutableList<UserLogin>?>() {
+
+        override fun doInBackground(vararg params: Void?): MutableList<UserLogin>? {
+            val userLoginDao = AppDatabase.Companion().getDatabase(context).userLoginDao()
+            return userLoginDao.checkLoggedInUser(username)
+        }
+
+        @SuppressLint("SetTextI18n")
+        override fun onPostExecute(data: MutableList<UserLogin>?) {
+            taskListener.onTaskEnded(data)
+        }
     }
 
     //Insert the all the venue in venue table
-    private suspend fun insertVenueData() {
-        val venueDao = AppDatabase.getDatabase(requireContext()).venueDao()
+    private fun insertVenueData() {
+        val runnable = Runnable {
+            val venueDao = AppDatabase.Companion().getDatabase(requireContext()).venueDao()
 
-        for (venue in getVenueList()) {
-            venueDao.insert(venue)
+            for (venue in getVenueList()) {
+                venueDao.insert(venue)
+            }
         }
+        Thread(runnable).start()
     }
 
     //Insert the all the caterer in caterer table
-    private suspend fun insertCaterersData() {
-        val catererDao = AppDatabase.getDatabase(requireContext()).catererDao()
+    private fun insertCaterersData() {
+        val runnable = Runnable {
+            val catererDao = AppDatabase.Companion().getDatabase(requireContext()).catererDao()
 
-        for (venue in getCatererList()) {
-            catererDao.insert(venue)
+            for (caterer in getCatererList()) {
+                catererDao.insert(caterer)
+            }
         }
+        Thread(runnable).start()
     }
 
     //Remove error on changing the values.

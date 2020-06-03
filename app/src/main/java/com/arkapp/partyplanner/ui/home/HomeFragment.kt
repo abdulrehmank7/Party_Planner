@@ -1,5 +1,8 @@
 package com.arkapp.partyplanner.ui.home
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +10,6 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.PartyDetails
@@ -15,8 +17,6 @@ import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
 import com.arkapp.partyplanner.databinding.FragmentHomeBinding
 import com.arkapp.partyplanner.utils.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -50,9 +50,9 @@ class HomeFragment : Fragment() {
         binding.guestEt.doAfterTextChanged { text ->
             if (!text.isNullOrEmpty()) {
                 binding.guest.error = null
-                val details = prefRepository.getCurrentPartyDetails()
+                val details = prefRepository.currentPartyDetails
                 details.partyGuest = text.toString().toInt()
-                prefRepository.setCurrentPartyDetails(details)
+                prefRepository.currentPartyDetails = details
             }
         }
 
@@ -64,14 +64,14 @@ class HomeFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            if (prefRepository.getCurrentPartyDetails().partyType.isEmpty()) {
+            if (prefRepository.currentPartyDetails.partyType.isEmpty()) {
                 requireContext().toastShort("Please select party type")
                 return@setOnClickListener
             }
 
             binding.guest.error = null
 
-            addUnfinishedData(lifecycleScope, requireContext(), prefRepository)
+            AddUnfinishedAsyncTask(requireActivity(), prefRepository).execute()
             findNavController().navigate(R.id.action_homeFragment_to_caterersListFragment)
         }
 
@@ -84,40 +84,47 @@ class HomeFragment : Fragment() {
         requireActivity()
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner) {
-                prefRepository
-                    .setCurrentPartyDetails(
-                        //Resetting the party details
-                        PartyDetails(
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            ArrayList(),
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            ArrayList())
-                    )
+                prefRepository.currentPartyDetails = PartyDetails(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    ArrayList<String>(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    ArrayList<String>())
                 this.remove()
                 requireActivity().onBackPressed()
                 true
             }
     }
 
+    private class GetUnfinishedSummaryAsyncTask(private val context: Activity,
+                                                private val prefRepository: PrefRepository,
+                                                val taskListener: GetUnfinishedSummaryListener) : AsyncTask<Void, Void, PartyDetails?>() {
+
+        override fun doInBackground(vararg params: Void?): PartyDetails? {
+            val unfinishedDao = AppDatabase.Companion().getDatabase(context).unfinishedDao()
+            val unfinishedData = unfinishedDao.getUserUnfinished(prefRepository.currentUser?.uid!!)
+            return convertPartyFromUnfinished(unfinishedData[0])
+        }
+
+        @SuppressLint("SetTextI18n")
+        override fun onPostExecute(unfinisedSummary: PartyDetails?) {
+            taskListener.onTaskEnded(unfinisedSummary)
+        }
+    }
+
+
     //Setting the Unfinished party data in SQL
     private fun setUnfinishedPartyData() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val unfinishedDao = AppDatabase.getDatabase(requireContext()).unfinishedDao()
-            val unfinishedData = unfinishedDao.getUserUnfinished(prefRepository.getCurrentUser()?.uid!!)
-
-            val unfinishedDetail = convertPartyFromUnfinished(unfinishedData[0])
-
+        val taskListener = GetUnfinishedSummaryListener { unfinishedDetail ->
             unfinishedDetail.partyDate.also {
                 if (it != null) {
-
                     val selectedDate = Calendar.getInstance()
                     selectedDate.time = it
                     binding.calendarView.date = selectedDate.timeInMillis
@@ -154,12 +161,12 @@ class HomeFragment : Fragment() {
             unfinishedDetail.partyType.also {
                 partyTypeAdapter.selectedPartyType = getPartyTypeFromStringArray(it)
                 partyTypeAdapter.notifyDataSetChanged()
-                val details = prefRepository.getCurrentPartyDetails()
+                val details = prefRepository.currentPartyDetails
                 details.partyType = it
-                prefRepository.setCurrentPartyDetails(details)
+                prefRepository.currentPartyDetails = details
             }
         }
-
+        GetUnfinishedSummaryAsyncTask(requireActivity(), prefRepository, taskListener).execute()
     }
 
     //Initializing the calendar UI
@@ -173,9 +180,9 @@ class HomeFragment : Fragment() {
             selectedPartyDate.set(Calendar.MONTH, month)
             selectedPartyDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.partyDate = selectedPartyDate.time
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
         }
     }
 
@@ -189,9 +196,9 @@ class HomeFragment : Fragment() {
             binding.highBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
             binding.veryHighBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_end)
 
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.partyBudget = getString(R.string.low)
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
         }
 
         binding.mediumBudget.setOnClickListener {
@@ -202,9 +209,9 @@ class HomeFragment : Fragment() {
             binding.highBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
             binding.veryHighBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_end)
 
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.partyBudget = getString(R.string.medium)
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
         }
 
         binding.highBudget.setOnClickListener {
@@ -215,9 +222,9 @@ class HomeFragment : Fragment() {
             binding.highBudget.background = requireContext().getDrawableRes(R.drawable.bg_selected)
             binding.veryHighBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected_end)
 
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.partyBudget = getString(R.string.high)
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
         }
 
         binding.veryHighBudget.setOnClickListener {
@@ -228,9 +235,9 @@ class HomeFragment : Fragment() {
             binding.highBudget.background = requireContext().getDrawableRes(R.drawable.bg_unselected)
             binding.veryHighBudget.background = requireContext().getDrawableRes(R.drawable.bg_selected_end)
 
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.partyBudget = getString(R.string.very_high)
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
         }
     }
 
@@ -240,24 +247,24 @@ class HomeFragment : Fragment() {
             binding.homeParty.background = requireContext().getDrawableRes(R.drawable.bg_selected_start)
             binding.venueParty.background = requireContext().getDrawableRes(R.drawable.bg_unselected_end)
 
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.partyDestination = getString(R.string.home)
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
         }
 
         binding.venueParty.setOnClickListener {
             binding.homeParty.background = requireContext().getDrawable(R.drawable.bg_unselected_start)
             binding.venueParty.background = requireContext().getDrawable(R.drawable.bg_selected_end)
 
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.partyDestination = getString(R.string.other_venue)
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
         }
     }
 
     //Set the last entered data
     private fun setLastEnteredData() {
-        val detail = prefRepository.getCurrentPartyDetails()
+        val detail = prefRepository.currentPartyDetails
 
         detail.partyDate.also {
             if (it != null) {
@@ -312,14 +319,14 @@ class HomeFragment : Fragment() {
             getString(R.string.low),
             getString(R.string.home),
             null,
-            ArrayList(),
+            ArrayList<String>(),
             null,
             null,
             null,
             null,
             null,
-            ArrayList()
+            ArrayList<String>()
         )
-        prefRepository.setCurrentPartyDetails(details)
+        prefRepository.currentPartyDetails = details
     }
 }

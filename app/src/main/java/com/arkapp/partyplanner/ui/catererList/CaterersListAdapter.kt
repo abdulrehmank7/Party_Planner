@@ -1,24 +1,23 @@
 package com.arkapp.partyplanner.ui.catererList
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.app.Activity
+import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.arkapp.partyplanner.R
 import com.arkapp.partyplanner.data.models.Caterer
 import com.arkapp.partyplanner.data.repository.PrefRepository
 import com.arkapp.partyplanner.data.room.AppDatabase
-import com.arkapp.partyplanner.utils.addUnfinishedData
+import com.arkapp.partyplanner.utils.AddUnfinishedAsyncTask
 import com.arkapp.partyplanner.utils.convertSummary
-import com.arkapp.partyplanner.utils.toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * Created by Abdul Rehman on 28-02-2020.
@@ -30,7 +29,7 @@ import kotlinx.coroutines.launch
  * This is a recycler view adapter used to show caterers list
  * */
 class CaterersListAdapter(
-    private val context: Context,
+    private val context: Activity,
     private val caterersList: List<Caterer>,
     private val navController: NavController,
     private val prefRepository: PrefRepository,
@@ -59,8 +58,8 @@ class CaterersListAdapter(
         val caterersData = caterersList[position]
         binding.name.text = caterersData.name.trim()
         binding.price.text = "$${caterersData.pricePerPax}"
-        binding.totalGuestPriceTv.text = "${prefRepository.getCurrentPartyDetails().partyGuest} Pax total"
-        binding.totalGuestPrice.text = "$${caterersData.pricePerPax * prefRepository.getCurrentPartyDetails().partyGuest!!}"
+        binding.totalGuestPriceTv.text = "${prefRepository.currentPartyDetails.partyGuest} Pax total"
+        binding.totalGuestPrice.text = "$${caterersData.pricePerPax * prefRepository.currentPartyDetails.partyGuest!!}"
 
         //This will show all the supported party type of the caterer
         val partyTypes = gson.fromJson<ArrayList<String>>(caterersData.partyType, type)
@@ -73,18 +72,18 @@ class CaterersListAdapter(
 
         //On clicking the caterer it open the different screen according to party detail
         binding.parent.setOnClickListener {
-            val details = prefRepository.getCurrentPartyDetails()
+            val details = prefRepository.currentPartyDetails
             details.selectedCaterer = caterersData
-            prefRepository.setCurrentPartyDetails(details)
+            prefRepository.currentPartyDetails = details
 
             when {
-                prefRepository.getCurrentPartyDetails().partyDestination == context.getString(R.string.home) ->
+                prefRepository.currentPartyDetails.partyDestination == context.getString(R.string.home) ->
                     navController.navigate(R.id.action_caterersListFragment_to_specialSelectionFragment)
-                !prefRepository.getCurrentPartyDetails().checkedItemList.isNullOrEmpty() ->
-                    updateSummaryData()
+                !prefRepository.currentPartyDetails.checkedItemList.isNullOrEmpty() ->
+                    UpdateSummaryAsyncTask(context, prefRepository).execute()
                 else -> {
                     navController.navigate(R.id.action_caterersListFragment_to_venueLocationFragment)
-                    addUnfinishedData(lifecycleScope, context, prefRepository)
+                    AddUnfinishedAsyncTask(context, prefRepository).execute()
                 }
             }
         }
@@ -99,15 +98,21 @@ class CaterersListAdapter(
     }
 
     // Used to update the summary data in SQL table
-    private fun updateSummaryData() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            context.toast("Please wait saving data...")
-            val summaryDao = AppDatabase.getDatabase(context).summaryDao()
-            summaryDao.delete(prefRepository.getCurrentUser()?.uid!!)
-            summaryDao.insert(convertSummary(prefRepository.getCurrentPartyDetails(),
-                                             prefRepository.getCurrentUser()?.uid!!))
-            navController.navigate(R.id.action_caterersListFragment_to_finalChecklistFragment)
+    private class UpdateSummaryAsyncTask(private val context: Activity,
+                                         private val prefRepository: PrefRepository) : AsyncTask<Void, Void, Void?>() {
 
+        override fun doInBackground(vararg params: Void?): Void? {
+            val summaryDao = AppDatabase.Companion().getDatabase(context).summaryDao()
+            summaryDao.delete(prefRepository.currentUser?.uid!!)
+            summaryDao.insert(convertSummary(prefRepository.currentPartyDetails,
+                                             prefRepository.currentUser?.uid!!))
+            return null
+        }
+
+        @SuppressLint("SetTextI18n")
+        override fun onPostExecute(summaryData: Void?) {
+            context.findNavController(R.id.fragment)
+                .navigate(R.id.action_caterersListFragment_to_finalChecklistFragment)
         }
     }
 
